@@ -4,10 +4,10 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && rm -rf dist/temp",
-    "preview": "node ./scripts/preview.js",
-    "typecheck": "astro sync && tsc",
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress serve",
+    "typecheck": "tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
@@ -16,18 +16,13 @@
     "publint": "workspace:*"
   },
   "devDependencies": {
-    "@astrojs/markdown-remark": "^6.1.0",
-    "@astrojs/starlight": "^0.31.1",
-    "@astrojs/svelte": "^7.0.4",
-    "@unocss/astro": "^65.4.3",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@unocss/core": "^65.4.3",
     "@unocss/extractor-svelte": "^65.4.3",
     "@unocss/preset-uno": "^65.4.3",
     "@unocss/vite": "^65.4.3",
-    "astro": "^5.2.5",
     "fs-fixture": "^2.7.0",
-    "rehype-autolink-headings": "^7.1.0",
     "svelte": "^5.19.7",
-    "vite": "^6.0.11"
+    "vitepress": "2.0.0-alpha.2"
   }
 }

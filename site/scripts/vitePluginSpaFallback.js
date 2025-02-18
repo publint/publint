@@ -1,6 +1,6 @@
 /**
- * We need `src/pages/index.astro` to be an SPA fallback, matching the same behavior after deploying
- * on Cloudflare Pages. We can't use `[...slug].astro` as it only supports specifying known routes.
+ * We need `src/pages/index.html` to be an SPA fallback, matching the same behavior after deploying
+ * on Cloudflare Pages.
  * @returns {import('vite').Plugin}
  */
 export function spaFallback() {
@@ -13,7 +13,7 @@ export function spaFallback() {
           !req.url.startsWith('/rules') &&
           !req.url.startsWith('/docs/')
         ) {
-          req.url = '/index.html'
+          req.url = '/'
         }
 
         next()

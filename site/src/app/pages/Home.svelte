@@ -23,7 +23,7 @@
 
 <main class="flex flex-col items-center {analysis ? '' : 'min-h-screen'}">
   <HomeBackground />
-  <section class="main-section flex flex-col items-center w-full px-4 mb-10">
+  <section class="main-section flex flex-col items-center w-full px-8 mb-10">
     <Logo />
     <NpmSearchInput autofocus />
     <p class="my-8">

@@ -74,7 +74,7 @@
 </script>
 
 <div class="relative w-full mt-16">
-  <h2 class="text-center font-medium text-xl">Popular packages</h2>
+  <h2 class="text-center font-medium text-xl mb-4">Popular packages</h2>
 
   <div
     class="flex justify-center items-center flex-wrap gap-4 max-w-300 mx-auto transition-height {open
@@ -110,7 +110,7 @@
       class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none"
     >
       <button
-        class="action-button pointer-events-initial"
+        class="VPButton medium alt pointer-events-initial"
         onclick={() => (open = true)}
       >
         View all {Object.keys(results).length} packages
@@ -131,5 +131,34 @@
   .blur-mask {
     -webkit-mask: linear-gradient(transparent, black 60%);
     mask: linear-gradient(transparent, black 60%);
+  }
+
+  /* Copied from VitePress */
+  .VPButton {
+    display: inline-block;
+    border: 1px solid transparent;
+    text-align: center;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      color 0.25s,
+      border-color 0.25s,
+      background-color 0.25s;
+  }
+  .VPButton.medium {
+    border-radius: 20px;
+    padding: 0 20px;
+    line-height: 38px;
+    font-size: 14px;
+  }
+  .VPButton.alt {
+    border-color: var(--vp-button-alt-border);
+    color: var(--vp-button-alt-text);
+    background-color: var(--vp-button-alt-bg);
+  }
+  .VPButton.alt:hover {
+    border-color: var(--vp-button-alt-hover-border);
+    color: var(--vp-button-alt-hover-text);
+    background-color: var(--vp-button-alt-hover-bg);
   }
 </style>

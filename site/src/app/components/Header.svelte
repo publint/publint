@@ -1,6 +1,6 @@
 <script>
-  import homeIcon from '../assets/home.svg?url'
-  import githubIcon from '../assets/github.svg?url'
+  import homeIcon from '../../assets/home.svg?url'
+  import githubIcon from '../../assets/github.svg?url'
 
   /**
    * @typedef {Object} Props

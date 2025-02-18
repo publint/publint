@@ -13,5 +13,5 @@
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", ".astro/types.d.ts"]
+  "include": ["src", ".vitepress"]
 }

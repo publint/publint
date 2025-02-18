@@ -6,7 +6,7 @@
   import npmLogo from '../../assets/npm.svg?url'
   import pkgPrNewLogo from '../../assets/stackblitz.svg?url'
   import jsdelivrLogo from '../../assets/jsdelivr.svg?url'
-  import Header from '../../components/Header.svelte'
+  import Header from '../components/Header.svelte'
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'

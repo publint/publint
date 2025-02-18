@@ -8,7 +8,7 @@ export default defineConfig({
   content: {
     filesystem: ['src/app/**/*'],
     pipeline: {
-      include: [/\.(svelte|mdx?|astro|html)($|\?)/, 'src/app/utils/colors.js'],
+      include: [/\.(vue|svelte)($|\?)/, 'src/app/utils/colors.js'],
     },
   },
   theme: {
