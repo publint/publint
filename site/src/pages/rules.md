@@ -324,3 +324,7 @@ For example, the bin file should look like this:
 
 console.log('CLI is running')
 ```
+
+## `IMPORTS_FIELD_INVALID` {#imports_field_invalid}
+
+Entries in the `"imports"` field should always start with a `#`.

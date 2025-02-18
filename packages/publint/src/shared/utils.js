@@ -1,4 +1,8 @@
-import { lintableFileExtensions } from './constants.js'
+import {
+  builtinModules,
+  lintableFileExtensions,
+  nodeProtocol,
+} from './constants.js'
 
 /**
  * @typedef {{
@@ -336,7 +340,7 @@ export function isRelativePath(filePath) {
 }
 
 /**
- * Whether the `filePath` looks like an absoluate path
+ * Whether the `filePath` looks like an absolute path
  * @param {string} filePath
  */
 export function isAbsolutePath(filePath) {
@@ -501,4 +505,29 @@ export function replaceLast(str, search, replace) {
  */
 export function startsWithShebang(code) {
   return code.startsWith('#!/usr/bin/env')
+}
+
+/**
+ * @param {Record<string, any>} pkg
+ * @param {string} dep
+ */
+export function isExternalDependency(pkg, dep) {
+  const deps = Object.keys(pkg.dependencies || {})
+  for (const depName of deps) {
+    if (depName === dep) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * @param {string} dep
+ */
+export function isBuiltinModule(dep) {
+  // remove `node:` prefix
+  if (dep.startsWith(nodeProtocol)) {
+    dep = dep.slice(nodeProtocol.length)
+  }
+  return builtinModules.includes(dep)
 }

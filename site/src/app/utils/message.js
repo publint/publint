@@ -56,25 +56,32 @@ function messageToString(m, pkg) {
       return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As Node.js doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
+    case 'IMPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `Should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
+    case 'IMPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
       return `Does not match any files.`
     case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
+    case 'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
       // prettier-ignore
       return `${bold(fp(m.path))} maps to a path that ends with ${bold('/')} which is deprecated. Use ${bold(fp(m.args.expectPath))}: "${bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
+    case 'IMPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `Should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
-    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
+    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE':
+    case 'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `Should come before the "require" condition so it can take precedence when used by a bundler.`
     }
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
+    case 'IMPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `Should be the last in the object so it doesn't take precedence over the keys following it.`
     case 'EXPORTS_VALUE_INVALID':
+    case 'IMPORTS_VALUE_INVALID':
       // prettier-ignore
       return `${bold(pv(m.path))} is invalid as it does not start with "${bold('./')}". Use ${bold(m.args.suggestValue)} instead.`
     case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
@@ -187,6 +194,9 @@ function messageToString(m, pkg) {
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
       return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
+    case 'IMPORTS_FIELD_INVALID':
+      // prettier-ignore
+      return `${bold(fp(m.path))} is invalid as it does not start with "${bold('#')}". Use ${bold(m.args.suggestValue)} instead.`
     default:
       return
   }

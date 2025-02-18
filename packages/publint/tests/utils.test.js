@@ -14,6 +14,7 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments,
+  isBuiltinModule,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
 
@@ -231,4 +232,12 @@ test('getAdjacentDtsPath', () => {
   expect(getAdjacentDtsPath('foo.jsx')).toEqual('foo.d.ts')
   expect(getAdjacentDtsPath('foo.test.js')).toEqual('foo.test.d.ts')
   expect(getAdjacentDtsPath('path/foo.js')).toEqual('path/foo.d.ts')
+})
+
+test('isBuiltinModules', () => {
+  expect(isBuiltinModule('fs')).toEqual(true)
+  expect(isBuiltinModule('fs/promises')).toEqual(true)
+  expect(isBuiltinModule('node:fs')).toEqual(true)
+  expect(isBuiltinModule('node:fs/promises')).toEqual(true)
+  expect(isBuiltinModule('foobar')).toEqual(false)
 })

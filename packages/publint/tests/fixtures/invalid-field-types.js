@@ -8,5 +8,6 @@ export default {
     module: true,
     'jsnext:main': false,
     repository: 123,
+    imports: '123',
   }),
 }
