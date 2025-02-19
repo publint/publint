@@ -11,7 +11,7 @@
 <!-- Credits: https://loading.io/css/ -->
 
 <div
-  class="lds-dual-ring text-gray-900 @dark:text-gray-100"
+  class="lds-dual-ring text-gray-900 dark:text-gray-100"
   style:--size={size + 'px'}
   style:--border={Math.max(size * 0.075, 1) + 'px'}
 ></div>

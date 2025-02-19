@@ -1,7 +1,8 @@
 <script setup>
-import 'virtual:uno.css'
 import Footer from './components/Footer.vue'
-import appUrl from './app.js?url'
+import devAppUrl from './app.js?url'
+
+const appUrl = import.meta.env.PROD ? '__APP_URL__' : devAppUrl
 </script>
 
 <template>

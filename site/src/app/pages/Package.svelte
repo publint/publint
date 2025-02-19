@@ -200,7 +200,7 @@
 <main class="flex flex-col items-center min-h-screen p-4">
   <Header />
   {#if npmPkgName}
-    <h1 class="mt-10 mb-0 font-600">
+    <h1 class="text-8 mt-10 mb-0 font-600">
       {npmPkgName}
       {#if !error}
         <PackageVersion
@@ -211,10 +211,15 @@
       {/if}
     </h1>
 
-    <p class="flex flex-row justify-center items-end gap-4 mb-10">
+    <p class="flex flex-row justify-center items-end gap-4 mt-4 mb-10">
       {#if repo}
         <a class="inline-block rounded @light:filter-invert" href={repo.url}>
-          <img class="block" src={repo.logo} alt="repo logo" height="20" />
+          <img
+            class="block h-[20px]"
+            src={repo.logo}
+            alt="repo logo"
+            height="20"
+          />
         </a>
       {:else}
         <span class="w-5 h-5"></span>
@@ -222,12 +227,17 @@
 
       {#if !isPkgPrNew}
         <a class="inline-block rounded" href={npmUrl}>
-          <img class="block" src={npmLogo} alt="npm logo" height="18" />
+          <img
+            class="block h-[18px]"
+            src={npmLogo}
+            alt="npm logo"
+            height="18"
+          />
         </a>
 
         <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
           <img
-            class="block"
+            class="block h-[20px]"
             src={jsdelivrLogo}
             alt="jsdelivr logo"
             height="20"
@@ -239,7 +249,7 @@
           href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
         >
           <img
-            class="block"
+            class="block h-[18px]"
             src={pkgPrNewLogo}
             alt="pkg.pr.new logo"
             height="18"
@@ -272,10 +282,10 @@
         {/if}
       </section>
       <section
-        class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md"
+        class="w-full max-w-3xl my-4 bg-gray-200 dark:bg-gray-900 rounded-md"
       >
         <p
-          class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+          class="px-4 py-2 m-0 bg-gray-300 dark:bg-gray-800 font-mono text-sm font-bold"
         >
           package.json
         </p>

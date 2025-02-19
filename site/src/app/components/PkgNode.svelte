@@ -56,7 +56,7 @@
   {#if isValueObject}
     <!-- TODO: Truncate known unnecessary fields -->
     <span class="indentable">
-      <span class="text-blue-700 @dark:text-blue-300">{keyText}</span>
+      <span class="text-blue-700 dark:text-blue-300">{keyText}</span>
       {isValueArray ? '[' : '{'}
     </span>
     <ul class="m-0 p-0 list-none">
@@ -85,7 +85,7 @@
   {/if}
   {#if shownMessages.length}
     <div
-      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 @dark:bg-gray-700 pt-1 px-1 -z-1 -mx-4"
+      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 dark:bg-gray-700 pt-1 px-1 -z-1 -mx-4"
     ></div>
     <div class="-mx-4">
       {#each shownMessages as msg}
@@ -100,7 +100,7 @@
       {/each}
       {#if shownMessages.length < matchedMessages.length && !showAllMessages}
         <button
-          class="w-full px-4 py-2 text-xs bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 focus:outline-none border-0"
+          class="w-full px-4 py-2 text-xs bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 focus:outline-none border-0"
           onclick={() => (showAllMessages = true)}
         >
           Show {matchedMessages.length - shownMessages.length} more

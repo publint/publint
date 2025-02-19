@@ -80,12 +80,12 @@
 
   {#if !isPkgPrNew}
     <button
-      class="inline-flex justify-center items-center active:bg-white p-0 m-0 w-4 h-4 border-0 rounded bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 active:bg-gray-500 transition-colors"
+      class="inline-flex justify-center items-center active:bg-white p-0 m-0 w-4 h-4 border-0 rounded bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 active:bg-gray-500 transition-colors"
       onclick={handleClick}
     >
       {#if !versionsLoading}
         <img
-          class="block p-0 m-0 @dark:filter-invert"
+          class="block p-0 m-0 dark:filter-invert"
           src={selectIcon}
           alt="select icon"
           height="16"
@@ -102,7 +102,7 @@
       keyboard arrow keys to navigate, while the ARIA labels will fill in the gap.
     -->
     <ul
-      class="absolute right-0 rounded-md list-none m-0 p-0 max-h-[70vh] overflow-x-hidden overflow-y-auto border-0 border-t border-gray bg-gray-300 @dark:bg-gray-700"
+      class="absolute right-0 rounded-md list-none m-0 p-0 max-h-[70vh] overflow-x-hidden overflow-y-auto border-0 border-t border-gray bg-gray-300 dark:bg-gray-700"
       tabindex="-1"
       role="listbox"
     >

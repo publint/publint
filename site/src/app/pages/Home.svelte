@@ -15,6 +15,21 @@
       // best effort. simply log if fail
       console.log(e)
     })
+
+  const links = [
+    {
+      href: '#docs',
+      text: 'How it works',
+    },
+    {
+      href: '/rules.html',
+      text: 'Lint rules',
+    },
+    {
+      href: 'https://github.com/publint/publint',
+      text: 'GitHub',
+    },
+  ]
 </script>
 
 <svelte:head>
@@ -26,13 +41,15 @@
   <section class="main-section flex flex-col items-center w-full px-8 mb-10">
     <Logo />
     <NpmSearchInput autofocus />
-    <p class="my-8">
-      <a class="anchor-link" href="#docs">How it works</a>
-      <strong class="inline-block mx-1">·</strong>
-      <a class="anchor-link" href="/rules.html">Lint rules</a>
-      <strong class="inline-block mx-1">·</strong>
-      <a class="anchor-link" href="https://github.com/publint/publint">GitHub</a
-      >
+    <p class="vp-doc flex my-8">
+      {#each links as { href, text }, i}
+        <a class="not-hover:text-inherit! decoration-none!" {href}>
+          {text}
+        </a>
+        {#if i !== links.length - 1}
+          <strong class="mx-2">·</strong>
+        {/if}
+      {/each}
     </p>
   </section>
   {#if analysis}
