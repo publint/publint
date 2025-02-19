@@ -94,6 +94,9 @@ importers:
       publint:
         specifier: workspace:*
         version: link:../packages/publint
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.7.3)
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^5.0.3
@@ -113,9 +116,6 @@ importers:
       fs-fixture:
         specifier: ^2.7.0
         version: 2.7.0
-      sirv-cli:
-        specifier: ^3.0.1
-        version: 3.0.1
       svelte:
         specifier: ^5.19.7
         version: 5.19.7
@@ -956,10 +956,6 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  console-clear@1.1.1:
-    resolution: {integrity: sha512-pMD+MVR538ipqkG5JXeOEbKWS5um1H4LUUccUQG68qpeqBYbzYy79Gh55jkd2TtPdRfUaLWdv6LPP//5Zt0aPQ==}
-    engines: {node: '>=4'}
-
   copy-anything@3.0.5:
     resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
     engines: {node: '>=12.13'}
@@ -1110,10 +1106,6 @@ packages:
     resolution: {integrity: sha512-ro+DiMu5DXgRBabqXupW38h7WPZ9+Ad8UjwhvsmmN8w1sU7ab0nzAXvVZ4kqYg57OrqomRtJvepX5/xvFKNtjA==}
     engines: {node: '>=12.17'}
 
-  get-port@5.1.1:
-    resolution: {integrity: sha512-g/Q1aTSDOxFpchXC4i8ZWvxA1lnPqx/JHqcpIw0/LX9T8x/GBbi6YnlN5nhaKIFkT8oFsscUKgDJYxfwfS6QsQ==}
-    engines: {node: '>=8'}
-
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -1195,10 +1187,6 @@ packages:
 
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
-    engines: {node: '>=6'}
-
-  local-access@1.1.0:
-    resolution: {integrity: sha512-XfegD5pyTAfb+GY6chk283Ox5z8WexG56OvM06RWLpAc/UHozO8X6xAxEkIitZOtsSMM1Yr3DkHgW5W+onLhCw==}
     engines: {node: '>=6'}
 
   locate-character@3.0.0:
@@ -1431,10 +1419,6 @@ packages:
   search-insights@2.17.3:
     resolution: {integrity: sha512-RQPdCYTa8A68uM2jwxoY842xDhvx3E5LFL1LxvxCNMev4o5mLuokczhzjAgGwUZBAmOKZknArSxLKmXtIi2AxQ==}
 
-  semiver@1.1.0:
-    resolution: {integrity: sha512-QNI2ChmuioGC1/xjyYwyZYADILWyW6AmS1UH6gDj/SFUUUS4MBAWs/7mxnkRPc/F4iHezDP+O8t0dO8WHiEOdg==}
-    engines: {node: '>=6'}
-
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
@@ -1457,11 +1441,6 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
-
-  sirv-cli@3.0.1:
-    resolution: {integrity: sha512-ICXaF2u6IQhLZ0EXF6nqUF4YODfSQSt+mGykt4qqO5rY+oIiwdg7B8w2PVDBJlQulaS2a3J8666CUoDoAuCGvg==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   sirv@3.0.0:
     resolution: {integrity: sha512-BPwJGUeDaDCHihkORDchNyyTvWFhcusy1XMmhEVTQTwGeybFbp8YEmB+njbPnth1FibULBSBVwCQni25XlCUDg==}
@@ -1522,10 +1501,6 @@ packages:
 
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
-
-  tinydate@1.3.0:
-    resolution: {integrity: sha512-7cR8rLy2QhYHpsBDBVYnnWXm8uRTr38RoZakFSW7Bs7PzfMPNZthuMLkwqZv7MTu8lhQ91cOFYS5a7iFj2oR3w==}
-    engines: {node: '>=4'}
 
   tinyexec@0.3.2:
     resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
@@ -2683,8 +2658,6 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  console-clear@1.1.1: {}
-
   copy-anything@3.0.5:
     dependencies:
       is-what: 4.1.16
@@ -2836,8 +2809,6 @@ snapshots:
 
   get-npm-tarball-url@2.1.0: {}
 
-  get-port@5.1.1: {}
-
   glob-parent@5.1.2:
     dependencies:
       is-glob: 4.0.3
@@ -2923,8 +2894,6 @@ snapshots:
       graceful-fs: 4.2.11
 
   kleur@4.1.5: {}
-
-  local-access@1.1.0: {}
 
   locate-character@3.0.0: {}
 
@@ -3135,8 +3104,6 @@ snapshots:
 
   search-insights@2.17.3: {}
 
-  semiver@1.1.0: {}
-
   semver@7.7.1: {}
 
   shebang-command@2.0.0:
@@ -3159,17 +3126,6 @@ snapshots:
   siginfo@2.0.0: {}
 
   signal-exit@4.1.0: {}
-
-  sirv-cli@3.0.1:
-    dependencies:
-      console-clear: 1.1.1
-      get-port: 5.1.1
-      kleur: 4.1.5
-      local-access: 1.1.0
-      sade: 1.8.1
-      semiver: 1.1.0
-      sirv: 3.0.0
-      tinydate: 1.3.0
 
   sirv@3.0.0:
     dependencies:
@@ -3233,8 +3189,6 @@ snapshots:
   term-size@2.2.1: {}
 
   tinybench@2.9.0: {}
-
-  tinydate@1.3.0: {}
 
   tinyexec@0.3.2: {}
 

@@ -50,7 +50,7 @@ export default defineConfig({
   },
 
   vite: {
-    envDir: r('../env'),
+    envDir: r('../'),
     publicDir: r('../public'),
     optimizeDeps: {
       // Vite's scanner doesn't scan references via `new URL(...)`.
