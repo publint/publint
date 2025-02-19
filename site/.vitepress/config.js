@@ -4,10 +4,6 @@ import { defineConfig } from 'vitepress'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import unocss from '@unocss/vite'
 import { serveAnalysisJson } from '../scripts/vitePluginAnalysisJson.js'
-import {
-  publintAppInput,
-  updateBuildIndexHtml,
-} from '../scripts/vitePluginPublintAppInput.js'
 
 const r = (p) => fileURLToPath(new URL(p, import.meta.url))
 
@@ -61,17 +57,10 @@ export default defineConfig({
     esbuild: {
       legalComments: 'none',
     },
-    plugins: [
-      unocss({ inspector: false }),
-      svelte(),
-      serveAnalysisJson(),
-      publintAppInput(),
-    ],
+    plugins: [unocss({ inspector: false }), svelte(), serveAnalysisJson()],
   },
 
   async buildEnd() {
-    await updateBuildIndexHtml()
-
     // Delete the 404 page as we want the index.html to be an SPA
     await fs.rm(r('../dist/404.html'))
 

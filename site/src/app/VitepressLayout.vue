@@ -1,13 +1,13 @@
 <script setup>
+import { defineClientComponent } from 'vitepress'
 import Footer from './components/Footer.vue'
-import App from './App.vue'
+
+const App = defineClientComponent(() => import('./App.vue'))
 </script>
 
 <template>
   <main class="min-h-screen">
-    <ClientOnly>
-      <App />
-    </ClientOnly>
+    <App />
   </main>
   <Footer />
 </template>
