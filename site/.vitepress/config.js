@@ -43,6 +43,7 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/publint/publint' },
     ],
     sidebar: [],
+    nav: [{ text: 'Rules', link: '/rules' }],
   },
 
   vite: {
