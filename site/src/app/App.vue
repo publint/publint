@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vitepress'
-import { onMounted, useTemplateRef, onUnmounted } from 'vue'
+import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 import { mount, unmount } from 'svelte'
 import App from './App.svelte'
 import { url, updateHref } from './utils/url'
@@ -17,16 +17,19 @@ router.onAfterRouteChange = () => {
 url.push = router.go
 
 const div = useTemplateRef('publint-app')
+/** @type {any} */
+let app
 
 onMounted(() => {
   if (div.value) {
-    mount(App, { target: div.value })
+    app = mount(App, { target: div.value })
   }
 })
 
-onUnmounted(() => {
-  if (div.value) {
-    unmount(App)
+onBeforeUnmount(() => {
+  if (div.value && app) {
+    unmount(app)
+    app = undefined
   }
 })
 </script>

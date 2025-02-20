@@ -1,12 +1,13 @@
 <script setup>
 import { useData, useRouter } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import { computed } from 'vue'
 import AppLayout from '../../src/app/VitepressLayout.vue'
 import NotFound from './NotFound.vue'
 
 const { frontmatter, page } = useData()
 const router = useRouter()
-const isDocs = router.route.path.startsWith('/docs/')
+const isDocs = computed(() => router.route.path.startsWith('/docs/'))
 </script>
 
 <template>
