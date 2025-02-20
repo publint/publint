@@ -7,6 +7,10 @@
   --vp-c-brand-2: hsl(29, 70%, 46%);
   --vp-c-brand-3: hsl(29, 74%, 38%);
   --vp-c-brand-soft: hsla(29, 70%, 48%, 0.18);
+
+  /* like --vp-c-bg but with alpha for blur */
+  --vp-nav-bg-color: #efefef4d;
+  --vp-local-nav-bg-color: #efefef4d;
 }
 
 .dark {
@@ -17,4 +21,13 @@
   --vp-c-brand-2: hsl(29, 70%, 56%);
   --vp-c-brand-3: hsl(29, 74%, 48%);
   --vp-c-brand-soft: hsla(29, 70%, 68%, 0.2);
+
+  /* like --vp-c-bg but with alpha for blur */
+  --vp-nav-bg-color: #1b1b1f4d;
+  --vp-local-nav-bg-color: #1b1b1f4d;
+}
+
+.VPNavBar,
+.VPLocalNav {
+  backdrop-filter: saturate(180%) blur(20px);
 }

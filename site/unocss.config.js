@@ -10,6 +10,8 @@ export default defineConfig({
       include: [/\.(vue|svelte)($|\?)/, /src\/app\/utils\/colors\.js($|\?)/],
     },
   },
+  // Messed with VitePress class
+  blocklist: ['container'],
   theme: {
     colors: {
       primary: '#E69B57',
