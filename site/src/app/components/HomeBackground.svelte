@@ -9,7 +9,8 @@
     background-repeat: repeat;
     background-position: center 6px;
     pointer-events: none;
-    mask-image: radial-gradient(
+    mask-image:
+      radial-gradient(
         farthest-corner at 50% 100%,
         transparent 0%,
         transparent 60%,

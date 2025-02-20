@@ -70,7 +70,8 @@
     display: flex;
     justify-content: center;
     align-items: end;
-    background-image: url('../../assets/bookmark.svg'),
+    background-image:
+      url('../../assets/bookmark.svg'),
       linear-gradient(
         to bottom,
         #cf7522,
