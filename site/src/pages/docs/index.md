@@ -64,7 +64,7 @@ yarn publint
 
 If you'd like to lint a package in a different directory, you can pass the path as an argument, like `publint ./dir`. See the [CLI documentation](./cli.md) for more information.
 
-If you'd like to use `publint` programmatically, check out the [JavaScript API documentation](./javascript-api.,d).
+If you'd like to use `publint` programmatically, check out the [JavaScript API documentation](./javascript-api.md).
 
 ::: tip
 If the package has a build step, it must be run first before running `publint` so that it can lint against the files to be published.

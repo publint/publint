@@ -56,7 +56,7 @@ export default defineConfig({
     ],
     nav: [
       { text: 'Docs', link: '/docs/', activeMatch: '/docs/' },
-      { text: 'Rules', link: '/rules' },
+      { text: 'Lint rules', link: '/rules' },
       {
         text: `v${version}`,
         items: [
