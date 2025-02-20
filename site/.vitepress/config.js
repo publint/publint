@@ -53,6 +53,7 @@ export default defineConfig({
       { text: 'CLI', link: '/docs/cli' },
       { text: 'JavaScript API', link: '/docs/javascript-api' },
       { text: 'Comparisons', link: '/docs/comparisons' },
+      { text: 'Further reading', link: '/docs/further-reading' },
     ],
     nav: [
       { text: 'Docs', link: '/docs/', activeMatch: '/docs/' },

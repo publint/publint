@@ -70,7 +70,7 @@ If you'd like to use `publint` programmatically, check out the [JavaScript API d
 If the package has a build step, it must be run first before running `publint` so that it can lint against the files to be published.
 :::
 
-## Community integrations
+## Community integration
 
 publint can also be used through different tools below:
 

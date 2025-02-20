@@ -1,5 +1,6 @@
 <template>
   <footer
+    id="app-footer"
     class="vp-doc bg-gray-300 text-dark dark:bg-gray-800 dark:text-white py-8"
   >
     <div
@@ -39,9 +40,9 @@
   </footer>
 </template>
 
-<style scoped>
+<style>
 /* Remove top border added by VitePress */
-.vp-doc h2 {
+#app-footer h2 {
   border-top: none;
 }
 </style>

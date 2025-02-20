@@ -25,7 +25,7 @@ const options = [
 ]
 
 const optionsHtml = `\
-<table class="options-table">
+<table>
   <thead>
     <tr>
       <th>Flag</th>
@@ -79,10 +79,10 @@ publint --pack npm
 ```
 
 <style>
-.options-table p {
+._docs_cli table p {
   margin: 0
 }
-.options-table tbody > tr > td:first-child {
+._docs_cli table tbody > tr > td:first-child {
   white-space: nowrap;
 }
 </style>
