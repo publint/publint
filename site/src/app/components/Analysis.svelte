@@ -52,13 +52,13 @@
   function numberToClass(num) {
     switch (num) {
       case 0:
-        return 'border-green-200 bg-green-100 @dark:border-green-700 @dark:bg-green-900 hover:bg-green-200 focus:bg-green-200 @dark:hover:bg-green-800 @dark:focus:bg-green-800'
+        return 'border-green-200 bg-green-100 dark:border-green-700 dark:bg-green-900 hover:bg-green-200 focus:bg-green-200 dark:hover:bg-green-800 dark:focus:bg-green-800'
       case 1:
-        return 'border-blue-200 bg-blue-100 @dark:border-blue-700 @dark:bg-blue-900 hover:bg-blue-200 focus:bg-blue-200 @dark:hover:bg-blue-800 @dark:focus:bg-blue-800'
+        return 'border-blue-200 bg-blue-100 dark:border-blue-700 dark:bg-blue-900 hover:bg-blue-200 focus:bg-blue-200 dark:hover:bg-blue-800 dark:focus:bg-blue-800'
       case 2:
-        return 'border-yellow-200 bg-yellow-100 @dark:border-yellow-700 @dark:bg-yellow-900 hover:bg-yellow-200 focus:bg-yellow-200 @dark:hover:bg-yellow-800 @dark:focus:bg-yellow-800'
+        return 'border-yellow-200 bg-yellow-100 dark:border-yellow-700 dark:bg-yellow-900 hover:bg-yellow-200 focus:bg-yellow-200 dark:hover:bg-yellow-800 dark:focus:bg-yellow-800'
       case 3:
-        return 'border-red-200 bg-red-100 @dark:border-red-700 @dark:bg-red-900 hover:bg-red-200 focus:bg-red-200 @dark:hover:bg-red-800 @dark:focus:bg-red-800'
+        return 'border-red-200 bg-red-100 dark:border-red-700 dark:bg-red-900 hover:bg-red-200 focus:bg-red-200 dark:hover:bg-red-800 dark:focus:bg-red-800'
     }
   }
 
@@ -74,7 +74,7 @@
 </script>
 
 <div class="relative w-full mt-16">
-  <h2 class="text-center font-medium text-xl">Popular packages</h2>
+  <h2 class="text-center font-medium text-xl mb-4">Popular packages</h2>
 
   <div
     class="flex justify-center items-center flex-wrap gap-4 max-w-300 mx-auto transition-height {open
@@ -101,7 +101,7 @@
   <!-- fade shadow -->
   {#if !open}
     <div
-      class="absolute bottom-0 w-full h-32 bg-gradient-to-b from-transparent to-gray-300 @dark:to-gray-800 pointer-events-none"
+      class="absolute bottom-0 w-full h-32 bg-gradient-to-b from-transparent to-gray-300 dark:to-gray-800 pointer-events-none"
     ></div>
     <div
       class="blur-mask absolute bottom-0 w-full h-28 backdrop-blur pointer-events-none"
@@ -110,7 +110,7 @@
       class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none"
     >
       <button
-        class="action-button pointer-events-initial"
+        class="VPButton medium alt pointer-events-initial"
         onclick={() => (open = true)}
       >
         View all {Object.keys(results).length} packages
@@ -131,5 +131,34 @@
   .blur-mask {
     -webkit-mask: linear-gradient(transparent, black 60%);
     mask: linear-gradient(transparent, black 60%);
+  }
+
+  /* Copied from VitePress */
+  .VPButton {
+    display: inline-block;
+    border: 1px solid transparent;
+    text-align: center;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+      color 0.25s,
+      border-color 0.25s,
+      background-color 0.25s;
+  }
+  .VPButton.medium {
+    border-radius: 20px;
+    padding: 0 20px;
+    line-height: 38px;
+    font-size: 14px;
+  }
+  .VPButton.alt {
+    border-color: var(--vp-button-alt-border);
+    color: var(--vp-button-alt-text);
+    background-color: var(--vp-button-alt-bg);
+  }
+  .VPButton.alt:hover {
+    border-color: var(--vp-button-alt-hover-border);
+    color: var(--vp-button-alt-hover-text);
+    background-color: var(--vp-button-alt-hover-bg);
   }
 </style>

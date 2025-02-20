@@ -1,0 +1,20 @@
+/* Vars docs: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+:root {
+  --vp-c-bg: #efefef;
+  --vp-c-bg-elv: #efefef;
+
+  --vp-c-brand-1: hsl(29, 72%, 38%);
+  --vp-c-brand-2: hsl(29, 70%, 46%);
+  --vp-c-brand-3: hsl(29, 74%, 38%);
+  --vp-c-brand-soft: hsla(29, 70%, 48%, 0.18);
+}
+
+.dark {
+  --vp-c-bg: #1b1b1f;
+  --vp-c-bg-elv: #202127;
+
+  --vp-c-brand-1: hsl(29, 70%, 68%);
+  --vp-c-brand-2: hsl(29, 70%, 56%);
+  --vp-c-brand-3: hsl(29, 74%, 48%);
+  --vp-c-brand-soft: hsla(29, 70%, 68%, 0.22);
+}

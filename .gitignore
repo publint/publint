@@ -1,6 +1,5 @@
 node_modules
 .DS_Store
 site/public/temp
-site/.astro
 *.tgz
 dist

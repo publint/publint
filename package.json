@@ -4,13 +4,13 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --check",
-    "format": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --write",
+    "lint": "prettier \"**/*.{js,ts,css,md,vue,svelte,html}\" --check",
+    "format": "prettier \"**/*.{js,ts,css,md,vue,svelte,html}\" --write",
     "lint-publint": "pnpm --filter \"./packages/*\" --no-bail run lint-publint",
     "typecheck": "pnpm --parallel --no-bail run typecheck",
     "test": "pnpm --filter \"./packages/*\" run test"
   },
-  "packageManager": "pnpm@10.2.0",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=18"
   },
