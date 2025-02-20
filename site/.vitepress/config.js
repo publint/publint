@@ -3,13 +3,16 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import unocss from '@unocss/vite'
+import corePackageJson from '../../packages/publint/package.json' with { type: 'json' }
 import { serveAnalysisJson } from '../scripts/vitePluginAnalysisJson.js'
+import { publintApi } from '../scripts/vitePluginPublintApi.js'
 
 const r = (p) => fileURLToPath(new URL(p, import.meta.url))
 
 const ogTitle = 'publint'
 const ogDescription =
   'Lint npm packages to ensure the widest compatibility across environments'
+const version = corePackageJson.version
 
 export default defineConfig({
   srcDir: r('../src/pages'),
@@ -34,6 +37,9 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/favicon.png',
+    search: {
+      provider: 'local',
+    },
     editLink: {
       pattern:
         'https://github.com/publint/publint/edit/master/site/src/pages/:path',
@@ -42,8 +48,41 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/publint/publint' },
     ],
-    sidebar: [],
-    nav: [{ text: 'Rules', link: '/rules' }],
+    sidebar: [
+      { text: 'Getting started', link: '/docs/' },
+      { text: 'CLI', link: '/docs/cli' },
+      { text: 'JavaScript API', link: '/docs/javascript-api' },
+      { text: 'Comparisons', link: '/docs/comparisons' },
+      { text: 'Further reading', link: '/docs/further-reading' },
+    ],
+    nav: [
+      { text: 'Docs', link: '/docs/', activeMatch: '/docs/' },
+      { text: 'Lint rules', link: '/rules' },
+      {
+        text: `v${version}`,
+        items: [
+          {
+            items: [
+              {
+                text: `v${version}`,
+                link: `https://github.com/publint/publint/releases/tag/v${version}`,
+              },
+              {
+                text: 'Releases notes',
+                link: 'https://github.com/publint/publint',
+              },
+              {
+                text: 'Contributing',
+                link: 'https://github.com/publint/publint/blob/master/CONTRIBUTING.md',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    outline: {
+      level: [2, 3],
+    },
   },
 
   vite: {
@@ -58,7 +97,12 @@ export default defineConfig({
     esbuild: {
       legalComments: 'none',
     },
-    plugins: [unocss({ inspector: false }), svelte(), serveAnalysisJson()],
+    plugins: [
+      unocss({ inspector: false }),
+      svelte(),
+      serveAnalysisJson(),
+      publintApi(),
+    ],
   },
 
   async buildEnd() {

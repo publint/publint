@@ -1,3 +1,7 @@
+---
+sidebar: false
+---
+
 # Rules
 
 Below is an unordered list of rules used by `publint` for linting.

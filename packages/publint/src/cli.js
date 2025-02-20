@@ -60,7 +60,10 @@ cli
   })
 
 cli
-  .command('deps [dir]', 'Lint dependencies declared in package.json')
+  .command(
+    'deps [dir]',
+    'Lint dependencies declared in package.json (deprecated)',
+  )
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
   .action(async (dir, opts) => {

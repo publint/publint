@@ -18,11 +18,11 @@
 
   const links = [
     {
-      href: '#docs',
-      text: 'How it works',
+      href: '/docs/',
+      text: 'Docs',
     },
     {
-      href: '/rules.html',
+      href: '/rules',
       text: 'Lint rules',
     },
     {
