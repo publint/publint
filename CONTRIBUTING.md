@@ -2,7 +2,7 @@
 
 ## Setup
 
-The project requires [`pnpm 9`](https://pnpm.io) and [`Node.js 18`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
+The project requires [`pnpm 10`](https://pnpm.io) and [`Node.js 18`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
 
 There are 3 parts to this repo:
 

@@ -131,11 +131,12 @@ export interface Options {
   /**
    * Path to your package that contains a package.json file.
    *
-   * **Environment notes:**
+   * ::: info Environment notes
    * - **Node.js**: Defaults to `process.cwd()`.
    * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer | ReadableStream }`. If `{ files: PackFile[] }` is used,
    *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
    *                the `pkgDir` should be `"package"`.
+   * :::
    */
   pkgDir?: string
   /**
@@ -157,12 +158,13 @@ export interface Options {
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
-   * **Environment notes:**
+   * ::: info Environment notes
    * - **Node.js**: Defaults to `'auto'`. All options above are supported. When using a package manager
    *                to pack, lifecycle scripts like `prepack` and `postpack` are ignored
    *                (except for yarn as it does not allow ignoring lifecycle scripts).
    * - **Browser**: Only `{ tarball }` and `{ files }` are supported and either **must be passed** to work,
    *                as the browser does not have access to the file system.
+   * :::
    */
   pack?:
     | 'auto'
