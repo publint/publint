@@ -132,10 +132,7 @@
     } else if (isPkgPrNew) {
       error = 'pkg.pr.new links require a version explicitly set in the url'
     } else {
-      fetch(
-        // prettier-ignore
-        `${VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`,
-      )
+      fetch(`${VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`)
         .then(async (res) => {
           const result = await res.json()
           if (typeof result === 'string') {

@@ -33,6 +33,9 @@
 
   let open = $state(false)
 
+  /**
+   * @param {string} version
+   */
   function getTagForVersion(version) {
     return Object.entries(tags).find(([, v]) => v === version)?.[0]
   }
@@ -44,15 +47,11 @@
     versionsLoading = true
 
     // fetch package versions from jsdelivr as it returns a smaller payload
-    fetch(
-      // prettier-ignore
-      `${VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`,
-      {
-        headers: {
-          Accept: 'application/json',
-        },
+    fetch(`${VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`, {
+      headers: {
+        Accept: 'application/json',
       },
-    )
+    })
       .then((data) => data.ok && data.json())
       .then((data) => {
         versions = data.versions.map((v) => v.version)

@@ -468,7 +468,6 @@ export function isDtsFile(filePath) {
  */
 export function resolveExports(exportsValue, conditions, currentPath = []) {
   if (typeof exportsValue === 'string') {
-    // prettier-ignore
     return { value: exportsValue, path: currentPath }
   } else if (Array.isArray(exportsValue)) {
     return resolveExports(exportsValue[0], conditions, currentPath.concat('0'))

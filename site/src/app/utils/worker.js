@@ -9,8 +9,10 @@ self.addEventListener('message', async (e) => {
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
-    // prettier-ignore
-    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
+    tarballUrl = new URL(
+      `/temp/${npmPkgName}-${npmPkgVersion}.tgz`,
+      self.location.href,
+    ).href
   } else if (isPkgPrNew) {
     tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
   } else {

@@ -90,7 +90,6 @@
 
     const search = npmPkgName
     const result = await fetch(
-      // prettier-ignore
       `${VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`,
     )
 
