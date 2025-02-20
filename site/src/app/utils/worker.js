@@ -5,7 +5,7 @@ import { isLocalPkg } from './common'
 import { VITE_NPM_REGISTRY } from './constants'
 
 self.addEventListener('message', async (e) => {
-  const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
+  const { npmPkgName, npmPkgVersion, isPkgPrNew, pkgPrNewScope } = e.data
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
@@ -14,7 +14,8 @@ self.addEventListener('message', async (e) => {
       self.location.href,
     ).href
   } else if (isPkgPrNew) {
-    tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
+    const scope = pkgPrNewScope ? `${pkgPrNewScope}/` : ''
+    tarballUrl = `https://pkg.pr.new/${scope}${npmPkgName}@${npmPkgVersion}`
   } else {
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
       registry: VITE_NPM_REGISTRY,

@@ -98,6 +98,7 @@
   }
 
   let isPkgPrNew = $state(false)
+  let pkgPrNewScope = $state('') // 'org/repo' if have
 
   $effect(() => {
     // $url.pathname possible values:
@@ -106,12 +107,35 @@
     // /@foo/bar@1.0.0
     // /pkg.pr.new/foo@1.0.0
     // /pkg.pr.new/@foo/bar@1.0.0
+    // /pkg.pr.new/org/repo/foo@1.0.0
+    // /pkg.pr.new/org/repo/@foo/bar@1.0.0
     const pathname = $url.pathname
 
     isPkgPrNew = pathname.startsWith('/pkg.pr.new/')
 
     // e.g. `foo@1.0.0` or `@foo/bar@1.0.0`
-    const packageSpecifier = pathname.slice(isPkgPrNew ? 12 : 1)
+    let packageSpecifier
+    if (isPkgPrNew) {
+      const parts = pathname.slice(12).split('/')
+      // handle `org/repo/@foo/bar@1.0.0` and `@foo/bar@1.0.0`
+      if (parts[parts.length - 2]?.startsWith('@')) {
+        packageSpecifier = parts.slice(-2).join('/')
+        pkgPrNewScope = parts.slice(0, -2).join('/')
+      }
+      // handle `org/repo/foo@1.0.0`
+      else if (parts.length >= 3) {
+        packageSpecifier = parts[parts.length - 1]
+        pkgPrNewScope = parts.slice(0, -1).join('/')
+      }
+      // handle `foo@1.0.0`
+      else {
+        packageSpecifier = parts[parts.length - 1]
+        pkgPrNewScope = ''
+      }
+    } else {
+      packageSpecifier = pathname.slice(1)
+      pkgPrNewScope = ''
+    }
     const parts = packageSpecifier.split('@')
     if (parts[0] === '') {
       parts.shift()
@@ -158,6 +182,7 @@
         npmPkgName,
         npmPkgVersion,
         isPkgPrNew,
+        pkgPrNewScope,
       })
     }
   })
@@ -242,9 +267,10 @@
           />
         </a>
       {:else}
+        {@const scope = pkgPrNewScope ? `${pkgPrNewScope}/` : ''}
         <a
           class="inline-block rounded"
-          href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
+          href={`https://pkg.pr.new/${scope}${npmPkgName}@${npmPkgVersion}`}
         >
           <img
             class="block h-[18px]"
