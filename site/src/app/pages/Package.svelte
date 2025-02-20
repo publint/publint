@@ -14,6 +14,7 @@
   import PkgNode from '../components/PkgNode.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
+  import { VITE_NPM_REGISTRY } from '../utils/constants'
 
   let npmPkgName = $state()
   let npmPkgVersion = $state()
@@ -133,7 +134,7 @@
     } else {
       fetch(
         // prettier-ignore
-        `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`,
+        `${VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`,
       )
         .then(async (res) => {
           const result = await res.json()

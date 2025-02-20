@@ -2,6 +2,7 @@ import { publint } from 'publint'
 import { unpack } from '@publint/pack'
 import getNpmTarballUrl from 'get-npm-tarball-url'
 import { isLocalPkg } from './common'
+import { VITE_NPM_REGISTRY } from './constants'
 
 self.addEventListener('message', async (e) => {
   const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
@@ -13,9 +14,8 @@ self.addEventListener('message', async (e) => {
   } else if (isPkgPrNew) {
     tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
   } else {
-    // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
-      registry: import.meta.env.VITE_NPM_REGISTRY
+      registry: VITE_NPM_REGISTRY,
     })
   }
 

@@ -1,5 +1,6 @@
 <script>
   import { debounce } from '../utils/common'
+  import { VITE_NPM_REGISTRY } from '../utils/constants'
   import { isNpmUrl, isPkgPrNewUrl } from '../utils/registry'
   import { url } from '../utils/url'
 
@@ -90,7 +91,7 @@
     const search = npmPkgName
     const result = await fetch(
       // prettier-ignore
-      `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`,
+      `${VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`,
     )
 
     // `npmPkgName` may have changed when the user types more stuff

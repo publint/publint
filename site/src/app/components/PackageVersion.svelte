@@ -3,6 +3,7 @@
   import Loading from './Loading.svelte'
   import { clickOutside } from '../utils/click-outside'
   import { url } from '../utils/url'
+  import { VITE_JSDELIVR_API } from '../utils/constants'
 
   /**
    * @typedef {Object} Props
@@ -45,7 +46,7 @@
     // fetch package versions from jsdelivr as it returns a smaller payload
     fetch(
       // prettier-ignore
-      `${import.meta.env.VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`,
+      `${VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`,
       {
         headers: {
           Accept: 'application/json',
