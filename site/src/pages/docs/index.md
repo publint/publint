@@ -12,7 +12,7 @@ Check out the [comparisons](./comparisons.md) page to see how publint differs fr
 
 The easiest way to use publint is through [publint.dev](https://publint.dev) (this website!). Search for an npm package, paste an npm link, or paste a pkg.pr.new link to start linting the package.
 
-You can also run publint locally with `npx publint`, which is a CLI that performs the same checks as on the website. See the [CLI page](./cli.md) for more information.
+You can also run publint locally with `npx publint`, which performs the checks as a CLI. See the [CLI page](./cli.md) for more information.
 
 ::: code-group
 
@@ -32,7 +32,7 @@ yarn dlx publint
 
 ## Local installation
 
-You can also install `publint` locally if you prefer to run it in CI or before publishing your package. First, install `publint` with your package manager:
+You can install `publint` locally if you prefer to integrate it in your publish or CI workflow. First, install `publint` with your package manager:
 
 ::: code-group
 
@@ -65,15 +65,15 @@ You can then call the script with your package manager:
 ::: code-group
 
 ```bash [npm]
-npm run publint
+npm run lint:package
 ```
 
 ```bash [pnpm]
-pnpm publint
+pnpm lint:package
 ```
 
 ```bash [yarn]
-yarn publint
+yarn lint:package
 ```
 
 :::
