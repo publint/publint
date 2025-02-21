@@ -1,5 +1,5 @@
 <script>
-  import { onDestroy } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import githubLogo from '../../assets/github.svg?url'
   import gitlabLogo from '../../assets/gitlab.svg?url'
   import gitLogo from '../../assets/git.svg?url'
@@ -28,6 +28,11 @@
   let result = $state()
   let error = $state('')
   let status = $state('')
+
+  onMount(() => {
+    // Always scroll to the top when first navigating to this page
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  })
 
   onDestroy(() => {
     if (worker) {
