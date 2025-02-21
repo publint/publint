@@ -12,7 +12,23 @@ Check out the [comparisons](./comparisons.md) page to see how publint differs fr
 
 The easiest way to use publint is through [publint.dev](https://publint.dev) (this website!). Search for an npm package, paste an npm link, or paste a pkg.pr.new link to start linting the package.
 
-You can also run publint locally with `npx publint`, which is a CLI that performs the same checks as on the website. See the [CLI documentation](./cli.md) for more information.
+You can also run publint locally with `npx publint`, which is a CLI that performs the same checks as on the website. See the [CLI page](./cli.md) for more information.
+
+::: code-group
+
+```bash [npm]
+npx publint
+```
+
+```bash [pnpm]
+pnpm dlx publint
+```
+
+```bash [yarn]
+yarn dlx publint
+```
+
+:::
 
 ## Local installation
 
@@ -62,9 +78,9 @@ yarn publint
 
 :::
 
-If you'd like to lint a package in a different directory, you can pass the path as an argument, like `publint ./dir`. See the [CLI documentation](./cli.md) for more information.
+If you'd like to lint a package in a different directory, you can pass the path as an argument, like `publint ./dir`. See the [CLI page](./cli.md) for more information.
 
-If you'd like to use `publint` programmatically, check out the [JavaScript API documentation](./javascript-api.md).
+If you'd like to use `publint` programmatically, check out the [JavaScript API page](./javascript-api.md).
 
 ::: tip
 If the package has a build step, it must be run first before running `publint` so that it can lint against the files to be published.

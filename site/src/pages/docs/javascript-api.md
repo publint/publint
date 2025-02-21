@@ -14,11 +14,11 @@ const { messages } = await publint({
 })
 ```
 
-`messages` is an array of message object that describes the the code, severity, and location of the issue. To format it as a string, you can use the `formatMessages` utility:
+`messages` is an array of message object that describes the the code, severity, and location of the issue. To format it as a string, you can use the `formatMessage` utility:
 
 ```js {2,8-15}
 import { publint } from 'publint'
-import { formatMessages } from 'publint/utils'
+import { formatMessage } from 'publint/utils'
 
 const { messages } = await publint({
   // options...

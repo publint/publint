@@ -26,8 +26,8 @@
         <h2 class="mt-4! pt-0!">How it works</h2>
         <p>
           Given an npm package, the site downloads the tarball and runs
-          <code> publint </code> against it in a web worker. For larger
-          packages, it may take a while to download and lint.
+          <code>publint</code> against it in a web worker. For larger packages,
+          it may take a while to download and lint.
         </p>
         <p>
           You can also directly paste
