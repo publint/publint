@@ -19,12 +19,7 @@ export function createTarballVfs(files) {
         (file) => file.name === path || file.name.startsWith(pathDirVariant),
       )
     },
-    pathJoin: (...parts) =>
-      parts
-        .map((v) => (v.startsWith('./') ? v.slice(2) : v))
-        .join('/')
-        .replace('///', '/')
-        .replace('//', '/'), // TODO: optimize this please
+    pathJoin: (...parts) => parts.join('/').replace(/\/(\.?\/){1,}/g, '/'),
     pathRelative: (from, to) => to.replace(from, '').slice(1),
     readDir: async (path) => {
       path = path.endsWith('/') ? path : path + '/'
