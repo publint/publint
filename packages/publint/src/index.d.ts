@@ -131,9 +131,6 @@ export type Message =
   | BaseMessage<'IMPORTS_FIELD_INVALID', { suggestValue: string }>
   | BaseMessage<'IMPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'IMPORTS_GLOB_NO_MATCHED_FILES'>
-  | BaseMessage<'IMPORTS_MODULE_SHOULD_BE_ESM'>
-  | BaseMessage<'IMPORTS_TYPES_SHOULD_BE_FIRST'>
-  | BaseMessage<'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'>
   | BaseMessage<'IMPORTS_DEFAULT_SHOULD_BE_LAST'>
 
 export interface PackFile {
