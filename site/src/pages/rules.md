@@ -325,6 +325,22 @@ For example, the bin file should look like this:
 console.log('CLI is running')
 ```
 
+## `IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING` {#imports_glob_no_deprecated_subpath_mapping}
+
+The `"imports"` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
+
 ## `IMPORTS_FIELD_INVALID` {#imports_field_invalid}
 
 Entries in the `"imports"` field should always start with a `#`.
+
+## `IMPORTS_VALUE_INVALID` {#imports_value_invalid}
+
+If the `"imports"` field value does not map to an external dependency, it should always start with a `./`. It does not support omitted relative paths like `"subpath/index.js"`.
+
+## `IMPORTS_GLOB_NO_MATCHED_FILES` {#imports_glob_no_matched_files}
+
+If the `"imports"` field contains glob paths, but it doesn't match any files, report this issue.
+
+## `IMPORTS_DEFAULT_SHOULD_BE_LAST` {#imports_default_should_be_last}
+
+Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"imports"` field is order-based.
