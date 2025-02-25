@@ -666,7 +666,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   ) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
-        // if value starts with `.` and we're crawling imports, assume
+        // if value doesn't starts with `.` and we're crawling imports, assume
         // that the value is an external dependency or built-in modules
         if (isImports && !exportsValue.startsWith('.')) {
           return
