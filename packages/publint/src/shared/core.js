@@ -29,8 +29,6 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isDeprecatedGitHubGitUrl,
   startsWithShebang,
-  isExternalDependency,
-  isBuiltinModule,
 } from './utils.js'
 
 /**
@@ -668,12 +666,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   ) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
-        // skip if external dependency or Node.js built-in module
-        if (
-          isImports &&
-          (isExternalDependency(rootPkg, exportsValue) ||
-            isBuiltinModule(exportsValue))
-        ) {
+        // if value starts with `.` and we're crawling imports, assume
+        // that the value is an external dependency or built-in modules
+        if (isImports && !exportsValue.startsWith('.')) {
           return
         }
 
