@@ -24,9 +24,12 @@ testFixture('glob', [])
 testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
   'EXPORTS_GLOB_NO_MATCHED_FILES',
+  'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+  'IMPORTS_GLOB_NO_MATCHED_FILES',
 ])
 
 testFixture('invalid-field-types', [
+  'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
@@ -196,6 +199,10 @@ testFixture('invalid-repository-value-object-deprecated', [
 testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
 
 testFixture('bin-file-not-lintable', [])
+
+testFixture('imports-external-package', [])
+
+testFixture('imports-field-invalid', ['IMPORTS_FIELD_INVALID'])
 
 /**
  * @typedef {{
