@@ -1087,6 +1087,18 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               }
 
               if (dtsActualFormat !== dtsExpectFormat) {
+                // convert ['exports', 'types'] -> ['exports', '<format>', 'types']
+                // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<format>']
+                const expectPath = typesResult.path.slice()
+                // Sometimes the path already includes the condition, but it's still in an invalid format
+                if (!expectPath.includes(format)) {
+                  const typesIndex = expectPath.findIndex((p) => p === 'types')
+                  if (typesIndex === expectPath.length - 1) {
+                    expectPath.splice(typesIndex, 0, format)
+                  } else {
+                    expectPath.push(format)
+                  }
+                }
                 messages.push({
                   code: 'EXPORTS_TYPES_INVALID_FORMAT',
                   args: {
@@ -1095,6 +1107,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                     expectFormat: dtsExpectFormat,
                     actualExtension: vfs.getExtName(typesResult.value),
                     expectExtension: getDtsCodeFormatExtension(dtsExpectFormat),
+                    expectPath,
                   },
                   path: typesResult.path,
                   type: 'warning',

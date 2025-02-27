@@ -115,16 +115,6 @@ function messageToString(m, pkg) {
       }
     }
     case 'EXPORTS_TYPES_INVALID_FORMAT': {
-      // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
-      // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
-      const expectPath = m.path.slice()
-      const typesIndex = m.path.findIndex((p) => p === 'types')
-      if (typesIndex === m.path.length - 1) {
-        expectPath.splice(typesIndex, 0, m.args.condition)
-      } else {
-        expectPath.push(m.args.condition)
-      }
-
       let additionalMessage = ''
       // ambiguous default export
       if (m.args.expectFormat === 'ESM' && m.args.actualFormat === 'CJS') {
@@ -134,12 +124,11 @@ function messageToString(m, pkg) {
       else if (m.args.expectFormat === 'CJS' && m.args.actualFormat === 'ESM') {
         additionalMessage = `This causes the types to only work when dynamically importing the package, even though the package exports CJS. `
       }
-
       // prettier-ignore
       return `The types is interpreted as ${m.args.actualFormat} when resolving with the "${bold(m.args.condition)}" condition. `
         + additionalMessage
         + `Consider splitting out two ${bold('"types"')} conditions for ${bold('"import"')} and ${bold('"require"')}, and use the ${warn(m.args.expectExtension)} extension, `
-        + `e.g. ${bold(fp(expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
+        + `e.g. ${bold(fp(m.args.expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
     }
     case 'FIELD_INVALID_VALUE_TYPE': {
       let expectStr = m.args.expectTypes[0]

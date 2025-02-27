@@ -88,6 +88,7 @@ export type Message =
         expectFormat: string
         actualExtension: string
         expectExtension: string
+        expectPath: string[]
       }
     >
   | BaseMessage<
