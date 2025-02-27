@@ -92,7 +92,7 @@
         <div
           class="
             {messageTypeToColor(msg.type)}
-            message message-type-{msg.type} border-solid border-4 px-4 py-2 scroll-mt-8
+            message message-type-{msg.type} font-medium border-solid border-4 px-4 py-2 scroll-mt-8
           "
         >
           {@html formatMessage(msg, pkg)}
@@ -139,6 +139,9 @@
 
   .message ~ .message {
     border-top: 0;
+  }
+  .message :global(strong) {
+    font-weight: 700;
   }
 
   @media (prefers-color-scheme: dark) {

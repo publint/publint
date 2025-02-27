@@ -18,7 +18,7 @@
 
 <button
   class="
-    inline text-base leading-tight border-none px-2 py-1 rounded-lg
+    inline text-base font-medium leading-tight border-none px-2 py-1 rounded-lg
     {messageTypeToColor(type)}
   "
   onclick={handleClick}
