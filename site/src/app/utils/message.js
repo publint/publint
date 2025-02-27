@@ -59,9 +59,11 @@ function messageToString(m, pkg) {
       // prettier-ignore
       return `Should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
+    case 'IMPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
       return `Does not match any files.`
     case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
+    case 'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
       // prettier-ignore
       return `${bold(fp(m.path))} maps to a path that ends with ${bold('/')} which is deprecated. Use ${bold(fp(m.args.expectPath))}: "${bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
@@ -72,9 +74,11 @@ function messageToString(m, pkg) {
       return `Should come before the "require" condition so it can take precedence when used by a bundler.`
     }
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
+    case 'IMPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `Should be the last in the object so it doesn't take precedence over the keys following it.`
     case 'EXPORTS_VALUE_INVALID':
+    case 'IMPORTS_VALUE_INVALID':
       // prettier-ignore
       return `${bold(pv(m.path))} is invalid as it does not start with "${bold('./')}". Use ${bold(m.args.suggestValue)} instead.`
     case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
@@ -187,6 +191,9 @@ function messageToString(m, pkg) {
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
       return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
+    case 'IMPORTS_KEY_INVALID':
+      // prettier-ignore
+      return `The imports key is invalid as it does not start with "${bold('#')}". Use ${bold(m.args.suggestKey)} instead.`
     default:
       return
   }

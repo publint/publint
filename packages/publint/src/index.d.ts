@@ -121,6 +121,17 @@ export type Message =
     >
   | BaseMessage<'LOCAL_DEPENDENCY'>
   | BaseMessage<'BIN_FILE_NOT_EXECUTABLE'>
+  | BaseMessage<
+      'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+      {
+        expectPath: string[]
+        expectValue: string
+      }
+    >
+  | BaseMessage<'IMPORTS_KEY_INVALID', { suggestKey: string }>
+  | BaseMessage<'IMPORTS_VALUE_INVALID', { suggestValue: string }>
+  | BaseMessage<'IMPORTS_GLOB_NO_MATCHED_FILES'>
+  | BaseMessage<'IMPORTS_DEFAULT_SHOULD_BE_LAST'>
 
 export interface PackFile {
   name: string

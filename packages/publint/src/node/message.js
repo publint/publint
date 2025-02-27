@@ -76,9 +76,11 @@ export function formatMessage(m, pkg, opts = {}) {
       // prettier-ignore
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
+    case 'IMPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files.`
     case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
+    case 'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
       // prettier-ignore
       return `${c.bold(fp(m.path))} maps to a path that ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
@@ -89,12 +91,14 @@ export function formatMessage(m, pkg, opts = {}) {
       return `${c.bold(fp(m.path))} should come before the "require" condition so it can take precedence when used by a bundler.`
     }
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
+    case 'IMPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be the last in the object so it doesn't take precedence over the keys following it.`
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_VALUE_INVALID':
+    case 'IMPORTS_VALUE_INVALID':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
     case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
@@ -207,6 +211,9 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file is not executable. It should start with shebang, e.g. ${c.bold('#!/usr/bin/env node')}.`
+    case 'IMPORTS_KEY_INVALID':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is invalid as the imports key does not start with "${c.bold('#')}". Use ${c.bold(m.args.suggestKey)} instead.`
     default:
       return
   }

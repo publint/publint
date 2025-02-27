@@ -371,7 +371,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   if (exports) {
     // recursively check exports
-    crawlExports(exports, exportsPkgPath)
+    crawlExportsOrImports(exports, exportsPkgPath)
     // make sure types are exported for moduleResolution bundler
     doCheckTypesExported()
   } else {
@@ -449,6 +449,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [bin, binPkgPath] = getPublishedField(rootPkg, 'bin')
   if (bin) {
     crawlBin(bin, binPkgPath)
+  }
+
+  // recursively check imports
+  const [imports, importsPkgPath] = getPublishedField(rootPkg, 'imports')
+  if (imports && ensureTypeOfField(imports, ['object'], importsPkgPath)) {
+    crawlExportsOrImports(imports, importsPkgPath, true)
   }
 
   await promiseQueue.wait()
@@ -649,15 +655,23 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   /**
    * @param {any} exportsValue
    * @param {string[]} currentPath
+   * @param {boolean} isImports
    * @param {boolean} isAfterNodeCondition
    */
-  function crawlExports(
+  function crawlExportsOrImports(
     exportsValue,
     currentPath,
+    isImports = false,
     isAfterNodeCondition = false,
   ) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
+        // if value doesn't start with `.` and we're crawling imports, assume
+        // that the value is an external dependency or built-in modules
+        if (isImports && !exportsValue.startsWith('.')) {
+          return
+        }
+
         // warn deprecated subpath mapping
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
         if (exportsValue.endsWith('/')) {
@@ -666,7 +680,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           })
           const expectPathAlreadyExist = !!getPkgPathValue(rootPkg, expectPath)
           messages.push({
-            code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+            code: isImports
+              ? 'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING'
+              : 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
             args: {
               expectPath,
               expectValue: exportsValue + '*',
@@ -680,10 +696,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           exportsValue += '*'
         }
 
-        // error incorrect exports value
+        // error incorrect exports/imports value
         if (!exportsValue.startsWith('./')) {
           messages.push({
-            code: 'EXPORTS_VALUE_INVALID',
+            code: isImports ? 'IMPORTS_VALUE_INVALID' : 'EXPORTS_VALUE_INVALID',
             args: {
               suggestValue: './' + exportsValue.replace(/^[\/]+/, ''),
             },
@@ -702,7 +718,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         if (isGlob && !exportsFiles.length) {
           messages.push({
-            code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
+            code: isImports
+              ? 'IMPORTS_GLOB_NO_MATCHED_FILES'
+              : 'EXPORTS_GLOB_NO_MATCHED_FILES',
             args: {},
             path: currentPath,
             type: 'warning',
@@ -713,7 +731,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // if the exports value matches a key in `pkg.browser` (meaning it'll be remapped
         // if in a browser-ish environment), check if this is a browser-ish environment/condition.
         // if so, warn about this conflict as it's often unexpected behaviour.
-        if (typeof browser === 'object' && exportsValue in browser) {
+        if (
+          !isImports &&
+          typeof browser === 'object' &&
+          exportsValue in browser
+        ) {
           const browserishCondition = knownBrowserishConditions.find((c) =>
             currentPath.includes(c),
           )
@@ -757,7 +779,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (fileContent === false) return
             if (!isFileContentLintable(fileContent)) return
             // the `module` condition is only used by bundlers and must be ESM
-            if (currentPath.includes('module')) {
+            if (!isImports && currentPath.includes('module')) {
               const actualFormat = getCodeFormat(fileContent)
               if (actualFormat === 'CJS') {
                 messages.push({
@@ -829,8 +851,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     else if (exportsValue) {
       const exportsKeys = Object.keys(exportsValue)
 
-      // the types export should be the first condition
-      if ('types' in exportsValue && exportsKeys[0] !== 'types') {
+      // types should be the first condition
+      if (!isImports && 'types' in exportsValue && exportsKeys[0] !== 'types') {
         // check preceding conditions before the `types` condition, if there are nested
         // conditions, check if they also have the `types` condition. If they do, there's
         // a good chance those take precedence over this non-first `types` condition, which
@@ -871,6 +893,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // if there is a 'require' and a 'module' condition at the same level,
       // then 'module' should always precede 'require'
       if (
+        !isImports &&
         'module' in exportsValue &&
         'require' in exportsValue &&
         exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
@@ -883,27 +906,46 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         })
       }
 
-      // the default export should be the last condition
+      // the default export/import should be the last condition
       if (
         'default' in exportsValue &&
         exportsKeys[exportsKeys.length - 1] !== 'default'
       ) {
         messages.push({
-          code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
+          code: isImports
+            ? 'IMPORTS_DEFAULT_SHOULD_BE_LAST'
+            : 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
           path: currentPath.concat('default'),
           type: 'error',
         })
       }
 
-      // keep special state of whether the next `crawlExports` iterations are after a node condition.
+      // Only check that imports start with `#` for the first set of keys
+      const isCurrentPathImports =
+        isImports && currentPath[currentPath.length - 1] === 'imports'
+
+      // keep special state of whether the next `crawlExportsOrImports` iterations are after a node condition.
       // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
       // which are fine with any format.
       let isKeyAfterNodeCondition = isAfterNodeCondition
       for (const key of exportsKeys) {
-        crawlExports(
+        // Check that import starts with `#`
+        if (isCurrentPathImports && !key.startsWith('#')) {
+          messages.push({
+            code: 'IMPORTS_KEY_INVALID',
+            args: {
+              suggestKey: '#' + key.replace(/^[\/]+/, ''),
+            },
+            path: currentPath.concat(key),
+            type: 'error',
+          })
+        }
+
+        crawlExportsOrImports(
           exportsValue[key],
           currentPath.concat(key),
+          isImports,
           isKeyAfterNodeCondition,
         )
         if (key === 'node') {

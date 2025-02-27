@@ -336,7 +336,7 @@ export function isRelativePath(filePath) {
 }
 
 /**
- * Whether the `filePath` looks like an absoluate path
+ * Whether the `filePath` looks like an absolute path
  * @param {string} filePath
  */
 export function isAbsolutePath(filePath) {

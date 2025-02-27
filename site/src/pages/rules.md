@@ -101,6 +101,8 @@ If you're not supporting Node.js 12.6 and below, you can also remove the `"main"
 
 If the `"exports"` field contains glob paths, but it doesn't match any files, report this issue.
 
+(Works similarly to [IMPORTS_GLOB_NO_MATCHED_FILES](#imports_glob_no_matched_files)).
+
 ## `EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING` {#exports_glob_no_deprecated_subpath_mapping}
 
 The `"exports"` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
@@ -168,6 +170,8 @@ Ensure `"default"` condition to be the last according to the [Node.js docs](http
 
 The example [above](#exports_types_should_be_first) also applies here as to why it should be last.
 
+(Works similarly to [IMPORTS_DEFAULT_SHOULD_BE_LAST](#imports_default_should_be_last)).
+
 ## `EXPORTS_MODULE_SHOULD_BE_ESM` {#exports_module_should_be_esm}
 
 The `"module"` condition should be ESM only. This condition is used to prevent the [dual package hazard](https://nodejs.org/api/packages.html#dual-package-hazard) in bundlers so `import` and `require` will both resolve to this condition, deduplicating the dual instances. The [esbuild docs](https://esbuild.github.io/api/#how-conditions-work) has a more in-depth explanation.
@@ -175,6 +179,8 @@ The `"module"` condition should be ESM only. This condition is used to prevent t
 ## `EXPORTS_VALUE_INVALID` {#exports_value_invalid}
 
 The `"exports"` field value should always start with a `./`. It does not support omitted relative paths like `"subpath/index.js"`.
+
+(Works similarly to [IMPORTS_VALUE_INVALID](#imports_value_invalid)).
 
 ## `EXPORTS_MISSING_ROOT_ENTRYPOINT` {#exports_missing_root_entrypoint}
 
@@ -324,3 +330,29 @@ For example, the bin file should look like this:
 
 console.log('CLI is running')
 ```
+
+## `IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING` {#imports_glob_no_deprecated_subpath_mapping}
+
+The `"imports"` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
+
+## `IMPORTS_KEY_INVALID` {#imports_key_invalid}
+
+The keys of the `"imports"` field object should always start with a `#`.
+
+## `IMPORTS_VALUE_INVALID` {#imports_value_invalid}
+
+If the `"imports"` field value does not map to an external dependency, it should always start with a `./`. It does not support omitted relative paths like `"subpath/index.js"`.
+
+(Works similarly to [EXPORTS_VALUE_INVALID](#exports_value_invalid)).
+
+## `IMPORTS_GLOB_NO_MATCHED_FILES` {#imports_glob_no_matched_files}
+
+If the `"imports"` field contains glob paths, but it doesn't match any files, report this issue.
+
+(Works similarly to [EXPORTS_GLOB_NO_MATCHED_FILES](#exports_glob_no_matched_files)).
+
+## `IMPORTS_DEFAULT_SHOULD_BE_LAST` {#imports_default_should_be_last}
+
+Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"imports"` field is order-based.
+
+(Works similarly to [EXPORTS_DEFAULT_SHOULD_BE_LAST](#exports_default_should_be_last)).
