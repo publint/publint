@@ -23,6 +23,7 @@
     "test": "vitest run",
     "test-dev": "vitest",
     "lint-publint": "node ./src/cli.js",
+    "lint-fixture": "node ./scripts/lintFixture.js",
     "typecheck": "tsc"
   },
   "engines": {
@@ -52,7 +53,9 @@
     "sade": "^1.8.1"
   },
   "devDependencies": {
+    "@types/prompts": "^2.4.9",
     "fs-fixture": "^2.7.1",
+    "prompts": "^2.4.2",
     "vitest": "^3.0.6"
   }
 }
