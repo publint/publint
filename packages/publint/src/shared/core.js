@@ -923,7 +923,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
       // Only check that imports start with `#` for the first set of keys
       const isCurrentPathImports =
-        isImports && currentPath.length === 1 && currentPath[0] === 'imports'
+        isImports && currentPath[currentPath.length - 1] === 'imports'
 
       // keep special state of whether the next `crawlExportsOrImports` iterations are after a node condition.
       // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
