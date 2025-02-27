@@ -355,17 +355,17 @@ If the `"imports"` field contains glob paths, but it doesn't match any files, re
 
 (Works similarly to [EXPORTS_GLOB_NO_MATCHED_FILES](#exports_glob_no_matched_files)).
 
-## `IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE` {#imports_module_should_precede_require}
-
-Ensure the `"module"` condition comes before the `"require"` condition. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before a `"require"` condition, so it has the opportunity to take precedence.
-
-(Works similarly to [EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE](#exports_module_should_precede_require)).
-
 ## `IMPORTS_DEFAULT_SHOULD_BE_LAST` {#imports_default_should_be_last}
 
 Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"imports"` field is order-based.
 
 (Works similarly to [EXPORTS_DEFAULT_SHOULD_BE_LAST](#exports_default_should_be_last)).
+
+## `IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE` {#imports_module_should_precede_require}
+
+Ensure the `"module"` condition comes before the `"require"` condition. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before a `"require"` condition, so it has the opportunity to take precedence.
+
+(Works similarly to [EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE](#exports_module_should_precede_require)).
 
 ## `IMPORTS_MODULE_SHOULD_BE_ESM` {#imports_module_should_be_esm}
 
