@@ -211,9 +211,9 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file is not executable. It should start with shebang, e.g. ${c.bold('#!/usr/bin/env node')}.`
-    case 'IMPORTS_FIELD_INVALID':
+    case 'IMPORTS_KEY_INVALID':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('#')}". Use ${c.bold(m.args.suggestValue)} instead.`
+      return `${c.bold(fp(m.path))} is invalid as the imports key does not start with "${c.bold('#')}". Use ${c.bold(m.args.suggestKey)} instead.`
     default:
       return
   }

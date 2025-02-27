@@ -191,9 +191,9 @@ function messageToString(m, pkg) {
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
       return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
-    case 'IMPORTS_FIELD_INVALID':
+    case 'IMPORTS_KEY_INVALID':
       // prettier-ignore
-      return `${bold(fp(m.path))} is invalid as it does not start with "${bold('#')}". Use ${bold(m.args.suggestValue)} instead.`
+      return `The imports key is invalid as it does not start with "${bold('#')}". Use ${bold(m.args.suggestKey)} instead.`
     default:
       return
   }

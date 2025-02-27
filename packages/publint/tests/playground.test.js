@@ -202,7 +202,7 @@ testFixture('bin-file-not-lintable', [])
 
 testFixture('imports-external-package', [])
 
-testFixture('imports-field-invalid', ['IMPORTS_FIELD_INVALID'])
+testFixture('imports-field-invalid', ['IMPORTS_KEY_INVALID'])
 
 /**
  * @typedef {{

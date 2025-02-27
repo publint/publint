@@ -128,7 +128,7 @@ export type Message =
         expectValue: string
       }
     >
-  | BaseMessage<'IMPORTS_FIELD_INVALID', { suggestValue: string }>
+  | BaseMessage<'IMPORTS_KEY_INVALID', { suggestKey: string }>
   | BaseMessage<'IMPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'IMPORTS_GLOB_NO_MATCHED_FILES'>
   | BaseMessage<'IMPORTS_DEFAULT_SHOULD_BE_LAST'>

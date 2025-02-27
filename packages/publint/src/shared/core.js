@@ -933,9 +933,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // Check that import starts with `#`
         if (isCurrentPathImports && !key.startsWith('#')) {
           messages.push({
-            code: 'IMPORTS_FIELD_INVALID',
+            code: 'IMPORTS_KEY_INVALID',
             args: {
-              suggestValue: '#' + key.replace(/^[\/]+/, ''),
+              suggestKey: '#' + key.replace(/^[\/]+/, ''),
             },
             path: currentPath.concat(key),
             type: 'error',
