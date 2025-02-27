@@ -26,6 +26,15 @@
    * The index of the showed choices when selecting via up/down arrows
    */
   let arrowSelectIndex = $state(-1)
+  /**
+   * If the input is submitted, this is set to true to abort any search results.
+   * This will be reset to false whenever an input is typed.
+   *
+   * NOTE: This also workarounds a strange behaviour where after you submit,
+   * and the it fill out the search options, it'll still show the options popup,
+   * even though the focus should already not be on the input. Strange.
+   */
+  let shouldAbortSearch = $state(false)
 
   let hintText = $derived(
     arrowSelectIndex < 0 &&
@@ -36,6 +45,9 @@
       : '',
   )
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
       npmPkgName = options[0].value
@@ -47,6 +59,9 @@
     }
   }
 
+  /**
+   * @param {KeyboardEvent} e
+   */
   function handleKeyUp(e) {
     if (e.key === 'Enter') {
       if (options[arrowSelectIndex]) {
@@ -93,10 +108,11 @@
       `${VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`,
     )
 
-    // `npmPkgName` may have changed when the user types more stuff
-    if (result.ok && search === npmPkgName) {
+    // `npmPkgName` may have changed when the user types more stuff.
+    // `shouldAbortSearch` is true if already submitted.
+    if (result.ok && search === npmPkgName && !shouldAbortSearch) {
       const json = await result.json()
-      options = json.objects.map((v) => ({
+      options = json.objects.map((/** @type {any} */ v) => ({
         value: v.package.name,
         description: v.package.description,
         version: v.package.version,
@@ -108,6 +124,7 @@
     // clear selection and reset option so we don't auto select while typing
     arrowSelectIndex = -1
     options = []
+    shouldAbortSearch = false
     search()
   }
 
