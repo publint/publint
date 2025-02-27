@@ -48,19 +48,20 @@ export function stripComments(code) {
 
 // Reference: https://git-scm.com/docs/git-clone#_git_urls and https://github.com/npm/hosted-git-info
 const GIT_URL_RE =
-  /^(git\+https?|git\+ssh|https?|ssh|git):\/\/(?:[\w._-]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[\w._/-]+)\/?$/
+  /^(?:(git\+https?|git\+ssh|https?|ssh|git):\/\/)?(?:[\w._-]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[\w._/-]+)\/?$/
 /**
  * @param {string} url
  */
 export function isGitUrl(url) {
-  return GIT_URL_RE.test(url)
+  // the second condition ensures that at least a protocol or a username is provided
+  return GIT_URL_RE.test(url) && (url.includes('://') || url.includes('@'))
 }
 /**
  * @param {string} url
  */
 export function isShorthandGitHubOrGitLabUrl(url) {
   const tokens = url.match(GIT_URL_RE)
-  if (tokens) {
+  if (tokens && (url.includes('://') || url.includes('@'))) {
     const host = tokens[2]
     const path = tokens[4]
 

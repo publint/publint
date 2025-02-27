@@ -191,18 +191,8 @@ export function formatMessage(m, pkg, opts = {}) {
           // prettier-ignore
           return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
         case 'shorthand-git-sites': {
-          let fullUrl = pv(m.path)
-          if (fullUrl[fullUrl.length - 1] === '/') {
-            fullUrl = fullUrl.slice(0, -1)
-          }
-          if (!fullUrl.startsWith('git+')) {
-            fullUrl = 'git+' + fullUrl
-          }
-          if (!fullUrl.endsWith('.git')) {
-            fullUrl += '.git'
-          }
           // prettier-ignore
-          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but could be a full git URL like "${c.bold(fullUrl)}".`
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but could be a full git URL like "${c.bold(m.args.suggestValue)}".`
         }
       }
     case 'LOCAL_DEPENDENCY':

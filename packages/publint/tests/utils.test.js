@@ -128,9 +128,7 @@ test('isGitUrl', () => {
   expect(isGitUrl('ssh://git@host.xz:user/project.git')).toEqual(true)
   expect(isGitUrl('git+ssh://git@host.xz/user/project.git')).toEqual(true)
   expect(isGitUrl('git+ssh://git@host.xz:user/project.git')).toEqual(true)
-  // NOTE: this technically works, but it's quite an edge case and technically not a URL,
-  // so maybe better to skip this and encourage proper URL format instead
-  // assert.equal(isGitUrl('git@github.com:react-component/tooltip.git'), true)
+  expect(isGitUrl('git@github.com:user/project.git')).toEqual(true)
 
   expect(isGitUrl('file://host.xz/path/to/repo')).toEqual(false)
   expect(isGitUrl('/User/foo/bar')).toEqual(false)
@@ -150,9 +148,11 @@ test('isShorthandGitHubOrGitLabUrl', () => {
   expect(f('https://github.com/user/project')).toEqual(true)
   expect(f('git+https://github.com/user/project')).toEqual(true)
   expect(f('https://github.com/user/project.git')).toEqual(true)
+  expect(f('git@github.com:user/project.git')).toEqual(true)
   expect(f('https://gitlab.com/user/project')).toEqual(true)
   expect(f('git+https://gitlab.com/user/project')).toEqual(true)
   expect(f('https://gitlab.com/user/project.git')).toEqual(true)
+  expect(f('git@gitlab.com:user/project.git')).toEqual(true)
 
   expect(f('https://bitbucket.com/user/project')).toEqual(false)
   expect(f('https://example.com')).toEqual(false)

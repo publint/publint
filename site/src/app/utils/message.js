@@ -171,18 +171,8 @@ function messageToString(m, pkg) {
           // prettier-ignore
           return `The field value uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
         case 'shorthand-git-sites': {
-          let fullUrl = pv(m.path)
-          if (fullUrl[fullUrl.length - 1] === '/') {
-            fullUrl = fullUrl.slice(0, -1)
-          }
-          if (!fullUrl.startsWith('git+')) {
-            fullUrl = 'git+' + fullUrl
-          }
-          if (!fullUrl.endsWith('.git')) {
-            fullUrl += '.git'
-          }
           // prettier-ignore
-          return `The field value could be a full git URL like "${bold(fullUrl)}".`
+          return `The field value could be a full git URL like "${bold(m.args.suggestValue)}".`
         }
       }
     case 'LOCAL_DEPENDENCY':

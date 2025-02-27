@@ -111,13 +111,16 @@ export type Message =
   | BaseMessage<'DEPRECATED_FIELD_JSNEXT'>
   | BaseMessage<
       'INVALID_REPOSITORY_VALUE',
-      {
-        type:
-          | 'invalid-string-shorthand'
-          | 'invalid-git-url'
-          | 'deprecated-github-git-protocol'
-          | 'shorthand-git-sites'
-      }
+      | {
+          type:
+            | 'invalid-string-shorthand'
+            | 'invalid-git-url'
+            | 'deprecated-github-git-protocol'
+        }
+      | {
+          type: 'shorthand-git-sites'
+          suggestValue: string
+        }
     >
   | BaseMessage<'LOCAL_DEPENDENCY'>
   | BaseMessage<'BIN_FILE_NOT_EXECUTABLE'>

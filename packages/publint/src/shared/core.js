@@ -554,9 +554,23 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           type: 'suggestion',
         })
       } else if (isShorthandGitHubOrGitLabUrl(repository.url)) {
+        let fullUrl = repository.url
+        // handle git@github.com:user/repo -> git+ssh://git@github.com/user/repo
+        if (!fullUrl.includes('://')) {
+          fullUrl = 'git+ssh://' + fullUrl.replace(':', '/')
+        }
+        if (fullUrl[fullUrl.length - 1] === '/') {
+          fullUrl = fullUrl.slice(0, -1)
+        }
+        if (!fullUrl.startsWith('git+')) {
+          fullUrl = 'git+' + fullUrl
+        }
+        if (!fullUrl.endsWith('.git')) {
+          fullUrl += '.git'
+        }
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
-          args: { type: 'shorthand-git-sites' },
+          args: { type: 'shorthand-git-sites', suggestValue: fullUrl },
           path: ['repository', 'url'],
           type: 'suggestion',
         })
