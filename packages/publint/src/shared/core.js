@@ -793,11 +793,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (fileContent === false) return
             if (!isFileContentLintable(fileContent)) return
             // the `module` condition is only used by bundlers and must be ESM
-            if (!isImports && currentPath.includes('module')) {
+            if (currentPath.includes('module')) {
               const actualFormat = getCodeFormat(fileContent)
               if (actualFormat === 'CJS') {
                 messages.push({
-                  code: 'EXPORTS_MODULE_SHOULD_BE_ESM',
+                  code: isImports
+                    ? 'IMPORTS_MODULE_SHOULD_BE_ESM'
+                    : 'EXPORTS_MODULE_SHOULD_BE_ESM',
                   args: {},
                   path: currentPath,
                   type: 'error',
@@ -907,13 +909,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // if there is a 'require' and a 'module' condition at the same level,
       // then 'module' should always precede 'require'
       if (
-        !isImports &&
         'module' in exportsValue &&
         'require' in exportsValue &&
         exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
       ) {
         messages.push({
-          code: 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE',
+          code: isImports
+            ? 'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'
+            : 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE',
           args: {},
           path: currentPath.concat('module'),
           type: 'error',

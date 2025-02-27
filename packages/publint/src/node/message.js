@@ -86,7 +86,8 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
-    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
+    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE':
+    case 'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `${c.bold(fp(m.path))} should come before the "require" condition so it can take precedence when used by a bundler.`
     }
@@ -95,6 +96,7 @@ export function formatMessage(m, pkg, opts = {}) {
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be the last in the object so it doesn't take precedence over the keys following it.`
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
+    case 'IMPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_VALUE_INVALID':
