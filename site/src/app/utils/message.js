@@ -56,6 +56,7 @@ function messageToString(m, pkg) {
       return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As Node.js doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
+    case 'IMPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `Should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
@@ -69,7 +70,8 @@ function messageToString(m, pkg) {
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `Should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
-    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
+    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE':
+    case 'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `Should come before the "require" condition so it can take precedence when used by a bundler.`
     }

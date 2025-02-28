@@ -111,6 +111,8 @@ The `"exports"` field should not have globs defined with trailing slashes. It is
 
 Ensure the `"module"` condition comes before the `"require"` condition. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before a `"require"` condition, so it has the opportunity to take precedence.
 
+(Works similarly to [IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE](#imports_module_should_precede_require)).
+
 ## `EXPORTS_TYPES_SHOULD_BE_FIRST` {#exports_types_should_be_first}
 
 Ensure `"types"` condition to be the first. As `"exports"` conditions are order-sensitive, in order for TypeScript to be able to resolve the types first, the `"types"` condition should be the first condition before any other JS exports. See the [TypeScript docs](https://www.typescriptlang.org/docs/handbook/modules/reference.html#packagejson-exports) for more information.
@@ -175,6 +177,8 @@ The example [above](#exports_types_should_be_first) also applies here as to why 
 ## `EXPORTS_MODULE_SHOULD_BE_ESM` {#exports_module_should_be_esm}
 
 The `"module"` condition should be ESM only. This condition is used to prevent the [dual package hazard](https://nodejs.org/api/packages.html#dual-package-hazard) in bundlers so `import` and `require` will both resolve to this condition, deduplicating the dual instances. The [esbuild docs](https://esbuild.github.io/api/#how-conditions-work) has a more in-depth explanation.
+
+(Works similarly to [IMPORTS_MODULE_SHOULD_BE_ESM](#imports_module_should_be_esm)).
 
 ## `EXPORTS_VALUE_INVALID` {#exports_value_invalid}
 
@@ -356,3 +360,15 @@ If the `"imports"` field contains glob paths, but it doesn't match any files, re
 Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"imports"` field is order-based.
 
 (Works similarly to [EXPORTS_DEFAULT_SHOULD_BE_LAST](#exports_default_should_be_last)).
+
+## `IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE` {#imports_module_should_precede_require}
+
+Ensure the `"module"` condition comes before the `"require"` condition. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before a `"require"` condition, so it has the opportunity to take precedence.
+
+(Works similarly to [EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE](#exports_module_should_precede_require)).
+
+## `IMPORTS_MODULE_SHOULD_BE_ESM` {#imports_module_should_be_esm}
+
+The `"module"` condition should be ESM only. This condition is used to prevent the [dual package hazard](https://nodejs.org/api/packages.html#dual-package-hazard) in bundlers so `import` and `require` will both resolve to this condition, deduplicating the dual instances. The [esbuild docs](https://esbuild.github.io/api/#how-conditions-work) has a more in-depth explanation.
+
+(Works similarly to [EXPORTS_MODULE_SHOULD_BE_ESM](#exports_module_should_be_esm)).
