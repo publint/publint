@@ -1,5 +1,22 @@
 # publint
 
+## 0.3.7
+
+### Patch Changes
+
+- The `"imports"` field is now linted with the following rules: ([#162](https://github.com/publint/publint/pull/162))
+
+  - `IMPORTS_KEY_INVALID`: Ensure the imports key starts with a `#`
+  - `IMPORTS_VALUE_INVALID`: Ensure the imports value is a valid path that starts with a `./`
+  - `IMPORTS_GLOB_NO_MATCHED_FILES`: Ensure the imports glob matches at least one file
+  - `IMPORTS_DEFAULT_SHOULD_BE_LAST`: Ensure the `"default"` condition is last in an entrypoint's object
+  - `IMPORTS_MODULE_SHOULD_BE_ESM`: Ensure the `"module"` condition file is ESM
+  - `IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE`: Ensure the `"module"` condition precedes the `"require"` condition in an entrypoint's object
+
+- Improve SSH git URL detection when checking the `"repository"` field. Values like `"git@github.com:user/project.git"` is now detected as a valid git URL, but will be suggested to use a full git URL instead, like `"git+ssh://git@github.com/user/project.git"` ([`28da844`](https://github.com/publint/publint/commit/28da844027e549f0b90ccb95c96e2578b433c6f3))
+
+- Fix exports types message when the `"require"` or `"import"` condition already exists but the dts file format is still invalid ([`a731ec3`](https://github.com/publint/publint/commit/a731ec3a39f9e62e32e6ed54e9eb87f55b6326aa))
+
 ## 0.3.6
 
 ### Patch Changes
