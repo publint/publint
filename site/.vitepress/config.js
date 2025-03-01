@@ -69,8 +69,8 @@ export default defineConfig({
                 link: `https://github.com/publint/publint/releases/tag/v${version}`,
               },
               {
-                text: 'Releases notes',
-                link: 'https://github.com/publint/publint',
+                text: 'Release notes',
+                link: 'https://github.com/publint/publint/releases',
               },
               {
                 text: 'Contributing',

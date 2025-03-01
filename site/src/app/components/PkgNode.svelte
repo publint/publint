@@ -15,7 +15,7 @@
    * @property {any} [value]
    * @property {boolean} [comma]
    * @property {number} [indent]
-   * @property {any} messages
+   * @property {import('publint').Message[]} messages
    * @property {any} pkg
    */
 
@@ -144,7 +144,7 @@
     font-weight: 700;
   }
 
-  @media (prefers-color-scheme: dark) {
+  :global(.dark) {
     .key {
       color: #9cdcfe;
     }

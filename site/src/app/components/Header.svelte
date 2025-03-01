@@ -121,7 +121,7 @@
     height: 6rem;
   }
 
-  @media (prefers-color-scheme: dark) {
+  :global(.dark) {
     .bookmark-nav::before {
       /* bg-gray-300 */
       background-image: linear-gradient(
