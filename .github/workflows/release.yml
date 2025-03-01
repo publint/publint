@@ -26,6 +26,11 @@ jobs:
         with:
           fetch-depth: 0 # fetch all history for changelog generation
 
+      - name: Setup git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
@@ -44,6 +49,7 @@ jobs:
           commit: Release packages
           title: Release packages
           publish: pnpm changeset publish
+          setupGitUser: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
