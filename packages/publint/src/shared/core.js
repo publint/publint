@@ -67,7 +67,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
   const rootPkgContent = await readFile(rootPkgPath, [])
-  if (rootPkgContent === false) return { messages }
+  if (rootPkgContent === false) {
+    throw new Error(
+      `[publint] Unable to find package.json at ${pkgDir}. If the \`pack: { files }\` option is used, ` +
+        `make sure the \`pkgDir\` is set to the root directory of the files.`,
+    )
+  }
   const rootPkg = JSON.parse(rootPkgContent)
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
@@ -468,12 +473,18 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   if (level === 'warning') {
-    return { messages: messages.filter((m) => m.type !== 'suggestion') }
+    return {
+      messages: messages.filter((m) => m.type !== 'suggestion'),
+      pkg: rootPkg,
+    }
   } else if (level === 'error') {
-    return { messages: messages.filter((m) => m.type === 'error') }
+    return {
+      messages: messages.filter((m) => m.type === 'error'),
+      pkg: rootPkg,
+    }
   }
 
-  return { messages }
+  return { messages, pkg: rootPkg }
 
   /**
    * @param {string} path file path to read

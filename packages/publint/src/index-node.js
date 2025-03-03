@@ -1,5 +1,4 @@
 import path from 'node:path'
-import { detect } from 'package-manager-detector/detect'
 import { packAsList, unpack } from '@publint/pack'
 import { createNodeVfs } from './node/vfs-node.js'
 import { core } from './shared/core.js'
@@ -23,6 +22,9 @@ export async function publint(options) {
   // file system, e.g. for cases where they have the tarball file in hand or prefers
   if (typeof pack === 'object') {
     if ('tarball' in pack) {
+      if (log) {
+        console.log('Unpacking tarball...')
+      }
       const result = await unpack(pack.tarball)
       vfs = createTarballVfs(result.files)
       overridePkgDir = result.rootDir
@@ -67,6 +69,7 @@ async function detectAndPack(pkgDir, pack, log) {
   let packageManager = pack
 
   if (packageManager === 'auto') {
+    const { detect } = await import('package-manager-detector/detect')
     let detected = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
     // Deno is not supported in `@publint/pack` (doesn't have a pack command)
     if (detected === 'deno') {
