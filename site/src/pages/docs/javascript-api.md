@@ -20,13 +20,9 @@ const { messages } = await publint({
 import { publint } from 'publint'
 import { formatMessage } from 'publint/utils'
 
-const { messages } = await publint({
+const { messages, pkg } = await publint({
   // options...
 })
-
-const pkg = JSON.parse(
-  await fs.readFile('./path/to/package/package.json', 'utf8'),
-)
 
 for (const message of messages) {
   // NOTE: only works in Node.js

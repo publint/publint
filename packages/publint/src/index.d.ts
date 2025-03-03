@@ -170,8 +170,8 @@ export interface Options {
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
-   * - `{ tarball }`: Packs the package from the specified tarball represented as an`ArrayBuffer` or `ReadableStream`.
-   * - `{ files }`: Packs the package using the specified files.
+   * - `{ tarball }`: The packed tarball represented as an `ArrayBuffer` or a `ReadableStream`.
+   * - `{ files }`: The manually-unpacked files from a tarball.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
@@ -200,6 +200,11 @@ export interface Options {
 
 export interface Result {
   messages: Message[]
+  /**
+   * The package.json of the linted package. This is exposed so
+   * it can be easily passed to `formatMessage`.
+   */
+  pkg: Record<string, any>
 }
 
 export declare function publint(options?: Options): Promise<Result>

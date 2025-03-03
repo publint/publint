@@ -26,25 +26,49 @@ const cli = sade('publint', false)
   .option('--strict', `Report warnings as errors`, false)
 
 cli
-  .command('run [dir]', 'Lint a directory (defaults to current directory)', {
+  .command('run [path]', 'Lint a directory (defaults to current directory)', {
     default: true,
   })
-  .action(async (dir, opts) => {
+  .action(async (runPath, opts) => {
     opts = normalizeOpts(opts)
 
-    const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const packageJson = await getPackageJson(pkgDir).catch(() => {
-      console.log(c.red(`Unable to read package.json at ${pkgDir}`))
-      process.exitCode = 1
-    })
-    if (packageJson == null) return
-    const { pkgName, pkgJson } = packageJson
+    // If a path is passed, see if it's a path to a file (likely the tarball file)
+    let isTarballFilePassed = false
+    if (runPath) {
+      const stat = await fs.stat(runPath).catch(() => {})
+      isTarballFilePassed = !!stat?.isFile()
+    }
+
+    /** @type {string | undefined} */
+    let pkgDir
+    /** @type {string} */
+    let pkgName
+    // CLI-specific feature allowing a tarball path to be loaded directly
+    if (isTarballFilePassed) {
+      try {
+        opts.pack = { tarball: (await fs.readFile(runPath)).buffer }
+      } catch (err) {
+        console.log(c.red(`Unable to unpack the tarball at ${runPath}: `) + err)
+        process.exit(1)
+      }
+      pkgName = runPath
+      // `pkgDir` is unset so that core will infer the correct dir when unpacking itself
+    }
+    // Lint from the filesystem
+    else {
+      pkgDir = runPath ? path.resolve(runPath) : process.cwd()
+      const pkg = await getPackageJson(pkgDir).catch(() => {
+        console.log(c.red(`Unable to read package.json at ${pkgDir}`))
+        process.exit(1)
+      })
+      pkgName = pkg.pkgName
+    }
 
     console.log(
       `Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)}...`,
     )
 
-    const { messages } = await publint({
+    const { messages, pkg } = await publint({
       pkgDir,
       level: opts.level,
       strict: opts.strict,
@@ -55,7 +79,7 @@ cli
     if (messages.length === 0) {
       console.log(c.bold(c.green('All good!')))
     } else {
-      formatMessages(messages, pkgJson).forEach((l) => console.log(l))
+      formatMessages(messages, pkg).forEach((l) => console.log(l))
     }
   })
 

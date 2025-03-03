@@ -8,19 +8,19 @@ const options = [
     flag: '--level',
     type: `'suggestion' | 'warning' | 'error'`,
     default: `'suggestion'`,
-    description: 'Level of messages to log',
+    description: 'Level of messages to log.',
   },
   {
     flag: '--pack',
     type: `'auto' | 'npm' | 'yarn' | 'pnpm' | 'bun' | false`,
     default: `'auto'`,
-    description: 'Package manager to use for packing',
+    description: 'Package manager to use for packing.',
   },
   {
     flag: '--strict',
     type: 'boolean',
     default: 'false',
-    description: 'Report warnings as errors',
+    description: 'Report warnings as errors.',
   },
 ]
 
@@ -49,11 +49,11 @@ const optionsHtml = `\
 
 # Command line interface
 
-## `publint [dir] [options]`
+## `publint [path] [options]`
 
-Pass a directory path (`[dir]`) to lint a specific directory. If not provided, the current directory is used.
+`[path]`: Pass a directory path to lint a specific directory, or pass a tarball file path to lint the tarball directly. If not provided, the current directory is linted.
 
-The flags below can be passed as options (`[options]`) for the CLI:
+`[options]`:
 
 <div v-html="optionsHtml" />
 
@@ -67,6 +67,9 @@ publint
 
 # Run publint on a specific directory
 publint ./dir
+
+# Run publint on a tarball
+publint ./path/to/package.tgz
 
 # Ignore suggestions (only show warnings and errors)
 publint --level warning
