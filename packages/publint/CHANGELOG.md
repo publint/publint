@@ -1,5 +1,20 @@
 # publint
 
+## 0.3.8
+
+### Patch Changes
+
+- Support passing a tarball path to the publint CLI. This allows to easily lint any tarball files at hand. ([#166](https://github.com/publint/publint/pull/166))
+
+  ```bash
+  npx publint ./mylib-1.0.0.tgz
+  ```
+
+- The `publint` API now returns a `pkg` object as a convenience to pass it to `formatMessage` ([#166](https://github.com/publint/publint/pull/166))
+
+- Updated dependencies [[`02d169b`](https://github.com/publint/publint/commit/02d169b1c1bb4739427b261dbc6cccdea37abdca)]:
+  - @publint/pack@0.1.2
+
 ## 0.3.7
 
 ### Patch Changes

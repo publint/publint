@@ -1,5 +1,11 @@
 # @publint/pack
 
+## 0.1.2
+
+### Patch Changes
+
+- Improve error message when yarn 1 is used to pack files ([#169](https://github.com/publint/publint/pull/169))
+
 ## 0.1.1
 
 ### Patch Changes
