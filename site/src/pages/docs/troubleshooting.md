@@ -19,3 +19,14 @@ There are several common reasons why it might hang:
    For example, [`npm pack`](https://docs.npmjs.com/cli/v11/using-npm/scripts#npm-pack) can be set to ignore `prepack` and `postpack` scripts, but it'll still run the `prepare` script. [`yarn pack`](https://yarnpkg.com/advanced/lifecycle-scripts#prepack-and-postpack) does not support ignoring the `prepack` and `postpack` scripts.
 
    **To fix this**, avoiding calling `publint` in these lifecycle scripts, and run `publint` in a separate step instead.
+
+## Yarn 1 is not supported
+
+publint doesn't support yarn 1. However, there are several workarounds:
+
+- Pass a different package manager to pack files, e.g. `publint --pack npm`. This will cause publint to call `npm pack` to pack files even though you're using yarn to install dependencies.
+
+  If this option is used, make sure the packed files (as shown by `npm pack` logs when running manually) are correct. Different package managers interpret the `"files"` field of the `package.json` differently.
+
+- Or upgrade yarn to v3 or v4, which are officially supported.
+- Or pack the files manually and pass the tarball to publint, e.g. `publint ./mylib-1.0.0.tgz`.
