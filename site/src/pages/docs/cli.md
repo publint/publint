@@ -69,7 +69,7 @@ publint
 publint ./dir
 
 # Run publint on a tarball
-publint ./path/to/package.tgz
+publint ./mylib-1.0.0.tgz
 
 # Ignore suggestions (only show warnings and errors)
 publint --level warning

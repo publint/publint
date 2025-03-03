@@ -30,6 +30,36 @@ yarn dlx publint
 
 :::
 
+## Local requirements
+
+When running publint locally, it requires Node.js >=18 and only supports these package managers:
+
+<!-- The list below should sync with the README in `@publint/pack` -->
+
+- npm (v9, v10, v11)
+- yarn (v3, v4)
+- pnpm (v8, v9, v10)
+- bun
+
+Older versions of these package managers may still work, but they're not officially tested. yarn 1 is also explicitly not supported. However, you can workaround this by [packing](https://docs.npmjs.com/cli/v11/commands/npm-pack) it yourself and pass it to publint.
+
+<details>
+<summary>Workaround examples</summary>
+
+```bash
+npx publint ./mylib-1.0.0.tgz
+```
+
+```js
+import fs from 'node:fs/promises'
+import { publint } from 'publint'
+
+const tarballBuffer = await fs.readFile('./mylib-1.0.0.tgz')
+const result = await publint({ pack: { tarball: tarballBuffer.buffer } })
+```
+
+</details>
+
 ## Local installation
 
 You can install `publint` locally if you prefer to integrate it in your publish or CI workflow. First, install `publint` with your package manager:
