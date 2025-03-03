@@ -41,7 +41,7 @@ When running publint locally, it requires Node.js >=18 and only supports these p
 - pnpm (v8, v9, v10)
 - bun
 
-Older versions of these package managers may still work, but they're not officially tested. yarn 1 is also explicitly not supported. However, you can workaround this by [packing](https://docs.npmjs.com/cli/v11/commands/npm-pack) it yourself and pass it to publint.
+Older versions of these package managers may still work, but they're not officially tested. Yarn 1 is also explicitly not supported. However, you can workaround this by [packing](https://docs.npmjs.com/cli/v11/commands/npm-pack) it yourself and pass it to publint.
 
 <details>
 <summary>Workaround examples</summary>
