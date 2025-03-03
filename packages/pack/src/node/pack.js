@@ -54,9 +54,15 @@ export async function pack(dir, opts) {
     )
   })
   if (!tarballFile) {
-    throw new Error(
-      `Failed to find packed tarball file in ${packDestination}. Command output:\n${JSON.stringify(output, null, 2)}`,
-    )
+    if (output.stdout.startsWith('yarn pack v1')) {
+      throw new Error(
+        `Yarn 1 is not supported to pack files. Command output:\n${JSON.stringify(output, null, 2)}`,
+      )
+    } else {
+      throw new Error(
+        `Failed to find packed tarball file in ${packDestination}. Command output:\n${JSON.stringify(output, null, 2)}`,
+      )
+    }
   }
 
   return path.join(packDestination, tarballFile)
