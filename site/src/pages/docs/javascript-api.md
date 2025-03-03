@@ -73,7 +73,6 @@ Works in Node.js.
 ```js
 import fs from 'node:fs/promises'
 import { publint } from 'publint'
-import { unpack } from '@publint/pack'
 
 const tarballBuffer = await fs.readFile('./mylib-1.0.0.tgz')
 const result = await publint({ pack: { tarball: tarballBuffer.buffer } })
