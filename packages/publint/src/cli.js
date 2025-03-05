@@ -26,9 +26,11 @@ const cli = sade('publint', false)
   .option('--strict', `Report warnings as errors`, false)
 
 cli
-  .command('run [path]', 'Lint a directory (defaults to current directory)', {
-    default: true,
-  })
+  .command(
+    'run [path]',
+    'Lint a directory or tarball file path (defaults to current directory)',
+    { default: true },
+  )
   .action(async (runPath, opts) => {
     opts = normalizeOpts(opts)
 
