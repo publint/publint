@@ -9,7 +9,13 @@ import {
 export function formatMessage(m, pkg, opts = {}) {
   const h = getHighlighter(opts.color)
   /** @param {string[]} path */
-  const pv = (path) => getPkgPathValue(pkg, path)
+  const pv = (path) => {
+    try {
+      return String(getPkgPathValue(pkg, path))
+    } catch {
+      return 'undefined'
+    }
+  }
 
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
