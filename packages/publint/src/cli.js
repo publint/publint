@@ -7,7 +7,7 @@ import { createRequire } from 'node:module'
 import sade from 'sade'
 import c from 'picocolors'
 import { publint } from './index-node.js'
-import { formatMessage } from './node/message.js'
+import { formatMessage } from './shared/message.js'
 import { createPromiseQueue } from './shared/utils.js'
 
 const version = createRequire(import.meta.url)('../package.json').version

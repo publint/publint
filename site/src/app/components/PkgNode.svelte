@@ -3,11 +3,11 @@
 </script>
 
 <script>
+  import { formatMessage } from 'publint/utils'
   import PkgNode from './PkgNode.svelte'
   import { getContext, setContext } from 'svelte'
   import { messageTypeToColor } from '../utils/colors'
   import { isArrayEqual } from '../utils/common'
-  import { formatMessage } from '../utils/message'
 
   /**
    * @typedef {Object} Props
@@ -47,6 +47,17 @@
       ? matchedMessages
       : matchedMessages.slice(0, maxShownMessages),
   )
+
+  /**
+   * @param {import('publint').Message} msg
+   */
+  function messageToHtml(msg) {
+    let str = formatMessage(msg, pkg, { color: 'html', reference: true })
+    if (str) {
+      str += ` (<a class="underline" href="/rules#${msg.code.toLowerCase()}">More info</a>)`
+    }
+    return str
+  }
 </script>
 
 <li
@@ -95,7 +106,7 @@
             message message-type-{msg.type} font-medium border-solid border-4 px-4 py-2 scroll-mt-8
           "
         >
-          {@html formatMessage(msg, pkg)}
+          {@html messageToHtml(msg)}
         </div>
       {/each}
       {#if shownMessages.length < matchedMessages.length && !showAllMessages}

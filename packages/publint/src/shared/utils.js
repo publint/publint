@@ -389,11 +389,7 @@ export function formatMessagePath(path) {
   return formatted
 }
 
-/**
- * @param {Pkg} pkg
- * @param {string[]} path
- * @returns {any}
- */
+/** @type {import('../utils.d.ts').getPkgPathValue} */
 export function getPkgPathValue(pkg, path) {
   let v = /** @type {any} */ (pkg)
   for (const p of path) {

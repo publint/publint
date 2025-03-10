@@ -2,7 +2,7 @@ import path from 'node:path'
 import { test } from 'vitest'
 import { createFixture } from 'fs-fixture'
 import { publint } from '../src/index-node.js'
-import { formatMessage } from '../src/utils-node.js'
+import { formatMessage } from '../src/utils.js'
 
 const isWindowsCI = process.env.CI !== undefined && process.platform === 'win32'
 

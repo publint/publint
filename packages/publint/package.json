@@ -14,8 +14,7 @@
     },
     "./utils": {
       "types": "./src/utils.d.ts",
-      "browser": "./src/utils-browser.js",
-      "default": "./src/utils-node.js"
+      "default": "./src/utils.js"
     }
   },
   "scripts": {
