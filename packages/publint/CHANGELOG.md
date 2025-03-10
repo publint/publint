@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.9
+
+### Patch Changes
+
+- Support the `formatMessage` utility in the browser. It has a new `color: 'html'` option to highlight important parts with `<strong>` tags instead of ANSI colors. It also has a new `reference: boolean` option so the messages are worded in reference of the message location. ([`e1cfef0`](https://github.com/publint/publint/commit/e1cfef0b9b49c1eb55c9679308d761b7ce211fc2))
+
+- If `formatMessage` is passed a `package.json` object with missing keys, the message part that references the value will now fallback to `"undefined"` instead of completely erroring out. ([`45962d1`](https://github.com/publint/publint/commit/45962d1e39250569aa877eb3568725bee7d5b434))
+
 ## 0.3.8
 
 ### Patch Changes
