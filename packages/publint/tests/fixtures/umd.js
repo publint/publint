@@ -7,7 +7,6 @@ export default {
     main: './main.umd.js',
   }),
   'main.umd.js': `
-    // prettier-ignore
     ;(function (global, factory) {
       typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
       typeof define === 'function' && define.amd ? define(['exports'], factory) :

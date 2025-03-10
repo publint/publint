@@ -15,14 +15,14 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.28.0",
+    "@changesets/cli": "^2.28.1",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.10",
     "@types/pnpapi": "^0.0.5",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.3",
     "prettier-plugin-svelte": "^3.3.3",
-    "svelte": "^5.20.2",
-    "typescript": "^5.7.3"
+    "svelte": "^5.22.6",
+    "typescript": "^5.8.2"
   },
   "pnpm": {
     "overrides": {

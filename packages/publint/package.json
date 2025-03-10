@@ -47,7 +47,7 @@
   ],
   "dependencies": {
     "@publint/pack": "workspace:^",
-    "package-manager-detector": "^0.2.9",
+    "package-manager-detector": "^1.0.0",
     "picocolors": "^1.1.1",
     "sade": "^1.8.1"
   },
@@ -55,6 +55,6 @@
     "@types/prompts": "^2.4.9",
     "fs-fixture": "^2.7.1",
     "prompts": "^2.4.2",
-    "vitest": "^3.0.6"
+    "vitest": "^3.0.8"
   }
 }
