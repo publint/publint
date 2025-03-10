@@ -25,14 +25,9 @@ const { messages, pkg } = await publint({
 })
 
 for (const message of messages) {
-  // NOTE: only works in Node.js
   console.log(formatMessage(message, pkg))
 }
 ```
-
-::: info
-The API for formatting and printing the message isn't the best right now, but this should be addressed in the next breaking release.
-:::
 
 ## Options
 
