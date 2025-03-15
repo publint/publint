@@ -260,7 +260,7 @@ Internal tests or config files are published, which are usually not needed and u
 
 ## `USE_TYPE` {#use_type}
 
-[Node.js v21.1.0](https://nodejs.org/en/blog/release/v21.1.0) added a new `--experimental-detect-module` flag, which can be used to automatically run ES modules when ESM syntax can be detected. It is also enabled by default since [Node.js v22.7.0](https://nodejs.org/en/blog/release/v22.7.0). Detection increases startup time, so Node is encouraging everyone — especially package authors — to add a type field to `package.json`, even for the default `"type": "commonjs"`.
+[Module syntax detection](https://nodejs.org/api/packages.html#determining-module-system) attempts to detect ESM syntax, and re-run as an ES module when no `"type"` field is present. It was enabled by default in [Node.js v20.19.0](https://nodejs.org/en/blog/release/v20.19.0) and [Node.js v22.7.0](https://nodejs.org/en/blog/release/v22.7.0). Detection increases startup time for ES modules, so Node is encouraging everyone — especially package authors — to add a type field to `package.json`, even for the default `"type": "commonjs"`.
 
 ## `USE_LICENSE` {#use_license}
 
