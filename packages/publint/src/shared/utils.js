@@ -308,6 +308,16 @@ export function isFilePathLintable(filePath) {
   return lintableFileExtensions.some((ext) => filePath.endsWith(ext))
 }
 
+/**
+ * @param {string} filePath
+ */
+export function isFilePathRawTs(filePath) {
+  return (
+    (filePath.endsWith('.ts') && !filePath.endsWith('.d.ts')) ||
+    filePath.endsWith('.tsx')
+  )
+}
+
 // support:
 // // @flow
 // /* @flow */
@@ -428,6 +438,19 @@ export function objectHasKeyNested(obj, key) {
   for (const k in obj) {
     if (k === key) return true
     if (typeof obj[k] === 'object' && objectHasKeyNested(obj[k], key))
+      return true
+  }
+  return false
+}
+
+/**
+ * @param {Record<string, any>} obj
+ * @param {(value: string) => boolean} predicate
+ */
+export function objectHasValueNested(obj, predicate) {
+  for (const k in obj) {
+    if (typeof obj[k] === 'string' && predicate(obj[k])) return true
+    if (typeof obj[k] === 'object' && objectHasValueNested(obj[k], predicate))
       return true
   }
   return false

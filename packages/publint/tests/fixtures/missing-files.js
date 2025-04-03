@@ -15,7 +15,6 @@ export default {
     exports: {
       '.': {
         types: './missing.d.ts',
-        bun: './missing.ts',
         import: './missing.js',
       },
       './not-published': './not-published.js',

@@ -29,6 +29,8 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isDeprecatedGitHubGitUrl,
   startsWithShebang,
+  objectHasValueNested,
+  isFilePathRawTs,
 } from './utils.js'
 
 /**
@@ -792,8 +794,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           // TODO: maybe improve .ts checks in the future
           if (!isFilePathLintable(filePath)) {
             // if not lintable, simply check file existence. only if it's an absolute path,
-            // so we avoid linting strings like `std:lib`
-            if (isAbsolutePath(filePath)) {
+            // so we avoid linting strings like `std:lib`. we also skip .ts and .tsx as it's
+            // common for some setup to only export them locally
+            if (isAbsolutePath(filePath) && !isFilePathRawTs(filePath)) {
               pq.push(async () => await readFile(filePath, currentPath))
             }
             continue
@@ -885,9 +888,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // a good chance those take precedence over this non-first `types` condition, which
         // is fine and is usually used as fallback instead. Versioned `types` conditions
         // are allowed to precede the `types` condition.
+        //
+        // we also skip any exports value of raw ts or tsx files as they also represent types.
         const precedingKeys = exportsKeys
           .slice(0, exportsKeys.indexOf('types'))
-          .filter((key) => !key.startsWith('types'))
+          .filter((key) => {
+            if (key.startsWith('types')) return false
+
+            const value = exportsValue[key]
+            if (typeof value === 'string' && isFilePathRawTs(value))
+              return false
+            if (
+              typeof value === 'object' &&
+              objectHasValueNested(value, isFilePathRawTs)
+            )
+              return false
+
+            return true
+          })
 
         // TODO: check that versioned types are valid and the ranges don't overlap.
 

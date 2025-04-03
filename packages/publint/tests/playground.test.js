@@ -41,7 +41,7 @@ testFixture('invalid-jsx-extensions', [
 ])
 
 testFixture('missing-files', [
-  ...Array(9).fill('FILE_DOES_NOT_EXIST'),
+  ...Array(8).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
@@ -53,6 +53,8 @@ testFixture('no-exports-module', [])
 testFixture('not-missing-files', [])
 
 testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
+
+testFixture('exports-custom-condition', [])
 
 testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
 
