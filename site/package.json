@@ -22,8 +22,8 @@
     "@unocss/preset-uno": "^66.0.0",
     "@unocss/vite": "^66.0.0",
     "fs-fixture": "^2.7.1",
-    "svelte": "^5.22.6",
-    "vite": "^6.2.3",
+    "svelte": "^5.25.6",
+    "vite": "^6.2.4",
     "vitepress": "^2.0.0-alpha.4"
   }
 }
