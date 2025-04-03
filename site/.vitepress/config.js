@@ -47,6 +47,7 @@ export default defineConfig({
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/publint/publint' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/publint' },
     ],
     sidebar: [
       { text: 'Getting started', link: '/docs/' },
