@@ -11,7 +11,12 @@ const router = useRouter()
 // render the package page which we don't want. VitePress' router is a little slower.
 router.onAfterRouteChange = () => {
   if (router.route.path === '/' || router.route.component == null) {
-    updateHref()
+    // Skip SPA url update if we're routing to a known VitePress page.
+    // This isn't technically needed, but sometimes somehow the SPA url still gets updated
+    // so just do this extra guard for now.
+    if (!['/docs/', '/rules'].includes(router.route.path)) {
+      updateHref()
+    }
   }
 }
 url.push = router.go
