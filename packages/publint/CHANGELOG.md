@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.10
+
+### Patch Changes
+
+- Support custom conditions in `"exports"` that points to raw TS or TSX files. This configuration is common in monorepo setups where packages refer to the raw files among themselves using a custom condition so custom aliasing isn't needed. ([`b34ea94`](https://github.com/publint/publint/commit/b34ea9433fb7457ac7f5f8ade972e1589ca9c89e))
+
+  With this support, the `"types"` condition is allowed to come after any exports of the raw TS or TSX files. File existence checks are also disabled for raw TS and TSX files reference as after publish these files may intentionally be not published.
+
 ## 0.3.9
 
 ### Patch Changes
