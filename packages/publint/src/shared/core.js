@@ -699,8 +699,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           return
         }
 
-        // warn deprecated subpath mapping
+        // error removed subpath mapping
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
+        // https://nodejs.org/docs/latest-v22.x/api/deprecations.html#dep0148-folder-mappings-in-exports-trailing-
         if (exportsValue.endsWith('/')) {
           const expectPath = currentPath.map((part) => {
             return part.endsWith('/') ? part + '*' : part
@@ -717,7 +718,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             path: currentPath,
             // if a trailing glob is also specified, that means this key is for backwards compat only.
             // lower severity to suggestion instead.
-            type: expectPathAlreadyExist ? 'suggestion' : 'warning',
+            type: expectPathAlreadyExist ? 'suggestion' : 'error',
           })
           // help fix glob so we can further analyze other issues
           exportsValue += '*'

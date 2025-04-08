@@ -105,7 +105,7 @@ If the `"exports"` field contains glob paths, but it doesn't match any files, re
 
 ## `EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING` {#exports_glob_no_deprecated_subpath_mapping}
 
-The `"exports"` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
+The `"exports"` field should not have globs defined with trailing slashes. It is [removed since Node 17](https://nodejs.org/docs/latest-v22.x/api/deprecations.html#dep0148-folder-mappings-in-exports-trailing-) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
 
 ## `EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE` {#exports_module_should_precede_require}
 
