@@ -12,6 +12,8 @@ testFixture('exports-browser-conflict', [
 ])
 
 testFixture('exports-styles', [
+  'EXPORTS_FALLBACK_ARRAY_USE',
+  'EXPORTS_FALLBACK_ARRAY_USE',
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',
   'FILE_DOES_NOT_EXIST',

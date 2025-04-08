@@ -372,3 +372,19 @@ Ensure the `"module"` condition comes before the `"require"` condition. Due to t
 The `"module"` condition should be ESM only. This condition is used to prevent the [dual package hazard](https://nodejs.org/api/packages.html#dual-package-hazard) in bundlers so `import` and `require` will both resolve to this condition, deduplicating the dual instances. The [esbuild docs](https://esbuild.github.io/api/#how-conditions-work) has a more in-depth explanation.
 
 (Works similarly to [EXPORTS_MODULE_SHOULD_BE_ESM](#exports_module_should_be_esm)).
+
+## `EXPORTS_FALLBACK_ARRAY_USE` {#exports_fallback_array_use}
+
+The use of fallback array feature is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.
+
+Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
+
+(Works similarly to [IMPORTS_FALLBACK_ARRAY_USE](#imports_fallback_array_use)).
+
+## `IMPORTS_FALLBACK_ARRAY_USE` {#imports_fallback_array_use}
+
+The use of fallback array feature is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.
+
+Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
+
+(Works similarly to [EXPORTS_FALLBACK_ARRAY_USE](#exports_fallback_array_use)).
