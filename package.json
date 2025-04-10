@@ -10,7 +10,7 @@
     "typecheck": "pnpm --parallel --no-bail run typecheck",
     "test": "pnpm --filter \"./packages/*\" run test"
   },
-  "packageManager": "pnpm@10.7.1",
+  "packageManager": "pnpm@10.8.0",
   "engines": {
     "node": ">=18"
   },
@@ -21,8 +21,8 @@
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.5.3",
     "prettier-plugin-svelte": "^3.3.3",
-    "svelte": "^5.25.6",
-    "typescript": "^5.8.2"
+    "svelte": "^5.25.10",
+    "typescript": "~5.8.3"
   },
   "pnpm": {
     "overrides": {
