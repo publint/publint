@@ -190,6 +190,39 @@ The `"exports"` field value should always start with a `./`. It does not support
 
 When a library has the `"main"`, `"module"`, or similar root entrypoint fields, and it also defines the `"exports"` field, the `"exports"` value should also export the root entrypoint as when it's defined, it will always take the highest priority over the other fields, including `"main"` and `"module"`.
 
+## `EXPORTS_VALUE_CONFLICTS_WITH_BROWSER` {#exports_value_conflicts_with_browser}
+
+When an `"exports"` value resolved with a browser-ish condition matches a key in the `"browser"` field object, this means the `"exports"` value is overridden by that matching `"browser"` key. This may cause build issues as the intended `"exports"` value is no longer used. For example, given this setup:
+
+```json
+{
+  "browser": {
+    "./lib.server.js": "./lib.browser.js"
+  },
+  "exports": {
+    ".": {
+      "worker": "./lib.server.js",
+      "browser": "./lib.browser.js",
+      "default": "./lib.server.js"
+    }
+  }
+}
+```
+
+When matching the `"worker"` condition, it will resolve to `"./lib.server.js"` which is intended to work in a worker environment. However, the `"browser"` field also has a matching mapping for `"./lib.server.js"`, causing the final resolved path to be `"./lib.browser.js"`.
+
+This is usually not intended and causes the wrong file to be loaded. If it is intended, the `"worker"` condition should point to `"./lib.browser.js"` directly instead.
+
+To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for example so it has its own specific file. Or check out the [USE_EXPORTS_OR_IMPORTS_BROWSER](#use_exports_or_imports_browser) rule to refactor away the `"browser"` field.
+
+## `EXPORTS_FALLBACK_ARRAY_USE` {#exports_fallback_array_use}
+
+The use of fallback array feature is not recommended. It currently does not have a use case in Node.js, and most tooling will only pick the first value that can be parsed. Other tooling may also work differently leading to inconsistent behaviors.
+
+Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
+
+(Works similarly to [IMPORTS_FALLBACK_ARRAY_USE](#imports_fallback_array_use)).
+
 ## `USE_EXPORTS_BROWSER` {#use_exports_browser}
 
 A `"browser"` field with a string value works similarly to the `"exports"` `"browser"` condition, to define the browser-specific exports of a package. Between the two, it's usually better to use the `"exports"` field instead as it's standardized, widely supported, and keeps one true way of defining your package entrypoints.
@@ -270,31 +303,6 @@ A license file is published but the `"license"` field is not set in `package.jso
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.
 
-## `EXPORTS_VALUE_CONFLICTS_WITH_BROWSER` {#exports_value_conflicts_with_browser}
-
-When an `"exports"` value resolved with a browser-ish condition matches a key in the `"browser"` field object, this means the `"exports"` value is overridden by that matching `"browser"` key. This may cause build issues as the intended `"exports"` value is no longer used. For example, given this setup:
-
-```json
-{
-  "browser": {
-    "./lib.server.js": "./lib.browser.js"
-  },
-  "exports": {
-    ".": {
-      "worker": "./lib.server.js",
-      "browser": "./lib.browser.js",
-      "default": "./lib.server.js"
-    }
-  }
-}
-```
-
-When matching the `"worker"` condition, it will resolve to `"./lib.server.js"` which is intended to work in a worker environment. However, the `"browser"` field also has a matching mapping for `"./lib.server.js"`, causing the final resolved path to be `"./lib.browser.js"`.
-
-This is usually not intended and causes the wrong file to be loaded. If it is intended, the `"worker"` condition should point to `"./lib.browser.js"` directly instead.
-
-To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for example so it has its own specific file. Or check out the [USE_EXPORTS_OR_IMPORTS_BROWSER](#use_exports_or_imports_browser) rule to refactor away the `"browser"` field.
-
 ## `DEPRECATED_FIELD_JSNEXT` {#deprecated_field_jsnext}
 
 The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field should be used instead. See [this issue](https://github.com/jsforum/jsforum/issues/5) for more information.
@@ -372,14 +380,6 @@ Ensure the `"module"` condition comes before the `"require"` condition. Due to t
 The `"module"` condition should be ESM only. This condition is used to prevent the [dual package hazard](https://nodejs.org/api/packages.html#dual-package-hazard) in bundlers so `import` and `require` will both resolve to this condition, deduplicating the dual instances. The [esbuild docs](https://esbuild.github.io/api/#how-conditions-work) has a more in-depth explanation.
 
 (Works similarly to [EXPORTS_MODULE_SHOULD_BE_ESM](#exports_module_should_be_esm)).
-
-## `EXPORTS_FALLBACK_ARRAY_USE` {#exports_fallback_array_use}
-
-The use of fallback array feature is not recommended. It currently does not have a use case in Node.js, and most tooling will only pick the first value that can be parsed. Other tooling may also work differently leading to inconsistent behaviors.
-
-Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
-
-(Works similarly to [IMPORTS_FALLBACK_ARRAY_USE](#imports_fallback_array_use)).
 
 ## `IMPORTS_FALLBACK_ARRAY_USE` {#imports_fallback_array_use}
 
