@@ -375,7 +375,7 @@ The `"module"` condition should be ESM only. This condition is used to prevent t
 
 ## `EXPORTS_FALLBACK_ARRAY_USE` {#exports_fallback_array_use}
 
-The use of fallback array feature is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.
+The use of fallback array feature is not recommended. It currently does not have a use case in Node.js, and most tooling will only pick the first value that can be parsed. Other tooling may also work differently leading to inconsistent behaviors.
 
 Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
 
@@ -383,7 +383,7 @@ Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928)
 
 ## `IMPORTS_FALLBACK_ARRAY_USE` {#imports_fallback_array_use}
 
-The use of fallback array feature is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.
+The use of fallback array feature is not recommended. It currently does not have a use case in Node.js, and most tooling will only pick the first value that can be parsed. Other tooling may also work differently leading to inconsistent behaviors.
 
 Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
 
