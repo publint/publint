@@ -84,7 +84,7 @@ export function formatMessage(m, pkg, opts = {}) {
     }
     case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
     case 'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
-      return `${h.bold(fp(m.path))} maps to a path that ends with ${h.bold('/')} which is deprecated. Use ${h.bold(fp(m.args.expectPath))}: "${h.bold(m.args.expectValue)}" instead.`
+      return `${h.bold(fp(m.path))} maps to a path that ends with ${h.bold('/')} which is a removed feature. Use ${h.bold(fp(m.args.expectPath))}: "${h.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST': {
       const start = opts.reference ? 'Should' : `${h.bold(fp(m.path))} should`
       return `${start} be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
