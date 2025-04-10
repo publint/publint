@@ -67,6 +67,7 @@ export type Message =
   | BaseMessage<'EXPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'EXPORTS_MISSING_ROOT_ENTRYPOINT', { mainFields: string[] }>
+  | BaseMessage<'EXPORTS_FALLBACK_ARRAY_USE'>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
   | BaseMessage<'USE_FILES'>
@@ -138,6 +139,7 @@ export type Message =
   | BaseMessage<'IMPORTS_DEFAULT_SHOULD_BE_LAST'>
   | BaseMessage<'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'>
   | BaseMessage<'IMPORTS_MODULE_SHOULD_BE_ESM'>
+  | BaseMessage<'IMPORTS_FALLBACK_ARRAY_USE'>
 
 export interface PackFile {
   name: string

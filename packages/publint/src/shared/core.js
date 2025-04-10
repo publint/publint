@@ -877,6 +877,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         await pq.wait()
       })
+    } else if (Array.isArray(exportsValue)) {
+      messages.push({
+        code: isImports
+          ? 'IMPORTS_FALLBACK_ARRAY_USE'
+          : 'EXPORTS_FALLBACK_ARRAY_USE',
+        args: {},
+        path: currentPath,
+        type: 'warning',
+      })
+
+      for (const key of exportsValue.keys()) {
+        crawlExportsOrImports(
+          exportsValue[key],
+          currentPath.concat('' + key),
+          isImports,
+          isAfterNodeCondition,
+        )
+      }
     }
     // `exports` could be null to disallow exports of globs from another key
     else if (exportsValue) {

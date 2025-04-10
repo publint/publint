@@ -106,6 +106,9 @@ export function formatMessage(m, pkg, opts = {}) {
         : `${h.bold(fp(m.path))} is ${h.bold(pv(m.path))} but`
       return `${start} is invalid as it does not start with "${h.bold('./')}". Use ${h.bold(m.args.suggestValue)} instead.`
     }
+    case 'EXPORTS_FALLBACK_ARRAY_USE':
+    case 'IMPORTS_FALLBACK_ARRAY_USE':
+      return `The use of fallback array feature is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.`
     case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
       const mainField = m.args.mainFields[0]
       const start = opts.reference
