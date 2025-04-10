@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.11
+
+### Patch Changes
+
+- Update `EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING` message and severity to error ([#179](https://github.com/publint/publint/pull/179))
+
+- Add a new warning when the `"exports"` or `"imports"` field contain a fallback array as most tooling will only the pick the first value that can be parsed, and other tooling may work differently leading to inconsistent behaviors ([#180](https://github.com/publint/publint/pull/180))
+
 ## 0.3.10
 
 ### Patch Changes
