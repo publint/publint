@@ -520,5 +520,5 @@ export function replaceLast(str, search, replace) {
  * @param {string} code
  */
 export function startsWithShebang(code) {
-  return code.startsWith('#!/usr/bin/env')
+  return /#!\s*\/usr\/bin\/env/.test(code)
 }
