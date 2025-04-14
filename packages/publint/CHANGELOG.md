@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.12
+
+### Patch Changes
+
+- Fix shebang check to allow spaces after the `#!` ([#183](https://github.com/publint/publint/pull/183))
+
 ## 0.3.11
 
 ### Patch Changes
