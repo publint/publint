@@ -25,6 +25,7 @@
   /** @type {Worker} */
   let worker
 
+  /** @type {{pkgJson: Record<string, any>, messages: import('publint').Message[]} | undefined} */
   let result = $state()
   let error = $state('')
   let status = $state('')
