@@ -48,7 +48,13 @@ cli
     // CLI-specific feature allowing a tarball path to be loaded directly
     if (isTarballFilePassed) {
       try {
-        opts.pack = { tarball: (await fs.readFile(runPath)).buffer }
+        {
+          const nodeBuffer = await fs.readFile(runPath)
+          opts.pack = { tarball: nodeBuffer.buffer.slice(
+            nodeBuffer.byteOffset,
+            nodeBuffer.byteOffset + nodeBuffer.byteLength
+          ) }
+        }
       } catch (err) {
         console.log(c.red(`Unable to unpack the tarball at ${runPath}: `) + err)
         process.exit(1)
