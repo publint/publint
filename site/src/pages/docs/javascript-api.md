@@ -69,8 +69,12 @@ Works in Node.js.
 import fs from 'node:fs/promises'
 import { publint } from 'publint'
 
-const tarballBuffer = await fs.readFile('./mylib-1.0.0.tgz')
-const result = await publint({ pack: { tarball: tarballBuffer.buffer } })
+const nodeBuffer = await fs.readFile('./mylib-1.0.0.tgz')
+const tarballBuffer = nodeBuffer.buffer.slice(
+  nodeBuffer.byteOffset,
+  nodeBuffer.byteOffset + nodeBuffer.byteLength
+)
++const result = await publint({ pack: { tarball: tarballBuffer } })
 ```
 
 ### Manually unpack and pass as files
