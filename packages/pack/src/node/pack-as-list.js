@@ -55,8 +55,12 @@ export async function packAsListWithPack(dir, packageManager, ignoreScripts) {
   })
 
   try {
+    const nodeBuffer = await fs.readFile(tarballPath)
     const buffer = /** @type {ArrayBuffer} */ (
-      (await fs.readFile(tarballPath)).buffer
+      nodeBuffer.buffer.slice(
+        nodeBuffer.byteOffset,
+        nodeBuffer.byteOffset + nodeBuffer.byteLength,
+      )
     )
     const { files, rootDir } = await unpack(buffer)
     return files.map((file) => file.name.slice(rootDir.length + 1))

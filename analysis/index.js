@@ -141,7 +141,11 @@ async function fetchPkgData(pkg) {
   let tarball
 
   if (fss.existsSync(cachedFileUrl)) {
-    const buffer = (await fs.readFile(cachedFileUrl)).buffer
+    const nodeBuffer = await fs.readFile(cachedFileUrl)
+    const buffer = nodeBuffer.buffer.slice(
+      nodeBuffer.byteOffset,
+      nodeBuffer.byteOffset + nodeBuffer.byteLength,
+    )
     if (buffer instanceof ArrayBuffer) {
       tarball = buffer
     } else {
