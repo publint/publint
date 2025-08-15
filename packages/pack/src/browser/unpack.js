@@ -11,6 +11,7 @@ export async function unpack(tarball) {
       ? tarball
       : arrayBufferToReadableStream(tarball)
   const buffer = await readableStreamToArrayBuffer(
+    // @ts-expect-error not dealing with this issue for now
     stream.pipeThrough(new DecompressionStream('gzip')),
   )
   const files = parseTar(buffer)

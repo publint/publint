@@ -50,7 +50,6 @@
 ### Patch Changes
 
 - The `"imports"` field is now linted with the following rules: ([#162](https://github.com/publint/publint/pull/162))
-
   - `IMPORTS_KEY_INVALID`: Ensure the imports key starts with a `#`
   - `IMPORTS_VALUE_INVALID`: Ensure the imports value is a valid path that starts with a `./`
   - `IMPORTS_GLOB_NO_MATCHED_FILES`: Ensure the imports glob matches at least one file
@@ -94,7 +93,6 @@
   The glob in `"./*": "./dist/*"` will no longer match and lint files in `"./browser/*"` as it's marked null (internal).
 
 - Update logs when running the `publint` CLI: ([`58d96a2`](https://github.com/publint/publint/commit/58d96a25ced0d74aa1cc41b98c79bccb663802f9))
-
   - The `publint` version is now displayed.
   - The packing command is also displayed.
   - Messages are now logged in the order of errors, warnings, and suggestions, instead of the other way round, to prioritize errors.

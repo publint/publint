@@ -13,17 +13,17 @@
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",
     "publint": "workspace:*",
-    "vue": "^3.5.13"
+    "vue": "^3.5.18"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "@unocss/core": "^66.0.0",
-    "@unocss/extractor-svelte": "^66.0.0",
-    "@unocss/preset-uno": "^66.0.0",
-    "@unocss/vite": "^66.0.0",
-    "fs-fixture": "^2.7.1",
-    "svelte": "^5.25.10",
-    "vite": "^6.2.6",
-    "vitepress": "^2.0.0-alpha.4"
+    "@sveltejs/vite-plugin-svelte": "^6.1.2",
+    "@unocss/core": "^66.4.2",
+    "@unocss/extractor-svelte": "^66.4.2",
+    "@unocss/preset-uno": "^66.4.2",
+    "@unocss/vite": "^66.4.2",
+    "fs-fixture": "^2.8.1",
+    "svelte": "^5.38.1",
+    "vite": "^7.1.2",
+    "vitepress": "^2.0.0-alpha.11"
   }
 }

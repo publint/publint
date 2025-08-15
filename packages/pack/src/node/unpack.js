@@ -9,6 +9,7 @@ export async function unpack(tarball) {
   let buffer
   if (tarball instanceof ReadableStream) {
     buffer = await readableStreamToArrayBuffer(
+      // @ts-expect-error not dealing with this issue for now
       tarball.pipeThrough(new DecompressionStream('gzip')),
     )
   } else {
