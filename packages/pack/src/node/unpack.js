@@ -13,10 +13,12 @@ export async function unpack(tarball) {
     )
   } else {
     const nodeBuffer = await util.promisify(zlib.gunzip)(tarball)
-    buffer = /** @type {ArrayBuffer} */ (nodeBuffer.buffer.slice(
-      nodeBuffer.byteOffset,
-      nodeBuffer.byteOffset + nodeBuffer.byteLength
-    ))
+    buffer = /** @type {ArrayBuffer} */ (
+      nodeBuffer.buffer.slice(
+        nodeBuffer.byteOffset,
+        nodeBuffer.byteOffset + nodeBuffer.byteLength,
+      )
+    )
   }
   const files = parseTar(buffer)
   const rootDir = getFilesRootDir(files)

@@ -215,7 +215,9 @@
       ? extractRepoUrl(result?.pkgJson?.repository)
       : undefined,
   )
-  let npmUrl = $derived(`https://www.npmjs.com/package/${npmPkgName}${npmPkgVersion ? `/v/${npmPkgVersion}` : ''}`)
+  let npmUrl = $derived(
+    `https://www.npmjs.com/package/${npmPkgName}${npmPkgVersion ? `/v/${npmPkgVersion}` : ''}`,
+  )
   let jsdelivrUrl = $derived(
     `https://www.jsdelivr.com/package/npm/${npmPkgName}`,
   )

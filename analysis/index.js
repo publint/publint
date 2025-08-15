@@ -144,7 +144,7 @@ async function fetchPkgData(pkg) {
     const nodeBuffer = await fs.readFile(cachedFileUrl)
     const buffer = nodeBuffer.buffer.slice(
       nodeBuffer.byteOffset,
-      nodeBuffer.byteOffset + nodeBuffer.byteLength
+      nodeBuffer.byteOffset + nodeBuffer.byteLength,
     )
     if (buffer instanceof ArrayBuffer) {
       tarball = buffer
