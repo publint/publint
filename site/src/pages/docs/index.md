@@ -107,3 +107,4 @@ publint can also be used through different tools below:
 | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [vscode-publint](https://github.com/kravetsone/vscode-publint) | A VSCode extension to lint `package.json` with publint. ([Marketplace](https://marketplace.visualstudio.com/items?itemName=kravets.vscode-publint)) |
 | [renoma](https://github.com/bluwy/renoma)                      | A recursive node_modules analyzer with opinionated package health checks. Run `npx renoma --filter-rules publint` to run publint on all packages.   |
+| [@e18e/cli](https://github.com/e18e/cli)                       | A CLI that analyzes your project and provide automatic migrations for various e18e goals.                                                           |
