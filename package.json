@@ -31,6 +31,9 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
-    ]
+    ],
+    "patchedDependencies": {
+      "@sveltejs/vite-plugin-svelte": "patches/@sveltejs__vite-plugin-svelte.patch"
+    }
   }
 }
