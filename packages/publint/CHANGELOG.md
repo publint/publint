@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.13
+
+### Patch Changes
+
+- Improve message for `"main"` field with empty value and has missing files ([`0499518`](https://github.com/publint/publint/commit/04995188cd08f42f2a8bc389a3f089405d56c293))
+
+- Update fallback arrays message for CLI output ([`37b9dd5`](https://github.com/publint/publint/commit/37b9dd59e05c7af2bf7fabf9aac8d28098847e0a))
+
 ## 0.3.12
 
 ### Patch Changes
