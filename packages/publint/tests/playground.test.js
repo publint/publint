@@ -252,7 +252,9 @@ function testFixture(name, expectCodes, options) {
         const pkg = JSON.parse(await fixture.readFile('package.json', 'utf-8'))
         console.log()
         console.log('Logs:', name)
-        messages.forEach((m) => console.log(formatMessage(m, pkg)))
+        for (const m of messages) {
+          console.log(formatMessage(m, pkg, { color: true }))
+        }
         console.log()
       }
 

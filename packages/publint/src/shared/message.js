@@ -5,13 +5,16 @@ import {
   replaceLast,
 } from './utils.js'
 
+const EMPTY_MSG = '<empty>'
+
 /** @type {import('../utils.d.ts').formatMessage} */
 export function formatMessage(m, pkg, opts = {}) {
   const h = getHighlighter(opts.color)
   /** @param {string[]} path */
   const pv = (path) => {
     try {
-      return String(getPkgPathValue(pkg, path))
+      const str = String(getPkgPathValue(pkg, path))
+      return str === '' ? EMPTY_MSG : str
     } catch {
       return 'undefined'
     }
@@ -57,7 +60,13 @@ export function formatMessage(m, pkg, opts = {}) {
       if (opts.reference) {
         return `File does not exist`
       } else {
-        return `${h.bold(fp(m.path))} is ${h.bold(pv(m.path))} but the file does not exist.`
+        let value = pv(m.path)
+        // `@types/*` packages have empty `"main"` field by default which can be confusing,
+        // so specifically improve its message here.
+        if (value === EMPTY_MSG && m.path[0] === 'main') {
+          value += ' (implies index.js)'
+        }
+        return `${h.bold(fp(m.path))} is ${h.bold(value)} but the file does not exist.`
       }
     case 'FILE_NOT_PUBLISHED':
       if (opts.reference) {
