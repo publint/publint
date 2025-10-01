@@ -140,6 +140,7 @@ export type Message =
   | BaseMessage<'IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'>
   | BaseMessage<'IMPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'IMPORTS_FALLBACK_ARRAY_USE'>
+  | BaseMessage<'FAUX_ESM_WITH_DEFAULT_EXPORT'>
 
 export interface PackFile {
   name: string

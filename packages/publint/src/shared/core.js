@@ -31,6 +31,7 @@ import {
   startsWithShebang,
   objectHasValueNested,
   isFilePathRawTs,
+  isFauxEsmWithDefaultExport,
 } from './utils.js'
 
 /**
@@ -446,6 +447,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               type: 'warning',
             })
           }
+          if (isFauxEsmWithDefaultExport(fileContent)) {
+            messages.push({
+              code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+              args: {},
+              path: modulePkgPath,
+              type: 'warning',
+            })
+          }
         })
       }
       await pq.wait()
@@ -807,6 +816,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
             if (!isFileContentLintable(fileContent)) return
+            if (isFauxEsmWithDefaultExport(fileContent)) {
+              messages.push({
+                code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+                args: {},
+                path: currentPath,
+                type: 'warning',
+              })
+            }
             // the `module` condition is only used by bundlers and must be ESM
             if (currentPath.includes('module')) {
               const actualFormat = getCodeFormat(fileContent)

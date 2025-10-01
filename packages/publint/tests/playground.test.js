@@ -11,6 +11,8 @@ testFixture('exports-browser-conflict', [
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
+testFixture('exports-esmodule-with-default', ['FAUX_ESM_WITH_DEFAULT_EXPORT'])
+
 testFixture('exports-styles', [
   'EXPORTS_FALLBACK_ARRAY_USE',
   'EXPORTS_FALLBACK_ARRAY_USE',
@@ -160,7 +162,11 @@ testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])
 
-testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
+testFixture('umd', [
+  'FAUX_ESM_WITH_DEFAULT_EXPORT',
+  'FILE_INVALID_FORMAT',
+  'FILE_INVALID_FORMAT',
+])
 
 testFixture('deprecated-fields', [
   'DEPRECATED_FIELD_JSNEXT',

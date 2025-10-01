@@ -14,6 +14,7 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments,
+  isFauxEsmWithDefaultExport,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
 
@@ -105,6 +106,50 @@ test('getCodeFormat', () => {
   for (const code of isoCode) {
     expect(getCodeFormat(code), code).toEqual('unknown')
   }
+})
+
+test('hasEsModuleAndExportsDefault', () => {
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.__esModule = true;
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.__esModule = true;
+  `),
+  ).toEqual(false)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(false)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    // Some comment
+    exports.__esModule = true;
+    /* another comment */
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.__esModule=true;
+    exports.default=megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    export default function foo() {}
+  `),
+  ).toEqual(false)
 })
 
 test('isGitUrl', () => {

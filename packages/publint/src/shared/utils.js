@@ -35,6 +35,21 @@ export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
 
+// Check for problematic __esModule + exports.default pattern (https://github.com/publint/publint/issues/187)
+const EXPORTS___ESMODULE_PATTERN_RE =
+  /exports\.__esModule\s*=\s*true|Object\.defineProperty\s*\(\s*exports\s*,\s*["']__esModule["']\s*,\s*\{\s*value\s*:\s*true\s*\}/
+const EXPORTS_DEFAULT_PATTERN_RE = /exports\.default\s*=/
+/**
+ * @param {string} code
+ */
+export function isFauxEsmWithDefaultExport(code) {
+  const strippedCode = stripComments(code)
+  return (
+    EXPORTS___ESMODULE_PATTERN_RE.test(strippedCode) &&
+    EXPORTS_DEFAULT_PATTERN_RE.test(strippedCode)
+  )
+}
+
 const MULTILINE_COMMENTS_RE = /\/\*(.|[\r\n])*?\*\//gm
 const SINGLELINE_COMMENTS_RE = /\/\/.*/g
 /**
