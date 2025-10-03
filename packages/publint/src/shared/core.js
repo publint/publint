@@ -185,7 +185,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             type: 'warning',
           })
         }
-        if (isFauxEsmWithDefaultExport(defaultContent)) {
+        if (
+          expectFormat === 'CJS' &&
+          isFauxEsmWithDefaultExport(defaultContent)
+        ) {
           messages.push({
             code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
             args: { filePath: '/index.js' },
@@ -248,6 +251,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       if (
         module == null &&
         exports == null &&
+        expectFormat === 'CJS' &&
         isFauxEsmWithDefaultExport(mainContent)
       ) {
         messages.push({
@@ -295,11 +299,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           type: 'suggestion',
         })
 
+        const expectFormat = await getFilePathFormat(modulePath, vfs)
         // This check only matters if bundlers uses the file.
         // If exports field is specified, bundlers will prefer that over module field
         if (
           module == null &&
           exports == null &&
+          expectFormat === 'CJS' &&
           isFauxEsmWithDefaultExport(moduleContent)
         ) {
           messages.push({
@@ -681,9 +687,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         ])
         if (browserContent === false) return
         if (!isFileContentLintable(browserContent)) return
+        const expectFormat = await getFilePathFormat(browserPath, vfs)
         // This check only matters if bundlers uses the file.
         // If exports field is specified, bundlers will prefer that over browser field
-        if (!hasExports && isFauxEsmWithDefaultExport(browserContent)) {
+        if (
+          !hasExports &&
+          expectFormat === 'CJS' &&
+          isFauxEsmWithDefaultExport(browserContent)
+        ) {
           messages.push({
             code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
             args: { filePath: vfs.pathRelative(pkgDir, browserPath) },
@@ -892,10 +903,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               }
               return
             }
+            const expectFormat = await getFilePathFormat(filePath, vfs)
             // This check only matters if it can be reached by `import`.
             // If this is after the `import` condition, then `import` will not use this condition.
             if (
               !state?.isAfterImportCondition &&
+              expectFormat === 'CJS' &&
               isFauxEsmWithDefaultExport(fileContent)
             ) {
               messages.push({
@@ -911,7 +924,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (state?.isAfterNodeCondition || currentPath.includes('browser'))
               return
             const actualFormat = getCodeFormat(fileContent)
-            const expectFormat = await getFilePathFormat(filePath, vfs)
             if (
               actualFormat !== expectFormat &&
               actualFormat !== 'unknown' &&
