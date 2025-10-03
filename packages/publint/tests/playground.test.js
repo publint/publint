@@ -12,6 +12,7 @@ testFixture('exports-browser-conflict', [
 ])
 
 testFixture('exports-esmodule-with-default', ['FAUX_ESM_WITH_DEFAULT_EXPORT'])
+testFixture('exports-esmodule-with-default-after-import-condition', [])
 
 testFixture('exports-styles', [
   'EXPORTS_FALLBACK_ARRAY_USE',

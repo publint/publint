@@ -185,6 +185,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             type: 'warning',
           })
         }
+        if (isFauxEsmWithDefaultExport(defaultContent)) {
+          messages.push({
+            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+            args: { filePath: '/index.js' },
+            path: ['name'],
+            type: 'warning',
+          })
+        }
       }
     })
   }
@@ -235,6 +243,20 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           type: 'suggestion',
         })
       }
+      // This check only matters if bundlers uses the file.
+      // If module field or exports field is specified, bundlers will prefer those over main field
+      if (
+        module == null &&
+        exports == null &&
+        isFauxEsmWithDefaultExport(mainContent)
+      ) {
+        messages.push({
+          code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+          args: { filePath: vfs.pathRelative(pkgDir, mainPath) },
+          path: mainPkgPath,
+          type: 'warning',
+        })
+      }
     })
   }
 
@@ -272,6 +294,21 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           path: modulePkgPath,
           type: 'suggestion',
         })
+
+        // This check only matters if bundlers uses the file.
+        // If exports field is specified, bundlers will prefer that over module field
+        if (
+          module == null &&
+          exports == null &&
+          isFauxEsmWithDefaultExport(moduleContent)
+        ) {
+          messages.push({
+            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+            args: { filePath: vfs.pathRelative(pkgDir, modulePath) },
+            path: modulePkgPath,
+            type: 'warning',
+          })
+        }
       }
     })
   }
@@ -355,26 +392,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   // check file existence for browser field
   const [browser, browserPkgPath] = getPublishedField(rootPkg, 'browser')
   if (browser) {
-    crawlBrowser(browser, browserPkgPath)
-    // if the package has both the `browser` and `exports` fields, recommend to use
-    // the browser condition instead
-    if (exports) {
-      if (typeof browser === 'string') {
-        messages.push({
-          code: 'USE_EXPORTS_BROWSER',
-          args: {},
-          path: browserPkgPath,
-          type: 'suggestion',
-        })
-      } else {
-        messages.push({
-          code: 'USE_EXPORTS_OR_IMPORTS_BROWSER',
-          args: {},
-          path: browserPkgPath,
-          type: 'suggestion',
-        })
-      }
-    }
+    crawlBrowser(browser, browserPkgPath, !!exports)
   }
 
   if (exports) {
@@ -443,14 +461,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                 expectExtension,
                 actualFilePath: '/' + vfs.pathRelative(pkgDir, filePath),
               },
-              path: ['name'],
-              type: 'warning',
-            })
-          }
-          if (isFauxEsmWithDefaultExport(fileContent)) {
-            messages.push({
-              code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
-              args: { filePath: '/' + vfs.pathRelative(pkgDir, filePath) },
               path: ['name'],
               type: 'warning',
             })
@@ -659,16 +669,60 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   /**
    * @param {string | Record<string, any>} fieldValue
    * @param {string[]} currentPath
+   * @param {boolean} hasExports
    */
-  function crawlBrowser(fieldValue, currentPath) {
+  function crawlBrowser(fieldValue, currentPath, hasExports) {
     if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
         const browserPath = vfs.pathJoin(pkgDir, fieldValue)
-        await readFile(browserPath, currentPath, ['.js', '/index.js'])
+        const browserContent = await readFile(browserPath, currentPath, [
+          '.js',
+          '/index.js',
+        ])
+        if (browserContent === false) return
+        if (!isFileContentLintable(browserContent)) return
+        // This check only matters if bundlers uses the file.
+        // If exports field is specified, bundlers will prefer that over browser field
+        if (!hasExports && isFauxEsmWithDefaultExport(browserContent)) {
+          messages.push({
+            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+            args: { filePath: vfs.pathRelative(pkgDir, browserPath) },
+            path: currentPath,
+            type: 'warning',
+          })
+        }
       })
     } else if (typeof fieldValue === 'object') {
       for (const key in fieldValue) {
-        crawlBrowser(fieldValue[key], currentPath.concat(key))
+        if (typeof fieldValue[key] === 'string') {
+          promiseQueue.push(async () => {
+            const browserPath = vfs.pathJoin(pkgDir, fieldValue[key])
+            await readFile(browserPath, currentPath.concat(key), [
+              '.js',
+              '/index.js',
+            ])
+          })
+        }
+      }
+    }
+
+    // if the package has both the `browser` and `exports` fields, recommend to use
+    // the browser condition instead
+    if (hasExports) {
+      if (typeof fieldValue === 'string') {
+        messages.push({
+          code: 'USE_EXPORTS_BROWSER',
+          args: {},
+          path: currentPath,
+          type: 'suggestion',
+        })
+      } else {
+        messages.push({
+          code: 'USE_EXPORTS_OR_IMPORTS_BROWSER',
+          args: {},
+          path: currentPath,
+          type: 'suggestion',
+        })
       }
     }
   }
@@ -689,16 +743,23 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   /**
+   * @typedef {{
+   *   isAfterNodeCondition: boolean,
+   *   isAfterImportCondition: boolean,
+   * }} CrawlExportsOrImportsState
+   */
+
+  /**
    * @param {any} exportsValue
    * @param {string[]} currentPath
    * @param {boolean} isImports
-   * @param {boolean} isAfterNodeCondition
+   * @param {CrawlExportsOrImportsState} [state]
    */
   function crawlExportsOrImports(
     exportsValue,
     currentPath,
     isImports = false,
-    isAfterNodeCondition = false,
+    state,
   ) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
@@ -816,14 +877,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
             if (!isFileContentLintable(fileContent)) return
-            if (isFauxEsmWithDefaultExport(fileContent)) {
-              messages.push({
-                code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
-                args: {},
-                path: currentPath,
-                type: 'warning',
-              })
-            }
             // the `module` condition is only used by bundlers and must be ESM
             if (currentPath.includes('module')) {
               const actualFormat = getCodeFormat(fileContent)
@@ -839,10 +892,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               }
               return
             }
+            // This check only matters if it can be reached by `import`.
+            // If this is after the `import` condition, then `import` will not use this condition.
+            if (
+              !state?.isAfterImportCondition &&
+              isFauxEsmWithDefaultExport(fileContent)
+            ) {
+              messages.push({
+                code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+                args: { filePath: '/' + vfs.pathRelative(pkgDir, filePath) },
+                path: currentPath,
+                type: 'warning',
+              })
+            }
             // file format checks isn't required for `browser` condition or exports
             // after the node condition, as nodejs doesn't use it, only bundlers do,
             // which doesn't care of the format
-            if (isAfterNodeCondition || currentPath.includes('browser')) return
+            if (state?.isAfterNodeCondition || currentPath.includes('browser'))
+              return
             const actualFormat = getCodeFormat(fileContent)
             const expectFormat = await getFilePathFormat(filePath, vfs)
             if (
@@ -909,7 +976,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           exportsValue[key],
           currentPath.concat('' + key),
           isImports,
-          isAfterNodeCondition,
+          state,
         )
       }
     }
@@ -1007,10 +1074,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const isCurrentPathImports =
         isImports && currentPath[currentPath.length - 1] === 'imports'
 
-      // keep special state of whether the next `crawlExportsOrImports` iterations are after a node condition.
-      // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
-      // which are fine with any format.
-      let isKeyAfterNodeCondition = isAfterNodeCondition
+      /** @type {CrawlExportsOrImportsState} */
+      let stateForNextLevel = {
+        // whether the next `crawlExportsOrImports` iterations are after a node condition.
+        // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
+        // which are fine with any format.
+        isAfterNodeCondition: state?.isAfterNodeCondition ?? false,
+        isAfterImportCondition: state?.isAfterImportCondition ?? false,
+      }
       for (const key of exportsKeys) {
         // Check that import starts with `#`
         if (isCurrentPathImports && !key.startsWith('#')) {
@@ -1028,10 +1099,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           exportsValue[key],
           currentPath.concat(key),
           isImports,
-          isKeyAfterNodeCondition,
+          stateForNextLevel,
         )
         if (key === 'node') {
-          isKeyAfterNodeCondition = true
+          stateForNextLevel.isAfterNodeCondition = true
+        }
+        if (key === 'import') {
+          stateForNextLevel.isAfterImportCondition = true
         }
       }
     }
