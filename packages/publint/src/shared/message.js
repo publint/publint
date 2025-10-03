@@ -237,7 +237,7 @@ export function formatMessage(m, pkg, opts = {}) {
         ? `The imports key is invalid as it`
         : `${h.bold(fp(m.path))} is invalid as the imports key`
       return `${start} does not start with "${h.bold('#')}". Use ${h.bold(m.args.suggestKey)} instead.`
-    case 'FAUX_ESM_WITH_DEFAULT_EXPORT': {
+    case 'CJS_WITH_ESMODULE_DEFAULT_EXPORT': {
       const start =
         m.path[0] === 'name' && m.args.filePath
           ? h.bold(m.args.filePath)

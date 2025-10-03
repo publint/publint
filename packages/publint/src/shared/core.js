@@ -190,7 +190,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           isFauxEsmWithDefaultExport(defaultContent)
         ) {
           messages.push({
-            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+            code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
             args: { filePath: '/index.js' },
             path: ['name'],
             type: 'warning',
@@ -255,7 +255,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         isFauxEsmWithDefaultExport(mainContent)
       ) {
         messages.push({
-          code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+          code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
           args: { filePath: vfs.pathRelative(pkgDir, mainPath) },
           path: mainPkgPath,
           type: 'warning',
@@ -679,7 +679,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           isFauxEsmWithDefaultExport(browserContent)
         ) {
           messages.push({
-            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+            code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
             args: { filePath: vfs.pathRelative(pkgDir, browserPath) },
             path: currentPath,
             type: 'warning',
@@ -895,7 +895,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               isFauxEsmWithDefaultExport(fileContent)
             ) {
               messages.push({
-                code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
+                code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
                 args: { filePath: '/' + vfs.pathRelative(pkgDir, filePath) },
                 path: currentPath,
                 type: 'warning',

@@ -389,7 +389,7 @@ Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928)
 
 (Works similarly to [EXPORTS_FALLBACK_ARRAY_USE](#exports_fallback_array_use)).
 
-## `FAUX_ESM_WITH_DEFAULT_EXPORT` {#faux_esm_with_default_export}
+## `CJS_WITH_ESMODULE_DEFAULT_EXPORT` {#cjs_with_esmodule_default_export}
 
 It is discouraged to use `default` exports in CJS files that are tranpiled from ESM. Otherwise, the default export may have a different value depending on the bundler or the runtime.
 
