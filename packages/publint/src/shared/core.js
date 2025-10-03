@@ -739,7 +739,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   /**
    * @typedef {{
    *   isAfterNodeCondition: boolean,
-   *   isAfterImportCondition: boolean,
+   *   isReachableByImportCondition: boolean,
    * }} CrawlExportsOrImportsState
    */
 
@@ -888,9 +888,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             }
             const expectFormat = await getFilePathFormat(filePath, vfs)
             // This check only matters if it can be reached by `import`.
-            // If this is after the `import` condition, then `import` will not use this condition.
             if (
-              !state?.isAfterImportCondition &&
+              (!state || state?.isReachableByImportCondition) &&
               expectFormat === 'CJS' &&
               isFauxEsmWithDefaultExport(fileContent)
             ) {
@@ -1069,15 +1068,21 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const isCurrentPathImports =
         isImports && currentPath[currentPath.length - 1] === 'imports'
 
-      /** @type {CrawlExportsOrImportsState} */
-      let stateForNextLevel = {
-        // whether the next `crawlExportsOrImports` iterations are after a node condition.
-        // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
-        // which are fine with any format.
-        isAfterNodeCondition: state?.isAfterNodeCondition ?? false,
-        isAfterImportCondition: state?.isAfterImportCondition ?? false,
-      }
+      const isImportRequireConditions =
+        exportsKeys.includes('require') || exportsKeys.includes('import')
+      const isReachableByImportCondition =
+        state?.isReachableByImportCondition ?? true
+
       for (const key of exportsKeys) {
+        /** @type {CrawlExportsOrImportsState} */
+        let stateForNextLevel = {
+          // whether the next `crawlExportsOrImports` iterations are after a node condition.
+          // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
+          // which are fine with any format.
+          isAfterNodeCondition: state?.isAfterNodeCondition ?? false,
+          isReachableByImportCondition,
+        }
+
         // Check that import starts with `#`
         if (isCurrentPathImports && !key.startsWith('#')) {
           messages.push({
@@ -1090,6 +1095,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           })
         }
 
+        if (isImportRequireConditions) {
+          stateForNextLevel.isReachableByImportCondition =
+            isReachableByImportCondition &&
+            (key === 'import' ||
+              (!exportsKeys.includes('import') && key === 'default'))
+        }
+
         crawlExportsOrImports(
           exportsValue[key],
           currentPath.concat(key),
@@ -1098,9 +1110,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         )
         if (key === 'node') {
           stateForNextLevel.isAfterNodeCondition = true
-        }
-        if (key === 'import') {
-          stateForNextLevel.isAfterImportCondition = true
         }
       }
     }

@@ -1,6 +1,6 @@
 export default {
   'package.json': JSON.stringify({
-    name: 'publint-exports-esmodule-with-default-after-import-condition',
+    name: 'publint-exports-esmodule-with-default-with-import-condition',
     version: '0.0.1',
     private: true,
     type: 'commonjs',
@@ -10,6 +10,20 @@ export default {
         import: './lib.mjs',
         default: './lib.js',
       },
+      './default-only': {
+        default: './lib.js',
+      },
+      './no-import': {
+        require: './lib.js',
+        default: './lib.js',
+      },
+      './multiple-import': {
+        import: {
+          node: './lib.js',
+          browser: './lib.js',
+          deno: './lib.mjs',
+        }
+      }
     },
   }),
   'lib.mjs': `
