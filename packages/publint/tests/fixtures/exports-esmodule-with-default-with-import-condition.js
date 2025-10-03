@@ -22,8 +22,8 @@ export default {
           node: './lib.js',
           browser: './lib.js',
           deno: './lib.mjs',
-        }
-      }
+        },
+      },
     },
   }),
   'lib.mjs': `
