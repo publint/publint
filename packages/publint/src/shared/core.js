@@ -450,8 +450,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           if (isFauxEsmWithDefaultExport(fileContent)) {
             messages.push({
               code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
-              args: {},
-              path: modulePkgPath,
+              args: { filePath: '/' + vfs.pathRelative(pkgDir, filePath) },
+              path: ['name'],
               type: 'warning',
             })
           }

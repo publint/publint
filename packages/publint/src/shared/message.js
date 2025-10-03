@@ -238,8 +238,13 @@ export function formatMessage(m, pkg, opts = {}) {
         : `${h.bold(fp(m.path))} is invalid as the imports key`
       return `${start} does not start with "${h.bold('#')}". Use ${h.bold(m.args.suggestKey)} instead.`
     case 'FAUX_ESM_WITH_DEFAULT_EXPORT': {
-      const fileRef = opts.reference ? 'This file' : `${h.bold(fp(m.path))}`
-      return `${fileRef} sets both ${h.bold('exports.__esModule = true')} and ${h.bold('exports.default')}. This pattern breaks default imports when importing from ${h.bold('.mjs')} files or a ${h.bold('.js')} file that has a closest package.json with ${h.bold('"type": "module"')} in some bundlers. Consider using ESM syntax instead of CommonJS with ${h.bold('__esModule')} or avoid the default export.`
+      const start =
+        m.path[0] === 'name' && m.args.filePath
+          ? h.bold(m.args.filePath)
+          : opts.reference
+            ? 'This file'
+            : `${h.bold(fp(m.path))}`
+      return `${start} sets both ${h.bold('exports.__esModule = true')} and ${h.bold('exports.default')}. This pattern breaks default imports when importing from an ESM-interpreted file in some bundlers. Consider using ESM syntax instead of CommonJS with ${h.bold('__esModule')} or avoid the default export.`
     }
     default:
       return
