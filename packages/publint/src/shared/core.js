@@ -298,23 +298,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           path: modulePkgPath,
           type: 'suggestion',
         })
-
-        const expectFormat = await getFilePathFormat(modulePath, vfs)
-        // This check only matters if bundlers uses the file.
-        // If exports field is specified, bundlers will prefer that over module field
-        if (
-          module == null &&
-          exports == null &&
-          expectFormat === 'CJS' &&
-          isFauxEsmWithDefaultExport(moduleContent)
-        ) {
-          messages.push({
-            code: 'FAUX_ESM_WITH_DEFAULT_EXPORT',
-            args: { filePath: vfs.pathRelative(pkgDir, modulePath) },
-            path: modulePkgPath,
-            type: 'warning',
-          })
-        }
       }
     })
   }
