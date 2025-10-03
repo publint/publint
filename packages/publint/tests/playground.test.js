@@ -164,7 +164,6 @@ testFixture('types-exports-versioned', [])
 testFixture('types-versions', [])
 
 testFixture('umd', [
-  'FAUX_ESM_WITH_DEFAULT_EXPORT',
   'FILE_INVALID_FORMAT',
   'FILE_INVALID_FORMAT',
 ])
