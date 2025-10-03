@@ -163,10 +163,7 @@ testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])
 
-testFixture('umd', [
-  'FILE_INVALID_FORMAT',
-  'FILE_INVALID_FORMAT',
-])
+testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
 
 testFixture('deprecated-fields', [
   'DEPRECATED_FIELD_JSNEXT',
