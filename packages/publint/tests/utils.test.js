@@ -117,6 +117,26 @@ test('hasEsModuleAndExportsDefault', () => {
   ).toEqual(true)
   expect(
     isFauxEsmWithDefaultExport(`
+    exports.__esModule = true;
+    exports.default = exports
+  `),
+  ).toEqual(false)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.__esModule = true;
+    exports.default = exports;
+  `),
+  ).toEqual(false)
+  expect(
+    isFauxEsmWithDefaultExport(`
+    exports.__esModule = true;
+    const foo = 'foo';
+    exports.foo = foo;
+    exports.default = { foo };
+  `),
+  ).toEqual(false)
+  expect(
+    isFauxEsmWithDefaultExport(`
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = megalodon_1.default;
   `),
