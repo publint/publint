@@ -1070,17 +1070,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
       const isImportRequireConditions =
         exportsKeys.includes('require') || exportsKeys.includes('import')
-      const isReachableByImportCondition =
-        state?.isReachableByImportCondition ?? true
+
+      // whether the next `crawlExportsOrImports` iterations are after a node condition.
+      // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
+      // which are fine with any format.
+      // we track this outside of the for loop as we want the state to persist between the top-level keys.
+      let isAfterNodeCondition = state?.isAfterNodeCondition ?? false
 
       for (const key of exportsKeys) {
         /** @type {CrawlExportsOrImportsState} */
-        let stateForNextLevel = {
-          // whether the next `crawlExportsOrImports` iterations are after a node condition.
-          // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
-          // which are fine with any format.
-          isAfterNodeCondition: state?.isAfterNodeCondition ?? false,
-          isReachableByImportCondition,
+        const stateForNextLevel = {
+          isAfterNodeCondition,
+          isReachableByImportCondition:
+            state?.isReachableByImportCondition ?? true,
+        }
+        if (isImportRequireConditions) {
+          stateForNextLevel.isReachableByImportCondition &&=
+            key === 'import' ||
+            (!exportsKeys.includes('import') && key === 'default')
         }
 
         // Check that import starts with `#`
@@ -1095,13 +1102,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           })
         }
 
-        if (isImportRequireConditions) {
-          stateForNextLevel.isReachableByImportCondition =
-            isReachableByImportCondition &&
-            (key === 'import' ||
-              (!exportsKeys.includes('import') && key === 'default'))
-        }
-
         crawlExportsOrImports(
           exportsValue[key],
           currentPath.concat(key),
@@ -1109,7 +1109,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           stateForNextLevel,
         )
         if (key === 'node') {
-          stateForNextLevel.isAfterNodeCondition = true
+          isAfterNodeCondition = true
         }
       }
     }
