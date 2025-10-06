@@ -112,9 +112,6 @@ export default defineConfig({
       serveAnalysisJson(),
       publintApi(),
     ],
-    build: {
-      minify: false,
-    },
   },
 
   async buildEnd() {
