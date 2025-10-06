@@ -35,6 +35,36 @@ export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
 
+// Check for problematic __esModule + exports.default pattern (https://github.com/publint/publint/issues/187)
+const EXPORTS___ESMODULE_PATTERN_RE =
+  /exports\.__esModule\s*=\s*true|Object\.defineProperty\s*\(\s*exports\s*,\s*["']__esModule["']\s*,\s*\{\s*value\s*:\s*true\s*\}/
+const EXPORTS_DEFAULT_PATTERN_RE = /exports\.default\s*=\s*([^\s]{7}.)/g
+/**
+ * @param {string} code
+ */
+export function hasEsModuleAndExportsDefault(code) {
+  const strippedCode = stripComments(code)
+  if (!EXPORTS___ESMODULE_PATTERN_RE.test(strippedCode)) {
+    return false
+  }
+  for (const match of strippedCode.matchAll(EXPORTS_DEFAULT_PATTERN_RE)) {
+    const partialDefaultValue = match[1].trimEnd()
+    if (
+      partialDefaultValue === 'exports' ||
+      partialDefaultValue === 'exports;'
+    ) {
+      // ignore `exports.default = exports`
+      continue
+    }
+    if (partialDefaultValue.startsWith('{')) {
+      // ignore `exports.default = { ... }`
+      continue
+    }
+    return true
+  }
+  return false
+}
+
 const MULTILINE_COMMENTS_RE = /\/\*(.|[\r\n])*?\*\//gm
 const SINGLELINE_COMMENTS_RE = /\/\/.*/g
 /**
