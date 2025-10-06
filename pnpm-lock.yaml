@@ -118,6 +118,9 @@ importers:
       fs-fixture:
         specifier: ^2.8.1
         version: 2.8.1
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
       svelte:
         specifier: ^5.39.2
         version: 5.39.2
@@ -1033,6 +1036,9 @@ packages:
   get-npm-tarball-url@2.1.0:
     resolution: {integrity: sha512-ro+DiMu5DXgRBabqXupW38h7WPZ9+Ad8UjwhvsmmN8w1sU7ab0nzAXvVZ4kqYg57OrqomRtJvepX5/xvFKNtjA==}
     engines: {node: '>=12.17'}
+
+  github-slugger@2.0.0:
+    resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -2522,6 +2528,8 @@ snapshots:
     optional: true
 
   get-npm-tarball-url@2.1.0: {}
+
+  github-slugger@2.0.0: {}
 
   glob-parent@5.1.2:
     dependencies:
