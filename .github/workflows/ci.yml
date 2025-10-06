@@ -9,13 +9,13 @@ on:
       - 'packages/**'
       - '.github/workflows/ci.yml'
       - 'pnpm-lock.yaml'
-      - '!**.md'
+      - '!**/*.md'
   pull_request:
     paths:
       - 'packages/**'
       - '.github/workflows/ci.yml'
       - 'pnpm-lock.yaml'
-      - '!**.md'
+      - '!**/*.md'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
