@@ -388,3 +388,13 @@ The use of fallback array feature is not recommended. It currently does not have
 Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928), [vitejs/vite#4439](https://github.com/vitejs/vite/issues/4439), [microsoft/TypeScript#50762](https://github.com/microsoft/TypeScript/issues/50762), [webpack/enhanced-resolve#400](https://github.com/webpack/enhanced-resolve/issues/400), [evanw/esbuild#2974](https://github.com/evanw/esbuild/issues/2974), [web-infra-dev/rspack#5052](https://github.com/web-infra-dev/rspack/issues/5052)
 
 (Works similarly to [EXPORTS_FALLBACK_ARRAY_USE](#exports_fallback_array_use)).
+
+## `CJS_WITH_ESMODULE_DEFAULT_EXPORT` {#cjs_with_esmodule_default_export}
+
+It is discouraged to use `default` exports in CJS files that are transpiled from ESM as the default export may have a different value depending on the bundler or the runtime.
+
+CJS files that are transpiled from ESM have a `__esModule` marker property, which are used by bundlers to determine if the file was originally written in ESM and how its default export should be handled. However, Node.js does not treat files with `__esModule` specially and ignores it.
+
+To align with that behavior, many bundlers (e.g. Webpack, esbuild, Rolldown) decided to mimic Node.js and ignore `__esModule` when the importer is a `.mjs` file or a `.js` file that has a closest `package.json` with `"type": "module"`. However, others may not and it may also not be obvious for package authors for when this heuristic is applied. Hence, these cases of default exports are discouraged.
+
+See the [esbuild documentation](https://esbuild.github.io/content-types/#default-interop) for more information.

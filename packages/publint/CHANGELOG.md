@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.14
+
+### Patch Changes
+
+- Add a new warning when an entrypoint is exported as CJS-only, has a default export, and has the `__esModule` marker. This setup has different interpretations by bundlers and runtimes, and implicit handling detection that may not be obvious for both package authors and users, hence it is discouraged. ([#201](https://github.com/publint/publint/pull/201))
+
 ## 0.3.13
 
 ### Patch Changes

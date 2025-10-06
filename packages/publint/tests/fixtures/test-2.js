@@ -32,6 +32,10 @@ export default {
           default: './types/internal.d.ts',
         },
       },
+      './skip-format-after-node': {
+        node: './lib/cjs.js',
+        default: './lib/foo.js',
+      },
     },
   }),
   lib: {

@@ -14,6 +14,7 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments,
+  hasEsModuleAndExportsDefault,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
 
@@ -105,6 +106,70 @@ test('getCodeFormat', () => {
   for (const code of isoCode) {
     expect(getCodeFormat(code), code).toEqual('unknown')
   }
+})
+
+test('hasEsModuleAndExportsDefault', () => {
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule = true;
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule = true;
+    exports.default = exports
+  `),
+  ).toEqual(false)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule = true;
+    exports.default = exports;
+  `),
+  ).toEqual(false)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule = true;
+    const foo = 'foo';
+    exports.foo = foo;
+    exports.default = { foo };
+  `),
+  ).toEqual(false)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule = true;
+  `),
+  ).toEqual(false)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(false)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    // Some comment
+    exports.__esModule = true;
+    /* another comment */
+    exports.default = megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule=true;
+    exports.default=megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    export default function foo() {}
+  `),
+  ).toEqual(false)
 })
 
 test('isGitUrl', () => {

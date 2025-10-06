@@ -11,6 +11,16 @@ testFixture('exports-browser-conflict', [
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
+testFixture('exports-esmodule-with-default', [
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+])
+testFixture('exports-esmodule-with-default-with-import-condition', [
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+])
+
 testFixture('exports-styles', [
   'EXPORTS_FALLBACK_ARRAY_USE',
   'EXPORTS_FALLBACK_ARRAY_USE',

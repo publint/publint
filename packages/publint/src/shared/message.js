@@ -237,6 +237,15 @@ export function formatMessage(m, pkg, opts = {}) {
         ? `The imports key is invalid as it`
         : `${h.bold(fp(m.path))} is invalid as the imports key`
       return `${start} does not start with "${h.bold('#')}". Use ${h.bold(m.args.suggestKey)} instead.`
+    case 'CJS_WITH_ESMODULE_DEFAULT_EXPORT': {
+      const start =
+        m.path[0] === 'name' && m.args.filePath
+          ? h.bold(m.args.filePath)
+          : opts.reference
+            ? 'This file'
+            : `${h.bold(fp(m.path))}`
+      return `${start} sets both ${h.bold('exports.__esModule = true')} and ${h.bold('exports.default')}. This pattern breaks default imports when importing from an ESM-interpreted file in some bundlers. Consider using ESM syntax instead of CommonJS with ${h.bold('__esModule')} or avoid the default export.`
+    }
     default:
       return
   }
