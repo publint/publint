@@ -391,8 +391,10 @@ Related issues: [nodejs/node#37928](https://github.com/nodejs/node/issues/37928)
 
 ## `CJS_WITH_ESMODULE_DEFAULT_EXPORT` {#cjs_with_esmodule_default_export}
 
-It is discouraged to use `default` exports in CJS files that are tranpiled from ESM. Otherwise, the default export may have a different value depending on the bundler or the runtime.
+It is discouraged to use `default` exports in CJS files that are transpiled from ESM as the default export may have a different value depending on the bundler or the runtime.
 
-CJS files that are transpiled from ESM have a `__esModule` marker property, which has been used by bundlers to determine if the file was originally written in ESM. However, Node.js does not treat files with `__esModule` specially, and does not allow using named exports from those files. To align with that behavior, many bundlers (e.g. Webpack, esbuild, Rolldown) decided to respect `__esModule` only when the importer is a `.mjs` file or a `.js` file that has a closest `package.json` with `"type": "module"`.
+CJS files that are transpiled from ESM have a `__esModule` marker property, which are used by bundlers to determine if the file was originally written in ESM. However, Node.js does not treat files with `__esModule` specially, and does not allow using named exports from those files.
 
-- [Related esbuild documentation](https://esbuild.github.io/content-types/#default-interop)
+To align with that behavior, many bundlers (e.g. Webpack, esbuild, Rolldown) decided to respect `__esModule` only when the importer is a `.mjs` file or a `.js` file that has a closest `package.json` with `"type": "module"`. However, others may not and it may also not be obvious for package authors for when this heuristic is applied. Hence, these cases of default exports are discouraged.
+
+The [esbuild documentation](https://esbuild.github.io/content-types/#default-interop) has more information of this behavior.
