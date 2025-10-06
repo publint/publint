@@ -42,7 +42,7 @@ const EXPORTS_DEFAULT_PATTERN_RE = /exports\.default\s*=\s*([^\s]{7}.)/g
 /**
  * @param {string} code
  */
-export function isFauxEsmWithDefaultExport(code) {
+export function hasEsModuleAndExportsDefault(code) {
   const strippedCode = stripComments(code)
   if (!EXPORTS___ESMODULE_PATTERN_RE.test(strippedCode)) {
     return false

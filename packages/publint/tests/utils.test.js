@@ -14,7 +14,7 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments,
-  isFauxEsmWithDefaultExport,
+  hasEsModuleAndExportsDefault,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
 
@@ -110,25 +110,25 @@ test('getCodeFormat', () => {
 
 test('hasEsModuleAndExportsDefault', () => {
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule = true;
     exports.default = megalodon_1.default;
   `),
   ).toEqual(true)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule = true;
     exports.default = exports
   `),
   ).toEqual(false)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule = true;
     exports.default = exports;
   `),
   ).toEqual(false)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule = true;
     const foo = 'foo';
     exports.foo = foo;
@@ -136,23 +136,23 @@ test('hasEsModuleAndExportsDefault', () => {
   `),
   ).toEqual(false)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = megalodon_1.default;
   `),
   ).toEqual(true)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule = true;
   `),
   ).toEqual(false)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.default = megalodon_1.default;
   `),
   ).toEqual(false)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     // Some comment
     exports.__esModule = true;
     /* another comment */
@@ -160,13 +160,13 @@ test('hasEsModuleAndExportsDefault', () => {
   `),
   ).toEqual(true)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     exports.__esModule=true;
     exports.default=megalodon_1.default;
   `),
   ).toEqual(true)
   expect(
-    isFauxEsmWithDefaultExport(`
+    hasEsModuleAndExportsDefault(`
     export default function foo() {}
   `),
   ).toEqual(false)

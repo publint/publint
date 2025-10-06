@@ -31,7 +31,7 @@ import {
   startsWithShebang,
   objectHasValueNested,
   isFilePathRawTs,
-  isFauxEsmWithDefaultExport,
+  hasEsModuleAndExportsDefault,
 } from './utils.js'
 
 /**
@@ -187,7 +187,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
         if (
           expectFormat === 'CJS' &&
-          isFauxEsmWithDefaultExport(defaultContent)
+          hasEsModuleAndExportsDefault(defaultContent)
         ) {
           messages.push({
             code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
@@ -252,11 +252,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         module == null &&
         exports == null &&
         expectFormat === 'CJS' &&
-        isFauxEsmWithDefaultExport(mainContent)
+        hasEsModuleAndExportsDefault(mainContent)
       ) {
         messages.push({
           code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
-          args: { filePath: vfs.pathRelative(pkgDir, mainPath) },
+          args: { filePath: '/' + vfs.pathRelative(pkgDir, mainPath) },
           path: mainPkgPath,
           type: 'warning',
         })
@@ -676,11 +676,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         if (
           !hasExports &&
           expectFormat === 'CJS' &&
-          isFauxEsmWithDefaultExport(browserContent)
+          hasEsModuleAndExportsDefault(browserContent)
         ) {
           messages.push({
             code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
-            args: { filePath: vfs.pathRelative(pkgDir, browserPath) },
+            args: { filePath: '/' + vfs.pathRelative(pkgDir, browserPath) },
             path: currentPath,
             type: 'warning',
           })
@@ -891,7 +891,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (
               (!state || state?.isReachableByImportCondition) &&
               expectFormat === 'CJS' &&
-              isFauxEsmWithDefaultExport(fileContent)
+              hasEsModuleAndExportsDefault(fileContent)
             ) {
               messages.push({
                 code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
