@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import unocss from '@unocss/vite'
+import { slug } from 'github-slugger'
 import corePackageJson from '../../packages/publint/package.json' with { type: 'json' }
 import { serveAnalysisJson } from '../scripts/vitePluginAnalysisJson.js'
 import { publintApi } from '../scripts/vitePluginPublintApi.js'
@@ -87,6 +88,12 @@ export default defineConfig({
     },
   },
 
+  markdown: {
+    anchor: {
+      slugify: (str) => slug(str),
+    },
+  },
+
   vite: {
     envDir: r('../'),
     publicDir: r('../public'),
@@ -105,6 +112,9 @@ export default defineConfig({
       serveAnalysisJson(),
       publintApi(),
     ],
+    build: {
+      minify: false,
+    },
   },
 
   async buildEnd() {
