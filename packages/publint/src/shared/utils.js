@@ -38,7 +38,7 @@ export function isCodeCjs(code) {
 // Check for problematic __esModule + exports.default pattern (https://github.com/publint/publint/issues/187)
 const EXPORTS___ESMODULE_PATTERN_RE =
   /exports\.__esModule\s*=\s*true|Object\.defineProperty\s*\(\s*exports\s*,\s*["']__esModule["']\s*,\s*\{\s*value\s*:\s*true\s*\}/
-const EXPORTS_DEFAULT_PATTERN_RE = /exports\.default\s*=\s*([^\s]{7}.)/g
+const EXPORTS_DEFAULT_PATTERN_RE = /exports(?:\.default|\["default"\]|\['default'\])\s*=\s*([^\s]{7}.)/g
 /**
  * @param {string} code
  */
