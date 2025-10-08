@@ -167,6 +167,18 @@ test('hasEsModuleAndExportsDefault', () => {
   ).toEqual(true)
   expect(
     hasEsModuleAndExportsDefault(`
+    exports.__esModule=true;
+    exports["default"]=megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
+    exports.__esModule=true;
+    exports['default']=megalodon_1.default;
+  `),
+  ).toEqual(true)
+  expect(
+    hasEsModuleAndExportsDefault(`
     export default function foo() {}
   `),
   ).toEqual(false)
