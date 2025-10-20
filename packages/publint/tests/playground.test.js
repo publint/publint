@@ -37,7 +37,6 @@ testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
   'EXPORTS_GLOB_NO_MATCHED_FILES',
   'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
-  'IMPORTS_GLOB_NO_MATCHED_FILES',
 ])
 
 testFixture('invalid-field-types', [

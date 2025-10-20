@@ -5,6 +5,10 @@ export default {
     private: true,
     type: 'commonjs',
     main: 'index',
+    imports: {
+      '#unused': './missing.js',
+      '#unused/*': './missing-*.js',
+    },
   }),
   'index.js': '',
 }

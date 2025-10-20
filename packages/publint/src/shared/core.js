@@ -809,14 +809,16 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         )
 
         if (isGlob && !exportsFiles.length) {
-          messages.push({
-            code: isImports
-              ? 'IMPORTS_GLOB_NO_MATCHED_FILES'
-              : 'EXPORTS_GLOB_NO_MATCHED_FILES',
-            args: {},
-            path: currentPath,
-            type: 'warning',
-          })
+          if (!isImports) {
+            messages.push({
+              code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
+              args: {},
+              path: currentPath,
+              type: 'warning',
+            })
+          }
+          // NOTE: We do not report `IMPORTS_GLOB_NO_MATCHED_FILES` as it's possible
+          // for libraries to not use this subpath import if e.g. it was bundled.
           return
         }
 
@@ -862,13 +864,19 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             // so we avoid linting strings like `std:lib`. we also skip .ts and .tsx as it's
             // common for some setup to only export them locally
             if (isAbsolutePath(filePath) && !isFilePathRawTs(filePath)) {
-              pq.push(async () => await readFile(filePath, currentPath))
+              // If crawling subpath imports, files may be bundled so it doesn't exist anymore,
+              // so we pass `undefined` to prevent error reporting.
+              const readFilePkgPath = isImports ? undefined : currentPath
+              pq.push(async () => await readFile(filePath, readFilePkgPath))
             }
             continue
           }
           pq.push(async () => {
+            // If crawling subpath imports, files may be bundled so it doesn't exist anymore,
+            // so we pass `undefined` to prevent error reporting.
+            const readFilePkgPath = isImports ? undefined : currentPath
             // could fail if in !isGlob
-            const fileContent = await readFile(filePath, currentPath)
+            const fileContent = await readFile(filePath, readFilePkgPath)
             if (fileContent === false) return
             if (!isFileContentLintable(fileContent)) return
             // the `module` condition is only used by bundlers and must be ESM
