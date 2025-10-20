@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.15
+
+### Patch Changes
+
+- Skip file existence checks when crawling subpath imports as they may be dev-only and not used after bundling or publish. This check may be improved in the future when publint can scan for files to see if the subpath imports are used. ([`0d72997`](https://github.com/publint/publint/commit/0d729974120060eece8a93873e7e5a24f909338e))
+
+- Handle `exports["default"]` and `exports['default']` for `CJS_WITH_ESMODULE_DEFAULT_EXPORT` rule ([`8285f77`](https://github.com/publint/publint/commit/8285f77c939e30698bf44659aee1c76d4e2918c5))
+
 ## 0.3.14
 
 ### Patch Changes
