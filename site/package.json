@@ -24,7 +24,7 @@
     "fs-fixture": "^2.8.1",
     "github-slugger": "^2.0.0",
     "svelte": "^5.39.2",
-    "vite": "^7.1.6",
+    "vite": "^7.1.11",
     "vitepress": "^2.0.0-alpha.12"
   }
 }
