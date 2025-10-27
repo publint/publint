@@ -15,6 +15,7 @@
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
   import { VITE_NPM_REGISTRY } from '../utils/constants'
+  import { normalizeGitUrl } from '../utils/registry'
 
   let npmPkgName = $state()
   let npmPkgVersion = $state()
@@ -68,38 +69,15 @@
   function extractRepoUrl(repository) {
     if (!repository) return
 
-    if (typeof repository === 'string') {
-      return extractRepoUrlInternal(repository)
-    }
-    if (repository.url) {
-      return extractRepoUrlInternal(repository.url)
-    }
-  }
-  /**
-   * @param {string} url
-   */
-  function extractRepoUrlInternal(url) {
-    url = url
-      .replace(/^git\+/, '')
-      .replace(/\.git$/, '')
-      .replace(/^git:\/\//, 'https://')
-    if (url.includes('github.com')) {
-      return { logo: githubLogo, url }
-    } else if (url.includes('gitlab.com')) {
-      return { logo: gitlabLogo, url }
-    } else if (url.startsWith('github:')) {
-      return { logo: githubLogo, url: `https://github.com/${url.slice(7)}` }
-    } else if (url.startsWith('gitlab:')) {
-      return { logo: gitlabLogo, url: `https://gitlab.com/${url.slice(7)}` }
-    } else if (url.startsWith('bitbucket:')) {
-      return {
-        logo: gitLogo,
-        url: `https://bitbucket.org/${url.slice(10)}`,
-      }
-    } else if (url.split('/').length === 2) {
-      return { logo: githubLogo, url: `https://github.com/${url}` }
-    } else if (url) {
-      return { logo: gitLogo, url }
+    const gitUrl = typeof repository === 'string' ? repository : repository.url
+    const repoUrl = normalizeGitUrl(gitUrl)
+
+    if (repoUrl.includes('github.com')) {
+      return { logo: githubLogo, url: repoUrl }
+    } else if (repoUrl.includes('gitlab.com')) {
+      return { logo: gitlabLogo, url: repoUrl }
+    } else if (repoUrl) {
+      return { logo: gitLogo, url: repoUrl }
     }
   }
 

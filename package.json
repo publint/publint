@@ -8,7 +8,7 @@
     "format": "prettier \"**/*.{js,ts,css,md,vue,svelte,html}\" --write",
     "lint-publint": "pnpm --filter \"./packages/*\" --no-bail run lint-publint",
     "typecheck": "pnpm --parallel --no-bail run typecheck",
-    "test": "pnpm --filter \"./packages/*\" run test"
+    "test": "pnpm --filter \"./packages/*\" --filter \"./site\" run test"
   },
   "packageManager": "pnpm@10.17.0",
   "engines": {
@@ -21,7 +21,7 @@
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
-    "svelte": "^5.41.1",
+    "svelte": "^5.42.2",
     "typescript": "~5.9.3"
   },
   "pnpm": {

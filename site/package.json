@@ -7,6 +7,7 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "node ./scripts/preview.js",
+    "test": "node --test",
     "typecheck": "tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
@@ -23,8 +24,8 @@
     "@unocss/vite": "^66.5.4",
     "fs-fixture": "^2.9.0",
     "github-slugger": "^2.0.0",
-    "svelte": "^5.41.1",
-    "vite": "^7.1.11",
+    "svelte": "^5.42.2",
+    "vite": "^7.1.12",
     "vitepress": "2.0.0-alpha.12"
   }
 }
