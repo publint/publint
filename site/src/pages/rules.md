@@ -166,6 +166,26 @@ An example of a correct configuration looks like this:
 }
 ```
 
+::: tip Reducing file size
+
+Having both `.d.mts` and `.d.cts` files that entirely consist of the same code feels redundant. However, there's a way to reduce the file size.
+
+As you may notice from the extended documentation above ([Masquerading as CJS](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseCJS.md) and [Masquerading as ESM](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseESM.md)), the core issue is that default exports are handled differently between ESM and CJS. If your library does not have default exports, the ESM types can directly re-export from the CJS types without caveats (note that the inverse is not true):
+
+`index.d.cts`:
+
+```ts
+export declare const api: string
+```
+
+`index.d.mts`:
+
+```ts
+export * from './index.cjs'
+```
+
+:::
+
 ## `EXPORTS_DEFAULT_SHOULD_BE_LAST`
 
 Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"exports"` field is order-based.

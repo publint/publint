@@ -128,7 +128,7 @@ importers:
         specifier: ^7.1.12
         version: 7.1.12(@types/node@24.9.1)(jiti@2.6.1)
       vitepress:
-        specifier: 2.0.0-alpha.12
+        specifier: ^2.0.0-alpha.12
         version: 2.0.0-alpha.12(@types/node@24.9.1)(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)
 
 packages:

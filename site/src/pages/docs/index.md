@@ -65,7 +65,7 @@ yarn add --dev publint
 
 Then, setup a script to execute `publint` in your `package.json`:
 
-```json title="package.json"
+```json
 {
   "scripts": {
     "lint:package": "publint"

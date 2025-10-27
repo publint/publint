@@ -26,6 +26,6 @@
     "github-slugger": "^2.0.0",
     "svelte": "^5.42.2",
     "vite": "^7.1.12",
-    "vitepress": "2.0.0-alpha.12"
+    "vitepress": "^2.0.0-alpha.12"
   }
 }
