@@ -181,6 +181,7 @@
     <input
       type="text"
       class="w-full p-4 m-0 text-base bg-transparent text-red pointer-events-none truncate border-none"
+      aria-label="Search npm package"
       placeholder={hintText || ' '}
       readonly
       tabindex="-1"
@@ -222,6 +223,7 @@
     bind:value={npmPkgName}
     class="w-full p-4 m-0 bg-white text-black focus:outline-none text-base truncate group-focus-within:bg-transparent border-rounded-2 border-none shadow-sm group-focus-within:shadow-none transition-shadow"
     type="text"
+    aria-label="Search npm package"
     placeholder="Search npm package"
     autocomplete="off"
     autocapitalize="off"
@@ -233,6 +235,8 @@
   />
   <button
     class="absolute flex flex justify-center items-center top-0 right-0 h-full bg-transparent text-black border-none px-4"
+    type="submit"
+    aria-label="Submit npm search"
   >
     <!-- https://css.gg/search -->
     <!-- prettier-ignore -->
