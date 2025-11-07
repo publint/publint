@@ -236,7 +236,7 @@
   <button
     class="absolute flex flex justify-center items-center top-0 right-0 h-full bg-transparent text-black border-none px-4"
     type="submit"
-    aria-label="Search npm packages"
+    aria-label="Submit npm search"
   >
     <!-- https://css.gg/search -->
     <!-- prettier-ignore -->
