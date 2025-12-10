@@ -14,18 +14,18 @@
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",
     "publint": "workspace:*",
-    "vue": "^3.5.22"
+    "vue": "^3.5.25"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "@unocss/core": "^66.5.4",
-    "@unocss/extractor-svelte": "^66.5.4",
-    "@unocss/preset-uno": "^66.5.4",
-    "@unocss/vite": "^66.5.4",
-    "fs-fixture": "^2.9.0",
+    "@unocss/core": "^66.5.10",
+    "@unocss/extractor-svelte": "^66.5.10",
+    "@unocss/preset-uno": "^66.5.10",
+    "@unocss/vite": "^66.5.10",
+    "fs-fixture": "^2.11.0",
     "github-slugger": "^2.0.0",
-    "svelte": "^5.42.2",
-    "vite": "^7.1.12",
-    "vitepress": "^2.0.0-alpha.12"
+    "svelte": "^5.45.8",
+    "vite": "^7.2.7",
+    "vitepress": "^2.0.0-alpha.15"
   }
 }
