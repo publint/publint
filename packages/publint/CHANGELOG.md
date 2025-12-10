@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.16
+
+### Patch Changes
+
+- Re-enable file existence checks for TS and TSX files if they do not use custom conditions. In v0.3.10, this was done unconditionally instead which missed catching possible file typos if only common conditions are used. ([`7b1408e`](https://github.com/publint/publint/commit/7b1408eb4eb2dcc2239d878ecc11f819079b4643))
+
 ## 0.3.15
 
 ### Patch Changes
