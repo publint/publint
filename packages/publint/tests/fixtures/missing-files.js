@@ -16,6 +16,7 @@ export default {
       '.': {
         types: './missing.d.ts',
         import: './missing.js',
+        default: './missing-actual-js.ts',
       },
       './not-published': './not-published.js',
     },
@@ -23,4 +24,5 @@ export default {
     bin: 'missing.js',
   }),
   'not-published.js': '',
+  'missing-actual-js.js': '',
 }

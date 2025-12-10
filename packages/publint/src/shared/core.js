@@ -32,6 +32,8 @@ import {
   objectHasValueNested,
   isFilePathRawTs,
   hasEsModuleAndExportsDefault,
+  hasCustomCondition,
+  getConditionsFromCurrentPath,
 } from './utils.js'
 
 /**
@@ -861,9 +863,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           // TODO: maybe improve .ts checks in the future
           if (!isFilePathLintable(filePath)) {
             // if not lintable, simply check file existence. only if it's an absolute path,
-            // so we avoid linting strings like `std:lib`. we also skip .ts and .tsx as it's
-            // common for some setup to only export them locally
-            if (isAbsolutePath(filePath) && !isFilePathRawTs(filePath)) {
+            // so we avoid linting strings like `std:lib`. we also skip checking if it has
+            // custom conditions, as some libraries may use them internally only which means
+            // the file may not be published.
+            if (
+              isAbsolutePath(filePath, pkgDir) &&
+              !hasCustomCondition(getConditionsFromCurrentPath(currentPath))
+            ) {
               // If crawling subpath imports, files may be bundled so it doesn't exist anymore,
               // so we pass `undefined` to prevent error reporting.
               const readFilePkgPath = isImports ? undefined : currentPath

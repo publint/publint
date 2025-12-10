@@ -349,6 +349,60 @@ export function isFilePathRawTs(filePath) {
   )
 }
 
+const COMMON_CONDITIONS = [
+  'default',
+  // file type
+  'import',
+  'require',
+  // env type
+  'development',
+  'production',
+  // env
+  'types',
+  'node',
+  'browser',
+  'worker',
+  'deno',
+]
+/**
+ * Whether the given conditions may support raw `.ts` or `.tsx` files. Usually
+ * you shouldn't export these files, however some setups uses custom conditions
+ * to export them, which wouldn't be enabled by consumers in practice.
+ *
+ * Since we can't know all the possible custom condition names, we track a list
+ * of popular condition names we know of, and if one isn't found to be in the list,
+ * we can assume it's a custom condition and that it may export raw TS files.
+ *
+ * Note: This doesn't need to be perfect. Right now it's used for determining
+ * whether to check for file existence in these specified paths, so worst case
+ * is that we just missed some checks.
+ *
+ * @param {string[]} conditions
+ */
+export function hasCustomCondition(conditions) {
+  for (const condition of conditions) {
+    if (!COMMON_CONDITIONS.includes(condition)) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * When traversing the package.json `exports` or `imports` field, this function
+ * tries to extract the conditions from the current path.
+ *
+ * @param {string[]} currentPath
+ */
+export function getConditionsFromCurrentPath(currentPath) {
+  let sliceIndex = currentPath.findIndex(
+    (p) => p === 'exports' || p === 'imports',
+  )
+  if (sliceIndex === -1) return []
+  if (currentPath[sliceIndex + 1][0] === '.') sliceIndex++
+  return currentPath.slice(sliceIndex + 1)
+}
+
 // support:
 // // @flow
 // /* @flow */
@@ -380,9 +434,12 @@ export function isRelativePath(filePath) {
 /**
  * Whether the `filePath` looks like an absolute path
  * @param {string} filePath
+ * @param {string} pkgDir
  */
-export function isAbsolutePath(filePath) {
+export function isAbsolutePath(filePath, pkgDir) {
+  if (!pkgDir.endsWith('/')) pkgDir += '/'
   return (
+    filePath.startsWith(pkgDir) ||
     filePath[0] === '/' ||
     (filePath[1] === ':' && filePath[0].match(/[a-zA-Z]/))
   )
