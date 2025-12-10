@@ -6,25 +6,11 @@
 
 <header class="absolute top-0 left-0 w-full z-10 px-4 pointer-events-none">
   <nav class="bookmark-nav flex gap-3 justify-end max-w-3xl mx-auto">
-    <a
-      class="bookmark decoration-none pointer-events-auto"
-      href="/"
-      title="Go to main page"
-    >
+    <a class="bookmark decoration-none pointer-events-auto" href="/" title="Go to main page">
       <img src={homeIcon} alt="home icon" width="20" height="20" />
     </a>
-    <a
-      class="bookmark decoration-none pointer-events-auto"
-      href="/docs/"
-      title="Go to docs"
-    >
-      <img
-        class="-mb-0.5"
-        src={docsIcon}
-        alt="docs icon"
-        width="20"
-        height="20"
-      />
+    <a class="bookmark decoration-none pointer-events-auto" href="/docs/" title="Go to docs">
+      <img class="-mb-0.5" src={docsIcon} alt="docs icon" width="20" height="20" />
     </a>
     <a
       class="bookmark decoration-none pointer-events-auto"
@@ -50,19 +36,10 @@
     width: 5rem;
     height: 5rem;
     /* bg-gray-800 */
-    background-image: linear-gradient(
-      -45deg,
-      rgb(31, 41, 55) 100%,
-      rgb(31, 41, 55) 100%
-    );
+    background-image: linear-gradient(-45deg, rgb(31, 41, 55) 100%, rgb(31, 41, 55) 100%);
     filter: blur(50px);
     /* clip top by 0.2rem (-0.02rem to negate border) so it appears that the bookmark wraps around the glow */
-    clip-path: polygon(
-      -100rem 2.18rem,
-      100rem 2.18rem,
-      100rem 100rem,
-      -100rem 100rem
-    );
+    clip-path: polygon(-100rem 2.18rem, 100rem 2.18rem, 100rem 100rem, -100rem 100rem);
   }
 
   .bookmark {
@@ -124,11 +101,7 @@
   :global(.dark) {
     .bookmark-nav::before {
       /* bg-gray-300 */
-      background-image: linear-gradient(
-        -45deg,
-        rgb(209, 213, 219) 100%,
-        rgb(209, 213, 219) 100%
-      );
+      background-image: linear-gradient(-45deg, rgb(209, 213, 219) 100%, rgb(209, 213, 219) 100%);
     }
   }
 

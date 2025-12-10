@@ -212,12 +212,8 @@ test('isGitUrl', () => {
 })
 
 test('isDeprecatedGitHubGitUrl', () => {
-  expect(isDeprecatedGitHubGitUrl('git://github.com/user/project.git')).toEqual(
-    true,
-  )
-  expect(isDeprecatedGitHubGitUrl('https://github.com/user/project')).toEqual(
-    false,
-  )
+  expect(isDeprecatedGitHubGitUrl('git://github.com/user/project.git')).toEqual(true)
+  expect(isDeprecatedGitHubGitUrl('https://github.com/user/project')).toEqual(false)
 })
 
 test('isShorthandGitHubOrGitLabUrl', () => {

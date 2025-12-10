@@ -8,10 +8,7 @@ self.addEventListener('message', async (e) => {
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
-    tarballUrl = new URL(
-      `/temp/${npmPkgName}-${npmPkgVersion}.tgz`,
-      self.location.href,
-    ).href
+    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
   } else if (isPkgPrNew) {
     const scope = pkgPrNewScope ? `${pkgPrNewScope}/` : ''
     tarballUrl = `https://pkg.pr.new/${scope}${npmPkgName}@${npmPkgVersion}`

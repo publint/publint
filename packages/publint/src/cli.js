@@ -13,11 +13,7 @@ import { createPromiseQueue } from './shared/utils.js'
 const version = createRequire(import.meta.url)('../package.json').version
 const cli = sade('publint', false)
   .version(version)
-  .option(
-    '--level',
-    `Level of messages to log ('suggestion' | 'warning' | 'error')`,
-    'suggestion',
-  )
+  .option('--level', `Level of messages to log ('suggestion' | 'warning' | 'error')`, 'suggestion')
   .option(
     '--pack',
     `Package manager to use for packing ('auto' | 'npm' | 'yarn' | 'pnpm' | 'bun' | false)`,
@@ -26,11 +22,9 @@ const cli = sade('publint', false)
   .option('--strict', `Report warnings as errors`, false)
 
 cli
-  .command(
-    'run [path]',
-    'Lint a directory or tarball file path (defaults to current directory)',
-    { default: true },
-  )
+  .command('run [path]', 'Lint a directory or tarball file path (defaults to current directory)', {
+    default: true,
+  })
   .action(async (runPath, opts) => {
     opts = normalizeOpts(opts)
 
@@ -72,9 +66,7 @@ cli
       pkgName = pkg.pkgName
     }
 
-    console.log(
-      `Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)}...`,
-    )
+    console.log(`Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)}...`)
 
     const { messages, pkg } = await publint({
       pkgDir,
@@ -92,10 +84,7 @@ cli
   })
 
 cli
-  .command(
-    'deps [dir]',
-    'Lint dependencies declared in package.json (deprecated)',
-  )
+  .command('deps [dir]', 'Lint dependencies declared in package.json (deprecated)')
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
   .action(async (dir, opts) => {
@@ -118,9 +107,7 @@ cli
     if (packageJson == null) return
     const { pkgName, pkgJson } = packageJson
 
-    console.log(
-      `Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)} deps...`,
-    )
+    console.log(`Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)} deps...`)
 
     /** @type {string[]} */
     const deps = []
@@ -239,26 +226,20 @@ function formatMessages(messages, pkgJson) {
   const errors = messages.filter((v) => v.type === 'error')
   if (errors.length) {
     logs.push(c.bold(c.red('Errors:')))
-    errors.forEach((m, i) =>
-      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
-    )
+    errors.forEach((m, i) => logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)))
     process.exitCode = 1
   }
 
   const warnings = messages.filter((v) => v.type === 'warning')
   if (warnings.length) {
     logs.push(c.bold(c.yellow('Warnings:')))
-    warnings.forEach((m, i) =>
-      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
-    )
+    warnings.forEach((m, i) => logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)))
   }
 
   const suggestions = messages.filter((v) => v.type === 'suggestion')
   if (suggestions.length) {
     logs.push(c.bold(c.blue('Suggestions:')))
-    suggestions.forEach((m, i) =>
-      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
-    )
+    suggestions.forEach((m, i) => logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)))
   }
 
   return logs

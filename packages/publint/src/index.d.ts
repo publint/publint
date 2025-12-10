@@ -20,10 +20,7 @@ interface BaseMessage<Code extends string, Args = Record<string, string>> {
 }
 
 export type Message =
-  | BaseMessage<
-      'IMPLICIT_INDEX_JS_INVALID_FORMAT',
-      { actualFormat: string; expectFormat: string }
-    >
+  | BaseMessage<'IMPLICIT_INDEX_JS_INVALID_FORMAT', { actualFormat: string; expectFormat: string }>
   | BaseMessage<
       'FILE_INVALID_FORMAT',
       {
@@ -44,10 +41,7 @@ export type Message =
         actualFilePath?: string
       }
     >
-  | BaseMessage<
-      'FILE_INVALID_JSX_EXTENSION',
-      { actualExtension: string; globbedFilePath?: string }
-    >
+  | BaseMessage<'FILE_INVALID_JSX_EXTENSION', { actualExtension: string; globbedFilePath?: string }>
   | BaseMessage<'FILE_DOES_NOT_EXIST'>
   | BaseMessage<'FILE_NOT_PUBLISHED'>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
@@ -114,10 +108,7 @@ export type Message =
   | BaseMessage<
       'INVALID_REPOSITORY_VALUE',
       | {
-          type:
-            | 'invalid-string-shorthand'
-            | 'invalid-git-url'
-            | 'deprecated-github-git-protocol'
+          type: 'invalid-string-shorthand' | 'invalid-git-url' | 'deprecated-github-git-protocol'
         }
       | {
           type: 'shorthand-git-sites'

@@ -7,12 +7,8 @@ import { createFixture } from 'fs-fixture'
 
 // Files and directories
 const cliPath = fileURLToPath(new URL('../src/cli.js', import.meta.url))
-const fixturesDir = fileURLToPath(
-  new URL('../tests/fixtures/', import.meta.url),
-)
-const fixtureFiles = (await fs.readdir(fixturesDir)).filter((file) =>
-  file.endsWith('.js'),
-)
+const fixturesDir = fileURLToPath(new URL('../tests/fixtures/', import.meta.url))
+const fixtureFiles = (await fs.readdir(fixturesDir)).filter((file) => file.endsWith('.js'))
 
 // Prompt user for fixture
 const { selectedFixtureFile } = await prompts({

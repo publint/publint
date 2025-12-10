@@ -49,9 +49,7 @@ export async function pack(dir, opts) {
   // Also double-check against stdout as usually the package manager also prints
   // the tarball file name there, in case the directory has existing tarballs.
   const tarballFile = await fs.readdir(packDestination).then((files) => {
-    return files.find(
-      (file) => file.endsWith('.tgz') && output.stdout.includes(file),
-    )
+    return files.find((file) => file.endsWith('.tgz') && output.stdout.includes(file))
   })
   if (!tarballFile) {
     if (output.stdout.startsWith('yarn pack v1')) {

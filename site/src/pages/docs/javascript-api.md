@@ -53,9 +53,7 @@ Works in Node.js and browsers.
 import { publint } from 'publint'
 
 // Fetch tarball
-const response = await fetch(
-  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz',
-)
+const response = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
 if (!response.body) throw new Error('Failed to fetch tarball')
 
 const result = await publint({ pack: { tarball: response.body } })
@@ -86,9 +84,7 @@ import { publint } from 'publint'
 import { unpack } from '@publint/pack'
 
 // Fetch tarball
-const response = await fetch(
-  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz',
-)
+const response = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
 if (!response.body) throw new Error('Failed to fetch tarball')
 
 const { rootDir, files } = await unpack(response.body)

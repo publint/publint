@@ -20,14 +20,7 @@
    */
 
   /** @type {Props} */
-  let {
-    key = '',
-    value = undefined,
-    comma = false,
-    indent = 0,
-    messages,
-    pkg,
-  } = $props()
+  let { key = '', value = undefined, comma = false, indent = 0, messages, pkg } = $props()
 
   const paths = key ? getContext(KEY).concat(key) : []
   setContext(KEY, paths)
@@ -43,9 +36,7 @@
   const maxShownMessages = 5
   let showAllMessages = $state(false)
   let shownMessages = $derived(
-    showAllMessages
-      ? matchedMessages
-      : matchedMessages.slice(0, maxShownMessages),
+    showAllMessages ? matchedMessages : matchedMessages.slice(0, maxShownMessages),
   )
 
   /**
@@ -60,10 +51,7 @@
   }
 </script>
 
-<li
-  class="relative isolate flex flex-col pt-1"
-  style:--indent-ch="{indent * 2}ch"
->
+<li class="relative isolate flex flex-col pt-1" style:--indent-ch="{indent * 2}ch">
   {#if isValueObject}
     <!-- TODO: Truncate known unnecessary fields -->
     <span class="indentable">
@@ -82,9 +70,7 @@
         />
       {/each}
     </ul>
-    <span class="indentable m-0"
-      >{isValueArray ? ']' : '}'}{comma ? ',' : ''}</span
-    >
+    <span class="indentable m-0">{isValueArray ? ']' : '}'}{comma ? ',' : ''}</span>
   {:else}
     <span class="indentable inline-flex">
       <span class="key mr-[1ch] min-w-max">{keyText}</span>

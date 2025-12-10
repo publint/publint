@@ -28,8 +28,7 @@ export function publintApi() {
       const optionsInterfaceAst = sourcefile.statements.find(
         (s) => ts.isInterfaceDeclaration(s) && s.name.text === 'Options',
       )
-      if (!optionsInterfaceAst)
-        throw new Error('Unable to find Options interface')
+      if (!optionsInterfaceAst) throw new Error('Unable to find Options interface')
       for (const member of optionsInterfaceAst.members) {
         if (ts.isPropertySignature(member)) {
           const optionName = trim(member.name.text)
@@ -56,10 +55,7 @@ export function publintApi() {
       optionsDocs = undefined
     },
     transform(code, id) {
-      if (
-        replaceInFiles.some((f) => id.endsWith(f)) &&
-        code.includes(replaceKey)
-      ) {
+      if (replaceInFiles.some((f) => id.endsWith(f)) && code.includes(replaceKey)) {
         const docs = getOptionsDocs()
         // NOTE: maybe emit sourcemap in the future
         return code.replace(replaceKey, docs)

@@ -88,10 +88,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     promiseQueue.push(async () => {
       for (const p of commonInternalPaths) {
         const internalPath = vfs.pathJoin(pkgDir, p)
-        if (
-          _packedFiles &&
-          _packedFiles.every((f) => !f.startsWith(internalPath))
-        ) {
+        if (_packedFiles && _packedFiles.every((f) => !f.startsWith(internalPath))) {
           continue
         }
         if (await vfs.isPathExist(internalPath)) {
@@ -187,10 +184,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             type: 'warning',
           })
         }
-        if (
-          expectFormat === 'CJS' &&
-          hasEsModuleAndExportsDefault(defaultContent)
-        ) {
+        if (expectFormat === 'CJS' && hasEsModuleAndExportsDefault(defaultContent)) {
           messages.push({
             code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
             args: { filePath: '/index.js' },
@@ -211,20 +205,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     promiseQueue.push(async () => {
       if (!ensureTypeOfField(main, ['string'], mainPkgPath)) return
       const mainPath = vfs.pathJoin(pkgDir, main)
-      const mainContent = await readFile(mainPath, mainPkgPath, [
-        '.js',
-        '/index.js',
-      ])
+      const mainContent = await readFile(mainPath, mainPkgPath, ['.js', '/index.js'])
       if (mainContent === false) return
       if (hasInvalidJsxExtension(main, mainPkgPath)) return
       if (!isFilePathLintable(main)) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
-      if (
-        actualFormat !== expectFormat &&
-        actualFormat !== 'unknown' &&
-        actualFormat !== 'mixed'
-      ) {
+      if (actualFormat !== expectFormat && actualFormat !== 'unknown' && actualFormat !== 'mixed') {
         const actualExtension = vfs.getExtName(mainPath)
         messages.push({
           code: isExplicitExtension(actualExtension)
@@ -276,10 +263,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     promiseQueue.push(async () => {
       if (!ensureTypeOfField(module, ['string'], modulePkgPath)) return
       const modulePath = vfs.pathJoin(pkgDir, module)
-      const moduleContent = await readFile(modulePath, modulePkgPath, [
-        '.js',
-        '/index.js',
-      ])
+      const moduleContent = await readFile(modulePath, modulePkgPath, ['.js', '/index.js'])
       if (moduleContent === false) return
       if (hasInvalidJsxExtension(module, modulePkgPath)) return
       if (!isFilePathLintable(module)) return
@@ -338,14 +322,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   // check file existence for other known package fields
-  const knownFields = [
-    'types',
-    'typings',
-    'jsnext:main',
-    'jsnext',
-    'unpkg',
-    'jsdelivr',
-  ]
+  const knownFields = ['types', 'typings', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
   // https://github.com/publint/publint/issues/42
@@ -354,19 +331,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
   for (const fieldName of knownFields) {
     const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, fieldName)
-    if (
-      fieldValue != null &&
-      ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)
-    ) {
+    if (fieldValue != null && ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)) {
       promiseQueue.push(async () => {
         const fieldPath = vfs.pathJoin(pkgDir, fieldValue)
-        const hasContent =
-          (await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])) !==
-          false
-        if (
-          hasContent &&
-          (fieldName === 'jsnext:main' || fieldName === 'jsnext')
-        ) {
+        const hasContent = (await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])) !== false
+        if (hasContent && (fieldName === 'jsnext:main' || fieldName === 'jsnext')) {
           messages.push({
             code: 'DEPRECATED_FIELD_JSNEXT',
             args: {},
@@ -394,20 +363,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   } else {
     // all files can be accessed. verify them all
     promiseQueue.push(async () => {
-      const files = await exportsGlob(
-        vfs.pathJoin(pkgDir, './*'),
-        vfs,
-        _packedFiles,
-      )
+      const files = await exportsGlob(vfs.pathJoin(pkgDir, './*'), vfs, _packedFiles)
       const pq = createPromiseQueue()
       for (const filePath of files) {
-        if (
-          hasInvalidJsxExtension(
-            filePath,
-            ['name'],
-            '/' + vfs.pathRelative(pkgDir, filePath),
-          )
-        )
+        if (hasInvalidJsxExtension(filePath, ['name'], '/' + vfs.pathRelative(pkgDir, filePath)))
           continue
         if (!isFilePathLintable(filePath)) continue
         pq.push(async () => {
@@ -434,11 +393,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             // test if the expected extension and file path already exist. if so, skip warning as
             // this invalid format file is probably intentional for other use.
             // NOTE: only relax this for globbed files, as they're implicitly exported.
-            const expectFilePath = replaceLast(
-              filePath,
-              actualExtension,
-              expectExtension,
-            )
+            const expectFilePath = replaceLast(filePath, actualExtension, expectExtension)
             if (await vfs.isPathExist(expectFilePath)) return
 
             messages.push({
@@ -543,8 +498,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
    * @param {Record<string, string> | string} repository
    */
   async function checkRepositoryField(repository) {
-    if (!ensureTypeOfField(repository, ['string', 'object'], ['repository']))
-      return
+    if (!ensureTypeOfField(repository, ['string', 'object'], ['repository'])) return
 
     if (typeof repository === 'string') {
       // the string field accepts shorthands only. if this doesn't look like a shorthand,
@@ -557,11 +511,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           type: 'warning',
         })
       }
-    } else if (
-      typeof repository === 'object' &&
-      repository.url &&
-      repository.type === 'git'
-    ) {
+    } else if (typeof repository === 'object' && repository.url && repository.type === 'git') {
       if (!isGitUrl(repository.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
@@ -666,20 +616,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
         const browserPath = vfs.pathJoin(pkgDir, fieldValue)
-        const browserContent = await readFile(browserPath, currentPath, [
-          '.js',
-          '/index.js',
-        ])
+        const browserContent = await readFile(browserPath, currentPath, ['.js', '/index.js'])
         if (browserContent === false) return
         if (!isFileContentLintable(browserContent)) return
         const expectFormat = await getFilePathFormat(browserPath, vfs)
         // This check only matters if bundlers uses the file.
         // If exports field is specified, bundlers will prefer that over browser field
-        if (
-          !hasExports &&
-          expectFormat === 'CJS' &&
-          hasEsModuleAndExportsDefault(browserContent)
-        ) {
+        if (!hasExports && expectFormat === 'CJS' && hasEsModuleAndExportsDefault(browserContent)) {
           messages.push({
             code: 'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
             args: { filePath: '/' + vfs.pathRelative(pkgDir, browserPath) },
@@ -693,10 +636,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         if (typeof fieldValue[key] === 'string') {
           promiseQueue.push(async () => {
             const browserPath = vfs.pathJoin(pkgDir, fieldValue[key])
-            await readFile(browserPath, currentPath.concat(key), [
-              '.js',
-              '/index.js',
-            ])
+            await readFile(browserPath, currentPath.concat(key), ['.js', '/index.js'])
           })
         }
       }
@@ -751,12 +691,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
    * @param {boolean} isImports
    * @param {CrawlExportsOrImportsState} [state]
    */
-  function crawlExportsOrImports(
-    exportsValue,
-    currentPath,
-    isImports = false,
-    state,
-  ) {
+  function crawlExportsOrImports(exportsValue, currentPath, isImports = false, state) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
         // if value doesn't start with `.` and we're crawling imports, assume
@@ -804,11 +739,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         const isGlob = exportsValue.includes('*')
         const exportsKey = currentPath[1]
-        const exportsFiles = await getExportsFiles(
-          exportsValue,
-          exportsKey,
-          exports,
-        )
+        const exportsFiles = await getExportsFiles(exportsValue, exportsKey, exports)
 
         if (isGlob && !exportsFiles.length) {
           if (!isImports) {
@@ -827,14 +758,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // if the exports value matches a key in `pkg.browser` (meaning it'll be remapped
         // if in a browser-ish environment), check if this is a browser-ish environment/condition.
         // if so, warn about this conflict as it's often unexpected behaviour.
-        if (
-          !isImports &&
-          typeof browser === 'object' &&
-          exportsValue in browser
-        ) {
-          const browserishCondition = knownBrowserishConditions.find((c) =>
-            currentPath.includes(c),
-          )
+        if (!isImports && typeof browser === 'object' && exportsValue in browser) {
+          const browserishCondition = knownBrowserishConditions.find((c) => currentPath.includes(c))
           if (browserishCondition) {
             messages.push({
               code: 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
@@ -890,9 +815,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               const actualFormat = getCodeFormat(fileContent)
               if (actualFormat === 'CJS') {
                 messages.push({
-                  code: isImports
-                    ? 'IMPORTS_MODULE_SHOULD_BE_ESM'
-                    : 'EXPORTS_MODULE_SHOULD_BE_ESM',
+                  code: isImports ? 'IMPORTS_MODULE_SHOULD_BE_ESM' : 'EXPORTS_MODULE_SHOULD_BE_ESM',
                   args: {},
                   path: currentPath,
                   type: 'error',
@@ -917,8 +840,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             // file format checks isn't required for `browser` condition or exports
             // after the node condition, as nodejs doesn't use it, only bundlers do,
             // which doesn't care of the format
-            if (state?.isAfterNodeCondition || currentPath.includes('browser'))
-              return
+            if (state?.isAfterNodeCondition || currentPath.includes('browser')) return
             const actualFormat = getCodeFormat(fileContent)
             if (
               actualFormat !== expectFormat &&
@@ -939,11 +861,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // this invalid format file is probably intentional for other use.
               // NOTE: only relax this for globbed files, as they're implicitly exported.
               if (isGlob) {
-                const expectFilePath = replaceLast(
-                  filePath,
-                  actualExtension,
-                  expectExtension,
-                )
+                const expectFilePath = replaceLast(filePath, actualExtension, expectExtension)
                 if (await vfs.isPathExist(expectFilePath)) return
               }
 
@@ -956,9 +874,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                   expectFormat,
                   actualExtension,
                   expectExtension,
-                  actualFilePath: isGlob
-                    ? './' + vfs.pathRelative(pkgDir, filePath)
-                    : exportsValue,
+                  actualFilePath: isGlob ? './' + vfs.pathRelative(pkgDir, filePath) : exportsValue,
                 },
                 path: currentPath,
                 type: 'warning',
@@ -971,21 +887,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       })
     } else if (Array.isArray(exportsValue)) {
       messages.push({
-        code: isImports
-          ? 'IMPORTS_FALLBACK_ARRAY_USE'
-          : 'EXPORTS_FALLBACK_ARRAY_USE',
+        code: isImports ? 'IMPORTS_FALLBACK_ARRAY_USE' : 'EXPORTS_FALLBACK_ARRAY_USE',
         args: {},
         path: currentPath,
         type: 'warning',
       })
 
       for (const key of exportsValue.keys()) {
-        crawlExportsOrImports(
-          exportsValue[key],
-          currentPath.concat('' + key),
-          isImports,
-          state,
-        )
+        crawlExportsOrImports(exportsValue[key], currentPath.concat('' + key), isImports, state)
       }
     }
     // `exports` could be null to disallow exports of globs from another key
@@ -1001,22 +910,16 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // are allowed to precede the `types` condition.
         //
         // we also skip any exports value of raw ts or tsx files as they also represent types.
-        const precedingKeys = exportsKeys
-          .slice(0, exportsKeys.indexOf('types'))
-          .filter((key) => {
-            if (key.startsWith('types')) return false
+        const precedingKeys = exportsKeys.slice(0, exportsKeys.indexOf('types')).filter((key) => {
+          if (key.startsWith('types')) return false
 
-            const value = exportsValue[key]
-            if (typeof value === 'string' && isFilePathRawTs(value))
-              return false
-            if (
-              typeof value === 'object' &&
-              objectHasValueNested(value, isFilePathRawTs)
-            )
-              return false
+          const value = exportsValue[key]
+          if (typeof value === 'string' && isFilePathRawTs(value)) return false
+          if (typeof value === 'object' && objectHasValueNested(value, isFilePathRawTs))
+            return false
 
-            return true
-          })
+          return true
+        })
 
         // TODO: check that versioned types are valid and the ranges don't overlap.
 
@@ -1064,14 +967,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
 
       // the default export/import should be the last condition
-      if (
-        'default' in exportsValue &&
-        exportsKeys[exportsKeys.length - 1] !== 'default'
-      ) {
+      if ('default' in exportsValue && exportsKeys[exportsKeys.length - 1] !== 'default') {
         messages.push({
-          code: isImports
-            ? 'IMPORTS_DEFAULT_SHOULD_BE_LAST'
-            : 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
+          code: isImports ? 'IMPORTS_DEFAULT_SHOULD_BE_LAST' : 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
           path: currentPath.concat('default'),
           type: 'error',
@@ -1079,8 +977,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
 
       // Only check that imports start with `#` for the first set of keys
-      const isCurrentPathImports =
-        isImports && currentPath[currentPath.length - 1] === 'imports'
+      const isCurrentPathImports = isImports && currentPath[currentPath.length - 1] === 'imports'
 
       const isImportRequireConditions =
         exportsKeys.includes('require') || exportsKeys.includes('import')
@@ -1095,13 +992,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         /** @type {CrawlExportsOrImportsState} */
         const stateForNextLevel = {
           isAfterNodeCondition,
-          isReachableByImportCondition:
-            state?.isReachableByImportCondition ?? true,
+          isReachableByImportCondition: state?.isReachableByImportCondition ?? true,
         }
         if (isImportRequireConditions) {
           stateForNextLevel.isReachableByImportCondition &&=
-            key === 'import' ||
-            (!exportsKeys.includes('import') && key === 'default')
+            key === 'import' || (!exportsKeys.includes('import') && key === 'default')
         }
 
         // Check that import starts with `#`
@@ -1155,15 +1050,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   function checkTypesExported(exportsRootKey = undefined) {
     promiseQueue.push(async () => {
       const typesFilePath = await findTypesFilePath(exportsRootKey)
-      const exportsRootValue = exportsRootKey
-        ? exports[exportsRootKey]
-        : exports
+      const exportsRootValue = exportsRootKey ? exports[exportsRootKey] : exports
 
       // detect if this package intend to ship types
       if (typesFilePath) {
-        const exportsPath = exportsRootKey
-          ? exportsPkgPath.concat(exportsRootKey)
-          : exportsPkgPath
+        const exportsPath = exportsRootKey ? exportsPkgPath.concat(exportsRootKey) : exportsPkgPath
 
         // keyed strings for seen resolved paths, so we don't trigger duplicate messages for the same thing
         const seenResolvedKeys = new Set()
@@ -1186,9 +1077,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           const importResult = _resolveExports(['import', env])
           const requireResult = _resolveExports(['require', env])
           const isDualPublish =
-            importResult &&
-            requireResult &&
-            importResult.value !== requireResult.value
+            importResult && requireResult && importResult.value !== requireResult.value
 
           for (const format of ['import', 'require']) {
             // the types resolved result for the corresponding js
@@ -1198,8 +1087,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             // cache by the types path to help deduplicate the linting if we've already done so
             // for the same environment or format. if it's dual publishing, we want to lint both times
             // so we add the `format` to the key here.
-            const seenKey =
-              typesResult.path.join('.') + (isDualPublish ? format : '')
+            const seenKey = typesResult.path.join('.') + (isDualPublish ? format : '')
             if (seenResolvedKeys.has(seenKey)) continue
             seenResolvedKeys.add(seenKey)
 
@@ -1211,10 +1099,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // if we have resolve to a dts file, it might not be ours because typescript requires
               // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
               // check if we're hitting this case :(
-              const dtsActualFormat = await getDtsFilePathFormat(
-                typesResolvedPath,
-                vfs,
-              )
+              const dtsActualFormat = await getDtsFilePathFormat(typesResolvedPath, vfs)
 
               /** @type {'ESM' | 'CJS' | undefined} */
               let dtsExpectFormat = undefined
@@ -1226,15 +1111,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // versions of the dts file, and we don't need to be lenient.
               // NOTE: could there be setups with CJS code and ESM types? seems a bit weird.
               if (!isDualPublish) {
-                const jsResult =
-                  format === 'import' ? importResult : requireResult
+                const jsResult = format === 'import' ? importResult : requireResult
                 if (jsResult) {
                   const jsResolvedPath = vfs.pathJoin(pkgDir, jsResult.value)
                   if (await vfs.isPathExist(jsResolvedPath)) {
-                    dtsExpectFormat = await getFilePathFormat(
-                      jsResolvedPath,
-                      vfs,
-                    )
+                    dtsExpectFormat = await getFilePathFormat(jsResolvedPath, vfs)
                   }
                 }
               }
@@ -1296,9 +1177,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                   code: 'TYPES_NOT_EXPORTED',
                   args: {
                     typesFilePath,
-                    actualExtension: isMatchingFormat
-                      ? undefined
-                      : vfs.getExtName(typesFilePath),
+                    actualExtension: isMatchingFormat ? undefined : vfs.getExtName(typesFilePath),
                     expectExtension: isMatchingFormat
                       ? undefined
                       : getDtsCodeFormatExtension(dtsExpectFormat),
@@ -1343,10 +1222,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     if (typeof binValue === 'string') {
       promiseQueue.push(async () => {
         const binPath = vfs.pathJoin(pkgDir, binValue)
-        const binContent = await readFile(binPath, currentPath, [
-          '.js',
-          '/index.js',
-        ])
+        const binContent = await readFile(binPath, currentPath, ['.js', '/index.js'])
         if (binContent === false) return
         // Skip checks if file is not lintable
         if (!isFilePathLintable(binValue)) return

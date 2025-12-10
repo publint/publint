@@ -76,9 +76,7 @@ It returns an object with `files`, which is the list of unpacked files, and `roo
 ```js
 import { unpack } from '@publint/pack'
 
-const response = await fetch(
-  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz',
-)
+const response = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
 if (!response.body) throw new Error('Failed to fetch tarball')
 
 const result = await unpack(response.body)

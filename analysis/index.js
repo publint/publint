@@ -55,9 +55,7 @@ async function mainCommand() {
           const { tarball, version } = pkgData
           const { messages } = await publint({ pack: { tarball } })
           const severity =
-            messages.length === 0
-              ? 0
-              : Math.max(...messages.map((m) => messageToSeverity(m)))
+            messages.length === 0 ? 0 : Math.max(...messages.map((m) => messageToSeverity(m)))
 
           // Provide feedback
           console.log(pkg, severity)
@@ -166,10 +164,7 @@ async function fetchPkgData(pkg) {
  * @param {string} version
  */
 function getCacheTarFileUrl(pkg, version) {
-  return new URL(
-    `./cache/${pkg.replace('/', '__')}-${version}.tgz`,
-    import.meta.url,
-  )
+  return new URL(`./cache/${pkg.replace('/', '__')}-${version}.tgz`, import.meta.url)
 }
 
 /**
@@ -192,14 +187,11 @@ async function fetchPkg(pkg, version) {
  * @returns {Promise<string>}
  */
 async function fetchPkgLatestVersion(pkg) {
-  return await fetch(
-    `https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`,
-    {
-      headers: {
-        'User-Agent': 'publint-analysis',
-      },
+  return await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`, {
+    headers: {
+      'User-Agent': 'publint-analysis',
     },
-  )
+  })
     .then((v) => v.ok && v.json())
     .then((v) => v.version)
 }

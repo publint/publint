@@ -170,10 +170,7 @@
   }
 </script>
 
-<form
-  class="relative isolate w-full max-w-xl group z-50"
-  onsubmit={handleSubmit}
->
+<form class="relative isolate w-full max-w-xl group z-50" onsubmit={handleSubmit}>
   <div
     class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white text-black absolute top-0 -z-1 transition-shadow"
   >
@@ -207,9 +204,7 @@
               class="bg-transparent flex justify-between m-0 border-none text-base w-full block text-left p-4"
               onclick={() => (npmPkgName = opt.value)}
             >
-              <span class="text-black"
-                >{@html highlightText(opt.value, npmPkgName)}</span
-              >
+              <span class="text-black">{@html highlightText(opt.value, npmPkgName)}</span>
               <span class="text-black opacity-50">{opt.version}</span>
             </button>
           </li>

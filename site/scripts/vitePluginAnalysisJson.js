@@ -1,9 +1,6 @@
 import fs from 'node:fs/promises'
 
-const analysisJsonUrl = new URL(
-  '../../analysis/cache/_results.json',
-  import.meta.url,
-)
+const analysisJsonUrl = new URL('../../analysis/cache/_results.json', import.meta.url)
 
 /** @type {import('vite').Connect.Server} */
 const analysisJsonMiddleware = async (req, res, next) => {

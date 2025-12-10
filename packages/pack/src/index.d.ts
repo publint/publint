@@ -29,10 +29,7 @@ export interface PackAsListOptions extends SharedPackOptions {}
 /**
  * Packs the given directory and returns a list of relative file paths that were packed.
  */
-export function packAsList(
-  dir: string,
-  opts?: PackAsListOptions,
-): Promise<string[]>
+export function packAsList(dir: string, opts?: PackAsListOptions): Promise<string[]>
 
 export interface PackAsJsonOptions extends SharedPackOptions {}
 /**
@@ -70,6 +67,4 @@ export interface UnpackResult {
  * For example when using `fetch()`, you can decide between both types with
  * its returned response: `response.arrayBuffer()` or `response.body`.
  */
-export function unpack(
-  tarball: ArrayBuffer | ReadableStream<Uint8Array>,
-): Promise<UnpackResult>
+export function unpack(tarball: ArrayBuffer | ReadableStream<Uint8Array>): Promise<UnpackResult>

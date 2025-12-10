@@ -50,10 +50,7 @@ export function hasEsModuleAndExportsDefault(code) {
   }
   for (const match of strippedCode.matchAll(EXPORTS_DEFAULT_PATTERN_RE)) {
     const partialDefaultValue = match[1].trimEnd()
-    if (
-      partialDefaultValue === 'exports' ||
-      partialDefaultValue === 'exports;'
-    ) {
+    if (partialDefaultValue === 'exports' || partialDefaultValue === 'exports;') {
       // ignore `exports.default = exports`
       continue
     }
@@ -72,9 +69,7 @@ const SINGLELINE_COMMENTS_RE = /\/\/.*/g
  * @param {string} code
  */
 export function stripComments(code) {
-  return code
-    .replace(MULTILINE_COMMENTS_RE, '')
-    .replace(SINGLELINE_COMMENTS_RE, '')
+  return code.replace(MULTILINE_COMMENTS_RE, '').replace(SINGLELINE_COMMENTS_RE, '')
 }
 
 // Reference: https://git-scm.com/docs/git-clone#_git_urls and https://github.com/npm/hosted-git-info
@@ -164,18 +159,10 @@ export function getCodeFormat(code) {
  * @param {Record<string, any>} [exports]
  * @returns {Promise<string[]>} Matched file paths
  */
-export async function exportsGlob(
-  globStr,
-  vfs,
-  packedFiles,
-  exportsKey,
-  exports,
-) {
+export async function exportsGlob(globStr, vfs, packedFiles, exportsKey, exports) {
   /** @type {string[]} */
   const filePaths = []
-  const globStrRe = new RegExp(
-    `^${slash(globStr).split('*').map(escapeRegExp).join('(.+)')}$`,
-  )
+  const globStrRe = new RegExp(`^${slash(globStr).split('*').map(escapeRegExp).join('(.+)')}$`)
   // the longest directory that doesn't contain `*`
   const topDir = globStr.split('*')[0].match(/(.+)[/\\]/)?.[1]
   // compute an array of regexes that are marked `null` in the `exports` field.
@@ -186,9 +173,7 @@ export async function exportsGlob(
   if (exportsKey && exports) {
     for (const key in exports) {
       if (exports[key] === null) {
-        excludedExportKeys.push(
-          new RegExp(`^${key.split('*').map(escapeRegExp).join('(.+)')}$`),
-        )
+        excludedExportKeys.push(new RegExp(`^${key.split('*').map(escapeRegExp).join('(.+)')}$`))
       }
     }
   }
@@ -208,10 +193,7 @@ export async function exportsGlob(
     for (const item of items) {
       const itemPath = vfs.pathJoin(dirPath, item)
       // ensure the file is within the packed files (if provided)
-      if (
-        !packedFiles ||
-        packedFiles.some((file) => file.startsWith(itemPath))
-      ) {
+      if (!packedFiles || packedFiles.some((file) => file.startsWith(itemPath))) {
         if (await vfs.isPathDir(itemPath)) {
           await scanDir(itemPath)
         } else {
@@ -237,9 +219,7 @@ export async function exportsGlob(
             // match any of the excludedExportsKeys.
             if (exportsKey && exports && excludedExportKeys.length) {
               const replacedExportsKey = exportsKey.replace('*', matched[1])
-              if (
-                excludedExportKeys.some((re) => re.test(replacedExportsKey))
-              ) {
+              if (excludedExportKeys.some((re) => re.test(replacedExportsKey))) {
                 continue
               }
             }
@@ -343,10 +323,7 @@ export function isFilePathLintable(filePath) {
  * @param {string} filePath
  */
 export function isFilePathRawTs(filePath) {
-  return (
-    (filePath.endsWith('.ts') && !filePath.endsWith('.d.ts')) ||
-    filePath.endsWith('.tsx')
-  )
+  return (filePath.endsWith('.ts') && !filePath.endsWith('.d.ts')) || filePath.endsWith('.tsx')
 }
 
 const COMMON_CONDITIONS = [
@@ -395,9 +372,7 @@ export function hasCustomCondition(conditions) {
  * @param {string[]} currentPath
  */
 export function getConditionsFromCurrentPath(currentPath) {
-  let sliceIndex = currentPath.findIndex(
-    (p) => p === 'exports' || p === 'imports',
-  )
+  let sliceIndex = currentPath.findIndex((p) => p === 'exports' || p === 'imports')
   if (sliceIndex === -1) return []
   if (currentPath[sliceIndex + 1][0] === '.') sliceIndex++
   return currentPath.slice(sliceIndex + 1)
@@ -525,8 +500,7 @@ export function getPublishedField(pkgJson, field) {
 export function objectHasKeyNested(obj, key) {
   for (const k in obj) {
     if (k === key) return true
-    if (typeof obj[k] === 'object' && objectHasKeyNested(obj[k], key))
-      return true
+    if (typeof obj[k] === 'object' && objectHasKeyNested(obj[k], key)) return true
   }
   return false
 }
@@ -538,8 +512,7 @@ export function objectHasKeyNested(obj, key) {
 export function objectHasValueNested(obj, predicate) {
   for (const k in obj) {
     if (typeof obj[k] === 'string' && predicate(obj[k])) return true
-    if (typeof obj[k] === 'object' && objectHasValueNested(obj[k], predicate))
-      return true
+    if (typeof obj[k] === 'object' && objectHasValueNested(obj[k], predicate)) return true
   }
   return false
 }
@@ -583,11 +556,7 @@ export function resolveExports(exportsValue, conditions, currentPath = []) {
 
   for (const key in exportsValue) {
     if (conditions.includes(key) || key === 'default') {
-      const result = resolveExports(
-        exportsValue[key],
-        conditions,
-        currentPath.concat(key),
-      )
+      const result = resolveExports(exportsValue[key], conditions, currentPath.concat(key))
       if (result || key === 'default') return result
     }
   }

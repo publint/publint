@@ -11,8 +11,7 @@ import { publintApi } from '../scripts/vitePluginPublintApi.js'
 const r = (p) => fileURLToPath(new URL(p, import.meta.url))
 
 const ogTitle = 'publint'
-const ogDescription =
-  'Lint npm packages to ensure the widest compatibility across environments'
+const ogDescription = 'Lint npm packages to ensure the widest compatibility across environments'
 const version = corePackageJson.version
 
 export default defineConfig({
@@ -29,10 +28,7 @@ export default defineConfig({
     ['meta', { property: 'og:title', content: ogTitle }],
     ['meta', { property: 'og:description', content: ogDescription }],
     ['meta', { property: 'og:type', content: 'website' }],
-    [
-      'meta',
-      { property: 'og:image', content: 'https://publint.dev/og-image.png' },
-    ],
+    ['meta', { property: 'og:image', content: 'https://publint.dev/og-image.png' }],
     ['meta', { name: 'twitter:card', content: 'summary' }],
   ],
 
@@ -42,8 +38,7 @@ export default defineConfig({
       provider: 'local',
     },
     editLink: {
-      pattern:
-        'https://github.com/publint/publint/edit/master/site/src/pages/:path',
+      pattern: 'https://github.com/publint/publint/edit/master/site/src/pages/:path',
       text: 'Suggest changes to this page',
     },
     socialLinks: [
@@ -106,12 +101,7 @@ export default defineConfig({
     esbuild: {
       legalComments: 'none',
     },
-    plugins: [
-      unocss({ inspector: false }),
-      svelte(),
-      serveAnalysisJson(),
-      publintApi(),
-    ],
+    plugins: [unocss({ inspector: false }), svelte(), serveAnalysisJson(), publintApi()],
   },
 
   async buildEnd() {

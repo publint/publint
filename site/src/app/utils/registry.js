@@ -4,9 +4,7 @@
 export function isNpmUrl(link) {
   try {
     const url = new URL(link)
-    return (
-      url.hostname === 'www.npmjs.com' && url.pathname.startsWith('/package/')
-    )
+    return url.hostname === 'www.npmjs.com' && url.pathname.startsWith('/package/')
   } catch {
     return false
   }

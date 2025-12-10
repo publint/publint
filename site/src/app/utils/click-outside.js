@@ -10,11 +10,7 @@ export function clickOutside(node) {
    * @param {MouseEvent} e
    */
   function handleClick(e) {
-    if (
-      e.target instanceof Node &&
-      !node.contains(e.target) &&
-      !e.defaultPrevented
-    ) {
+    if (e.target instanceof Node && !node.contains(e.target) && !e.defaultPrevented) {
       node.dispatchEvent(new MouseEvent('clickoutside', e))
     }
   }

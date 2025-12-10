@@ -1,9 +1,5 @@
 import picocolors from 'picocolors'
-import {
-  formatMessagePath as fp,
-  getPkgPathValue,
-  replaceLast,
-} from './utils.js'
+import { formatMessagePath as fp, getPkgPathValue, replaceLast } from './utils.js'
 
 const EMPTY_MSG = '<empty>'
 

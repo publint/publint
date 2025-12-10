@@ -30,10 +30,7 @@ export interface FormatMessageOptions {
 
 export declare function formatMessagePath(path: string[]): string
 
-export declare function getPkgPathValue(
-  pkg: Record<string, any>,
-  path: string[],
-): any
+export declare function getPkgPathValue(pkg: Record<string, any>, path: string[]): any
 
 export declare function formatMessage(
   msg: Message,

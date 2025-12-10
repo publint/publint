@@ -11,9 +11,7 @@ testFixture('exports-browser-conflict', [
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
-testFixture('exports-esmodule-with-default', [
-  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
-])
+testFixture('exports-esmodule-with-default', ['CJS_WITH_ESMODULE_DEFAULT_EXPORT'])
 testFixture('exports-esmodule-with-default-with-import-condition', [
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
@@ -47,9 +45,7 @@ testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE',
 ])
 
-testFixture('invalid-jsx-extensions', [
-  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION'),
-])
+testFixture('invalid-jsx-extensions', [...Array(4).fill('FILE_INVALID_JSX_EXTENSION')])
 
 testFixture('missing-files', [
   ...Array(9).fill('FILE_DOES_NOT_EXIST'),
@@ -105,11 +101,7 @@ testFixture(
 
 testFixture(
   'test-2 (level: error)',
-  [
-    'EXPORTS_MODULE_SHOULD_BE_ESM',
-    'EXPORTS_VALUE_INVALID',
-    'FILE_DOES_NOT_EXIST',
-  ],
+  ['EXPORTS_MODULE_SHOULD_BE_ESM', 'EXPORTS_VALUE_INVALID', 'FILE_DOES_NOT_EXIST'],
   { level: 'error' },
 )
 
@@ -147,18 +139,11 @@ testFixture('types-exports-resolution', [])
 
 testFixture('types-exports-resolution-cjs', [])
 
-testFixture('types-exports-resolution-cjs-explicit', [
-  'EXPORTS_TYPES_INVALID_FORMAT',
-])
+testFixture('types-exports-resolution-cjs-explicit', ['EXPORTS_TYPES_INVALID_FORMAT'])
 
-testFixture('types-exports-resolution-dual', [
-  'TYPES_NOT_EXPORTED',
-  'TYPES_NOT_EXPORTED',
-])
+testFixture('types-exports-resolution-dual', ['TYPES_NOT_EXPORTED', 'TYPES_NOT_EXPORTED'])
 
-testFixture('types-exports-resolution-dual-explicit', [
-  'EXPORTS_TYPES_INVALID_FORMAT',
-])
+testFixture('types-exports-resolution-dual-explicit', ['EXPORTS_TYPES_INVALID_FORMAT'])
 
 testFixture('types-exports-resolution-custom-conditions', [
   'EXPORTS_TYPES_INVALID_FORMAT',
@@ -171,11 +156,7 @@ testFixture('types-versions', [])
 
 testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
 
-testFixture('deprecated-fields', [
-  'DEPRECATED_FIELD_JSNEXT',
-  'DEPRECATED_FIELD_JSNEXT',
-  'USE_TYPE',
-])
+testFixture('deprecated-fields', ['DEPRECATED_FIELD_JSNEXT', 'DEPRECATED_FIELD_JSNEXT', 'USE_TYPE'])
 
 testFixture('invalid-repository-value-string-not-url', [
   {

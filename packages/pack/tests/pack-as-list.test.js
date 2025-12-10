@@ -1,10 +1,7 @@
 import cp from 'node:child_process'
 import util from 'node:util'
 import { test } from 'vitest'
-import {
-  packAsListWithJson,
-  packAsListWithPack,
-} from '../src/node/pack-as-list.js'
+import { packAsListWithJson, packAsListWithPack } from '../src/node/pack-as-list.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
@@ -63,8 +60,7 @@ async function packlistWithFixture(
       expect(stdout.trim()).toEqual(version)
     }
 
-    const packAsList =
-      strategy === 'json' ? packAsListWithJson : packAsListWithPack
+    const packAsList = strategy === 'json' ? packAsListWithJson : packAsListWithPack
     const pm = packageManager?.split('@')[0] ?? fallbackPackageManager ?? 'npm'
 
     return await packAsList(fixture.path, pm, ignoreScripts)
@@ -75,17 +71,12 @@ async function packlistWithFixture(
 
 // NOTE: only test recent package manager releases
 for (const pm of packageManagers) {
-  if (
-    pm === 'bun' &&
-    process.env.CI === undefined &&
-    !(await isBunInstalled())
-  ) {
+  if (pm === 'bun' && process.env.CI === undefined && !(await isBunInstalled())) {
     console.info('Skipping bun tests because bun is not installed.')
     continue
   }
 
-  const packageManagerValue =
-    pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
+  const packageManagerValue = pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
   for (const strategy of ['json', 'pack']) {
     if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
@@ -184,8 +175,7 @@ for (const pm of packageManagers) {
             ...defaultPackageJsonData,
             ...packageManagerValue,
             scripts: {
-              prepack:
-                "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
+              prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
             },
           }),
           'a.js': '',
@@ -215,8 +205,7 @@ for (const pm of packageManagers) {
             ...defaultPackageJsonData,
             ...packageManagerValue,
             scripts: {
-              prepack:
-                "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
+              prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
             },
           }),
           'a.js': '',

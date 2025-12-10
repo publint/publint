@@ -11,9 +11,7 @@ const isDocs = computed(() => router.route.path.startsWith('/docs/'))
 </script>
 
 <template>
-  <AppLayout
-    v-if="frontmatter.layout === 'app' || (page.isNotFound && !isDocs)"
-  />
+  <AppLayout v-if="frontmatter.layout === 'app' || (page.isNotFound && !isDocs)" />
   <DefaultTheme.Layout v-else>
     <template #not-found>
       <NotFound />

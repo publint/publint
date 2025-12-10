@@ -18,9 +18,7 @@ await Promise.all(
     const fixtureContent = (await import(fixturePath)).default
     const fixture = await createFixture(fixtureContent)
 
-    const proc = cp.exec(
-      `npm pack ${fixture.path} --pack-destination=./public/temp/`,
-    )
+    const proc = cp.exec(`npm pack ${fixture.path} --pack-destination=./public/temp/`)
     return new Promise((resolve, reject) => {
       proc.addListener('exit', () => resolve())
       proc.addListener('error', () => reject())

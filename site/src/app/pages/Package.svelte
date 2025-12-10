@@ -171,15 +171,9 @@
     }
   })
 
-  let suggestionCount = $derived(
-    result?.messages.filter((v) => v.type === 'suggestion').length,
-  )
-  let warningCount = $derived(
-    result?.messages.filter((v) => v.type === 'warning').length,
-  )
-  let errorCount = $derived(
-    result?.messages.filter((v) => v.type === 'error').length,
-  )
+  let suggestionCount = $derived(result?.messages.filter((v) => v.type === 'suggestion').length)
+  let warningCount = $derived(result?.messages.filter((v) => v.type === 'warning').length)
+  let errorCount = $derived(result?.messages.filter((v) => v.type === 'error').length)
 
   // Add debug logs for future self
   $effect(() => {
@@ -189,16 +183,12 @@
   })
 
   let repo = $derived(
-    result?.pkgJson?.repository
-      ? extractRepoUrl(result?.pkgJson?.repository)
-      : undefined,
+    result?.pkgJson?.repository ? extractRepoUrl(result?.pkgJson?.repository) : undefined,
   )
   let npmUrl = $derived(
     `https://www.npmjs.com/package/${npmPkgName}${npmPkgVersion ? `/v/${npmPkgVersion}` : ''}`,
   )
-  let jsdelivrUrl = $derived(
-    `https://www.jsdelivr.com/package/npm/${npmPkgName}`,
-  )
+  let jsdelivrUrl = $derived(`https://www.jsdelivr.com/package/npm/${npmPkgName}`)
 </script>
 
 <svelte:head>
@@ -212,23 +202,14 @@
     <h1 class="text-8 mt-10 mb-0 font-600">
       {npmPkgName}
       {#if !error}
-        <PackageVersion
-          version={npmPkgVersion}
-          pkgName={npmPkgName}
-          {isPkgPrNew}
-        />
+        <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} {isPkgPrNew} />
       {/if}
     </h1>
 
     <p class="flex flex-row justify-center items-end gap-4 mt-4 mb-10">
       {#if repo}
         <a class="inline-block rounded @light:filter-invert" href={repo.url}>
-          <img
-            class="block h-[20px]"
-            src={repo.logo}
-            alt="repo logo"
-            height="20"
-          />
+          <img class="block h-[20px]" src={repo.logo} alt="repo logo" height="20" />
         </a>
       {:else}
         <span class="w-5 h-5"></span>
@@ -236,21 +217,11 @@
 
       {#if !isPkgPrNew}
         <a class="inline-block rounded" href={npmUrl}>
-          <img
-            class="block h-[18px]"
-            src={npmLogo}
-            alt="npm logo"
-            height="18"
-          />
+          <img class="block h-[18px]" src={npmLogo} alt="npm logo" height="18" />
         </a>
 
         <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
-          <img
-            class="block h-[20px]"
-            src={jsdelivrLogo}
-            alt="jsdelivr logo"
-            height="20"
-          />
+          <img class="block h-[20px]" src={jsdelivrLogo} alt="jsdelivr logo" height="20" />
         </a>
       {:else}
         {@const scope = pkgPrNewScope ? `${pkgPrNewScope}/` : ''}
@@ -258,12 +229,7 @@
           class="inline-block rounded"
           href={`https://pkg.pr.new/${scope}${npmPkgName}@${npmPkgVersion}`}
         >
-          <img
-            class="block h-[18px]"
-            src={pkgPrNewLogo}
-            alt="pkg.pr.new logo"
-            height="18"
-          />
+          <img class="block h-[18px]" src={pkgPrNewLogo} alt="pkg.pr.new logo" height="18" />
         </a>
       {/if}
     </p>
@@ -291,22 +257,14 @@
           {/if}
         {/if}
       </section>
-      <section
-        class="w-full max-w-3xl my-4 bg-gray-200 dark:bg-gray-900 rounded-md"
-      >
-        <p
-          class="px-4 py-2 m-0 bg-gray-300 dark:bg-gray-800 font-mono text-sm font-bold"
-        >
+      <section class="w-full max-w-3xl my-4 bg-gray-200 dark:bg-gray-900 rounded-md">
+        <p class="px-4 py-2 m-0 bg-gray-300 dark:bg-gray-800 font-mono text-sm font-bold">
           package.json
         </p>
         <pre
           class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base overflow-x-auto overflow-y-hidden">
           <ul class="m-0 p-0 list-none">
-            <PkgNode
-              value={result.pkgJson}
-              messages={result.messages}
-              pkg={result.pkgJson}
-            />
+            <PkgNode value={result.pkgJson} messages={result.messages} pkg={result.pkgJson} />
           </ul>
         </pre>
       </section>

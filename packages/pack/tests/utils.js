@@ -17,8 +17,7 @@ export async function isBunInstalled() {
 
 export async function setupCorepackAndTestHooks() {
   const isCorepackEnabled = process.env.COREPACK_ROOT !== undefined
-  const isCorepackNpmEnabled =
-    isCorepackEnabled && (await checkCorepackNpmEnabled())
+  const isCorepackNpmEnabled = isCorepackEnabled && (await checkCorepackNpmEnabled())
 
   // NOTE: `corepack enable/disable npm` commands are only run on CI as corepack
   // npm support can delete your local npm installation. https://github.com/nodejs/corepack/issues/112
@@ -41,9 +40,7 @@ export async function setupCorepackAndTestHooks() {
   // and then disable it after all tests have run.
   else if (isCI && !isCorepackNpmEnabled) {
     beforeAll(async () => {
-      console.info(
-        'Corepack npm support not enabled for `@publint/pack` tests. Enabling.',
-      )
+      console.info('Corepack npm support not enabled for `@publint/pack` tests. Enabling.')
       await exec('corepack enable npm', { cwd })
     })
     afterAll(async () => {

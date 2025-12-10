@@ -11,8 +11,7 @@ export async function onRequestGet() {
     },
   )
 
-  if (!result.ok)
-    return new Response('Failed to fetch endpoint', { status: 500 })
+  if (!result.ok) return new Response('Failed to fetch endpoint', { status: 500 })
 
   return new Response(result.body, {
     headers: {

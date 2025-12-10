@@ -103,16 +103,9 @@
     <div
       class="absolute bottom-0 w-full h-32 bg-gradient-to-b from-transparent to-gray-300 dark:to-gray-800 pointer-events-none"
     ></div>
-    <div
-      class="blur-mask absolute bottom-0 w-full h-28 backdrop-blur pointer-events-none"
-    ></div>
-    <div
-      class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none"
-    >
-      <button
-        class="VPButton medium alt pointer-events-initial"
-        onclick={() => (open = true)}
-      >
+    <div class="blur-mask absolute bottom-0 w-full h-28 backdrop-blur pointer-events-none"></div>
+    <div class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none">
+      <button class="VPButton medium alt pointer-events-initial" onclick={() => (open = true)}>
         View all {Object.keys(results).length} packages
       </button>
     </div>
