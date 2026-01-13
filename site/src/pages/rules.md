@@ -54,9 +54,7 @@ console.log('CLI is running')
 
 ### `EXPORTS_DEFAULT_SHOULD_BE_LAST`
 
-Ensure `"default"` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `"exports"` field is order-based.
-
-The example [above](#exports_types_should_be_first) also applies here as to why it should be last.
+Ensure `"default"` condition to be the last. As `"exports"` conditions are order-sensitive, in order for tooling to be able to resolve the preferred conditions first, the `"default"` condition should come last as the fallback. See the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports) for more information.
 
 (Works similarly to [IMPORTS_DEFAULT_SHOULD_BE_LAST](#imports_default_should_be_last)).
 
@@ -260,13 +258,18 @@ To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for examp
 
 If the file has an invalid format through explicit entrypoints, e.g. the `"main"`, `"module"`, and `"exports"` fields, **and** the file has an explicit extension, e.g. `.mjs` and `.cjs`, the error is reported.
 
-Invalid format checks are the same as [above](#implicit_index_js_invalid_format), except scoped down for explicit extensions for better error messages.
+An invalid format is defined as whether it has correct [ESM](https://nodejs.org/api/esm.html) or [CJS](https://nodejs.org/docs/latest/api/modules.html) usage. If a code is written in ESM or CJS, it doesn't mean that it would be interpreted as ESM or CJS respectively. In brief, it's dictated by:
+
+- If the file extension is `.mjs`, or if the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
+- If the file extension is `.cjs`, or if the closest `package.json` does not have `"type": "module"`, it's interpreted as CJS.
+
+`publint` will check these two behaviour if the file will be interpreted correctly.
 
 ### `FILE_INVALID_FORMAT`
 
 If the file has an invalid format through explicit entrypoints, e.g. the `"main"`, `"module"`, and `"exports"` fields, the error is reported.
 
-Invalid format checks are the same as [above](#implicit_index_js_invalid_format).
+Invalid format checks are the same as described in [`FILE_INVALID_EXPLICIT_FORMAT`](#file_invalid_explicit_format).
 
 ### `FILE_INVALID_JSX_EXTENSION`
 
@@ -276,12 +279,7 @@ JSX extensions such as `.cjsx`, `.mjsx`, `.ctsx`, and `.mtsx` are invalid and ar
 
 If there are no entrypoints specified, e.g. via the `"main"`, `"module"`, and `"exports"` fields, it's assumed that the root `index.js` is the default entrypoint (if it exists). If the file has an invalid format, the error is reported.
 
-An invalid format is defined as whether it has correct [ESM](https://nodejs.org/api/esm.html) or [CJS](https://nodejs.org/docs/latest/api/modules.html) usage. If a code is written in ESM or CJS, it doesn't mean that it would be interpreted as ESM or CJS respectively. In brief, it's dictated by:
-
-- If the file extension is `.mjs`, or if the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
-- If the file extension is `.cjs`, or if the closest `package.json` does not have `"type": "module"`, it's interpreted as CJS.
-
-`publint` will check these two behaviour if the file will be interpreted correctly.
+Invalid format checks are the same as described in [`FILE_INVALID_EXPLICIT_FORMAT`](#file_invalid_explicit_format).
 
 ### `IMPORTS_FALLBACK_ARRAY_USE`
 
