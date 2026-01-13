@@ -9,6 +9,21 @@ import RuleType from '../../.vitepress/page-utils/RuleType.vue'
 useHeadingHighlight()
 </script>
 
+<style>
+.outline > .VPDocOutlineItem > li > a,
+.VPDocOutlineItem.root > li > a {
+  font-size: 12px;
+  line-height: 22px;
+  padding-top: 6px;
+}
+.outline > .VPDocOutlineItem .VPDocOutlineItem.nested,
+.VPDocOutlineItem.root .VPDocOutlineItem.nested {
+  padding-left: 0;
+  padding-right: 0;
+  letter-spacing: -0.5px;
+}
+</style>
+
 # Rules
 
 The below lint rules are grouped by severity and alphabetically. The <RuleType type="error,warning,suggestion" /> icons provide quick information of the rule severity.
