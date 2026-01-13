@@ -11,7 +11,7 @@ useHeadingHighlight()
 
 # Rules
 
-The below lint rules are grouped by severity and alphabetically. Some rules may dynamically downgrade to a lower severity, which will be mentioned accordingly.
+The below lint rules are grouped by severity and alphabetically. The <RuleType type="error,warning,suggestion" /> icons provide quick information of the rule severity.
 
 ## Errors
 

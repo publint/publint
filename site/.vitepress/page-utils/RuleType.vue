@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="inline-flex gap-1 ml-1 vertical-middle">
+  <div class="inline-flex gap-1 mx-1 vertical-middle">
     <span
       v-for="(type, index) in type.split(',')"
       :key="index"
