@@ -2,3 +2,10 @@ packages:
   - analysis
   - site
   - 'packages/*'
+
+overrides:
+  prettier: $prettier
+  'vitepress>@docsearch/js': '-'
+onlyBuiltDependencies:
+  - esbuild
+  - sharp

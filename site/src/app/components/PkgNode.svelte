@@ -2,6 +2,7 @@
   const KEY = {}
 </script>
 
+<!-- svelte-ignore state_referenced_locally -->
 <script>
   import { formatMessage } from 'publint/utils'
   import PkgNode from './PkgNode.svelte'
