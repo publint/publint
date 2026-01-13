@@ -85,7 +85,7 @@ export default defineConfig({
 
   markdown: {
     anchor: {
-      slugify: (str) => slug(str),
+      slugify: (str) => slug(str.trim()),
     },
   },
 

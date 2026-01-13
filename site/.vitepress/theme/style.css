@@ -32,6 +32,6 @@
   backdrop-filter: saturate(180%) blur(20px);
 }
 
-h2.active code {
+h3.active code {
   background-color: var(--vp-c-brand-soft);
 }
