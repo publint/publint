@@ -1,8 +1,13 @@
 import path from 'node:path'
-import { packAsList, unpack } from '@publint/pack'
+import { getPackDirectory, packAsList, unpack } from '@publint/pack'
 import { createNodeVfs } from './node/vfs-node.js'
 import { core } from './shared/core.js'
 import { createTarballVfs } from './shared/vfs-tarball.js'
+
+/**
+ * @typedef {T extends string ? T : never} ExtractStringLiteral
+ * @template T
+ */
 
 /**
  * @type {import('./index.d.ts').publint}
@@ -14,8 +19,8 @@ export async function publint(options) {
 
   /** @type {import('./shared/core.js').Vfs} */
   let vfs
-  /** @type {string | undefined} */
-  let overridePkgDir
+  /** @type {string} */
+  let resolvedPkgDir
   /** @type {string[] | undefined} */
   let packedFiles
   // If a pack object is provided, that means the user declares its own virtual
@@ -27,9 +32,10 @@ export async function publint(options) {
       }
       const result = await unpack(pack.tarball)
       vfs = createTarballVfs(result.files)
-      overridePkgDir = result.rootDir
+      resolvedPkgDir = options?.pkgDir ?? result.rootDir
     } else {
       vfs = createTarballVfs(pack.files)
+      resolvedPkgDir = options?.pkgDir ?? process.cwd()
     }
   }
   // The rest options are used for manual packing and falls back to node vfs.
@@ -37,7 +43,12 @@ export async function publint(options) {
   else {
     if (pack !== false) {
       const pkgDir = options?.pkgDir ?? process.cwd()
-      packedFiles = await detectAndPack(pkgDir, pack, log)
+      const packageManager = await detectPackageManager(pkgDir, pack)
+      const packDir = await getPackDirectory(pkgDir, packageManager)
+      packedFiles = await getPackedFiles(pkgDir, packDir, packageManager, log)
+      resolvedPkgDir = packDir
+    } else {
+      resolvedPkgDir = options?.pkgDir ?? process.cwd()
     }
     vfs = createNodeVfs()
   }
@@ -47,7 +58,7 @@ export async function publint(options) {
   }
 
   return core({
-    pkgDir: options?.pkgDir ?? overridePkgDir ?? process.cwd(),
+    pkgDir: resolvedPkgDir,
     vfs,
     level: options?.level ?? 'suggestion',
     strict: options?.strict ?? false,
@@ -56,16 +67,11 @@ export async function publint(options) {
 }
 
 /**
- * @typedef {T extends string ? T : never} ExtractStringLiteral
- * @template T
- */
-
-/**
  * @param {string} pkgDir
  * @param {ExtractStringLiteral<import('./index.d.ts').Options['pack']>} pack
- * @param {boolean} log
+ * @return {Promise<import('@publint/pack').PackageManager>}
  */
-async function detectAndPack(pkgDir, pack, log) {
+async function detectPackageManager(pkgDir, pack) {
   let packageManager = pack
 
   if (packageManager === 'auto') {
@@ -78,6 +84,16 @@ async function detectAndPack(pkgDir, pack, log) {
     packageManager = detected
   }
 
+  return packageManager
+}
+
+/**
+ * @param {string} pkgDir
+ * @param {string} packDir
+ * @param {import('@publint/pack').PackageManager} packageManager
+ * @param {boolean} log
+ */
+async function getPackedFiles(pkgDir, packDir, packageManager, log) {
   // When packing, we want to ignore scripts as `publint` itself could be used in one of them and could
   // cause an infinite loop. Also, running scripts might be slow and unexpected.
 
@@ -100,5 +116,5 @@ async function detectAndPack(pkgDir, pack, log) {
   }
 
   const list = await packAsList(pkgDir, { packageManager, ignoreScripts: true })
-  return list.map((file) => path.join(pkgDir, file))
+  return list.map((file) => path.join(packDir, file))
 }

@@ -15,18 +15,19 @@ export async function publint(options) {
 
   /** @type {import('./shared/core.js').Vfs} */
   let vfs
-  /** @type {string | undefined} */
-  let overridePkgDir
+  /** @type {string} */
+  let resolvedPkgDir
   if ('tarball' in pack) {
     const result = await unpack(pack.tarball)
     vfs = createTarballVfs(result.files)
-    overridePkgDir = result.rootDir
+    resolvedPkgDir = options?.pkgDir ?? result.rootDir
   } else {
     vfs = createTarballVfs(pack.files)
+    resolvedPkgDir = options?.pkgDir ?? '/'
   }
 
   return await core({
-    pkgDir: options.pkgDir ?? overridePkgDir ?? '/',
+    pkgDir: resolvedPkgDir,
     vfs,
     level: options.level ?? 'suggestion',
     strict: options?.strict ?? false,

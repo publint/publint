@@ -374,7 +374,7 @@ export function hasCustomCondition(conditions) {
 export function getConditionsFromCurrentPath(currentPath) {
   let sliceIndex = currentPath.findIndex((p) => p === 'exports' || p === 'imports')
   if (sliceIndex === -1) return []
-  if (currentPath[sliceIndex + 1][0] === '.') sliceIndex++
+  if (currentPath[sliceIndex + 1]?.[0] === '.') sliceIndex++
   return currentPath.slice(sliceIndex + 1)
 }
 

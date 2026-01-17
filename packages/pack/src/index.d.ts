@@ -1,10 +1,12 @@
+export type PackageManager = 'npm' | 'yarn' | 'pnpm' | 'bun'
+
 interface SharedPackOptions {
   /**
    * The package manager to use for packing.
    *
    * @default 'npm'
    */
-  packageManager?: 'npm' | 'yarn' | 'pnpm' | 'bun'
+  packageManager?: PackageManager
   /**
    * Whether to ignore lifecycle scripts during packing, i.e. `prepare`, `prepack`,
    * and `postpack`. (Does not work with yarn as it does not support ignoring scripts)
@@ -28,6 +30,9 @@ export function pack(dir: string, opts?: PackOptions): Promise<string>
 export interface PackAsListOptions extends SharedPackOptions {}
 /**
  * Packs the given directory and returns a list of relative file paths that were packed.
+ *
+ * The relative file paths should be resolved via `getPackDirectory()` if a different
+ * packed directory was used.
  */
 export function packAsList(dir: string, opts?: PackAsListOptions): Promise<string[]>
 
@@ -36,9 +41,21 @@ export interface PackAsJsonOptions extends SharedPackOptions {}
  * Packs the given directory with the `--json` flag and returns its stdout as JSON.
  * You can run the `<pm> pack --json` command manually to inspect the output shape.
  *
+ * Relative file paths in the output can be resolved via `getPackDirectory()` if a
+ * different packed directory was used.
+ *
  * NOTE: Does not work in pnpm <9.14.1 and bun as they don't support the `--json` flag.
  */
 export function packAsJson(dir: string, opts?: PackAsJsonOptions): Promise<any>
+
+/**
+ * Gets the directory that is being packed by the package manager. Usually this is
+ * the same as the input `dir`, but some package managers (like pnpm) allows changing
+ * the packed directory via the `publishConfig.directory` field in `package.json`.
+ *
+ * @param packageManager The package manager to use for packing. Defaults to 'npm'.
+ */
+export function getPackDirectory(dir: string, packageManager?: PackageManager): Promise<string>
 
 export interface TarballFile {
   name: string
