@@ -1,5 +1,11 @@
 # @publint/pack
 
+## 0.1.3
+
+### Patch Changes
+
+- Add new `getPackDirectory()` API to get the directory that is being packed by the package manager ([#216](https://github.com/publint/publint/pull/216))
+
 ## 0.1.2
 
 ### Patch Changes
