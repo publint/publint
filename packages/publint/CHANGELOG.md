@@ -1,5 +1,14 @@
 # publint
 
+## 0.3.17
+
+### Patch Changes
+
+- Fix packing packages with pnpm when `publishConfig.directory` is set ([#216](https://github.com/publint/publint/pull/216))
+
+- Updated dependencies [[`2dcb107`](https://github.com/publint/publint/commit/2dcb1076f5367396556ed5e9edc98c76bf83072a)]:
+  - @publint/pack@0.1.3
+
 ## 0.3.16
 
 ### Patch Changes
