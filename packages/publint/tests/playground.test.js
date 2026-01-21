@@ -65,6 +65,9 @@ testFixture('exports-custom-condition', [])
 
 testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
 
+// This needs to run with pnpm as only it supports `publishConfig.directory`
+testFixture('publish-config-directory', [], { pack: 'pnpm' })
+
 testFixture('npmignore', [])
 
 testFixture('test-1', [
@@ -202,6 +205,7 @@ testFixture('imports-field-invalid', ['IMPORTS_KEY_INVALID'])
  * @typedef {{
  *  level?: import('../src/index.d.ts').Options['level']
  *  strict?: import('../src/index.d.ts').Options['strict']
+ *  pack?: import('../src/index.d.ts').Options['pack']
  *  debug?: boolean
  * }} TestOptions
  */
@@ -232,6 +236,7 @@ function testFixture(name, expectCodes, options) {
         pkgDir: fixture.path,
         level: options?.level,
         strict: options?.strict,
+        pack: options?.pack,
       })
 
       // unfortunately the messages are not always in order as checks are ran in parallel,

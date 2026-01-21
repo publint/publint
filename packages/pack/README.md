@@ -35,6 +35,8 @@ console.log(tarballPath)
 
 Packs the given directory and returns a list of relative file paths that were packed.
 
+The relative file paths should be resolved via `getPackDirectory()` if a different packed directory was used.
+
 > [!NOTE]
 > Compared to [`npm-packlist`](https://github.com/npm/npm-packlist), this API works at a higher level by invoking the package manager `pack` command to retrieve the list of files packed. While `npm-packlist` is abstracted away from `npm` to expose a more direct API, unfortunately not all package managers pack files the same way, e.g. the patterns in `"files"` may be interpreted differently. Plus, since `npm-packlist` v7, it requires `@npmcli/arborist` to be used together, which is a much larger dependency to include altogether.
 >
@@ -54,6 +56,8 @@ console.log(files)
 
 Packs the given directory with the `--json` flag and returns its stdout as JSON. You can run the `<pm> pack --json` command manually to inspect the output shape.
 
+Relative file paths in the output can be resolved via `getPackDirectory()` if a different packed directory was used.
+
 > [!NOTE]
 > Does not work in pnpm <9.14.1 and bun as they don't support the `--json` flag.
 
@@ -63,6 +67,19 @@ import { packAsJson } from '@publint/pack'
 const json = await packAsJson(process.cwd())
 console.log(json)
 // => [{ "id": "project@1.0.0", ...  }]
+```
+
+### `getPackDirectory()`
+
+- **Type**: `(dir: string, packageManager?: PackageManager): Promise<string>`
+
+Gets the directory that is being packed by the package manager. Usually this is the same as the input `dir`, but some package managers (like pnpm) allows changing the packed directory via the `publishConfig.directory` field in `package.json`.
+
+```js
+import { getPackDirectory } from '@publint/pack'
+const packDir = await getPackDirectory(process.cwd(), 'pnpm')
+console.log(packDir)
+// => '<cwd>/dist' (if "publishConfig.directory" is set to "dist" in package.json)
 ```
 
 ### `unpack()`
