@@ -14,17 +14,17 @@
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",
     "publint": "workspace:*",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
-    "@unocss/core": "^66.5.12",
-    "@unocss/extractor-svelte": "^66.5.12",
-    "@unocss/preset-uno": "^66.5.12",
-    "@unocss/vite": "^66.5.12",
+    "@unocss/core": "^66.6.0",
+    "@unocss/extractor-svelte": "^66.6.0",
+    "@unocss/preset-uno": "^66.6.0",
+    "@unocss/vite": "^66.6.0",
     "fs-fixture": "^2.11.0",
     "github-slugger": "^2.0.0",
-    "svelte": "^5.46.4",
+    "svelte": "^5.48.3",
     "vite": "^7.3.1",
     "vitepress": "^2.0.0-alpha.15"
   }
