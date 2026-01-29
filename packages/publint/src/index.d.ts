@@ -145,7 +145,7 @@ export interface Options {
    * ::: info Environment notes
    * - **Node.js**: Defaults to `process.cwd()`.
    * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer | ReadableStream }`. If `{ files: PackFile[] }` is used,
-   *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
+   *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js"`,
    *                the `pkgDir` should be `"package"`.
    * :::
    */
@@ -187,7 +187,8 @@ export interface Options {
     | { files: PackFile[] }
     | false
   /**
-   * Report warnings as errors.
+   * Report warnings as errors. This runs before `level` filters the result, which means that if
+   * `level` is set to `'error'`, all warnings (elevated as errors) will still be reported.
    */
   strict?: boolean
 }

@@ -24,7 +24,7 @@ At the moment, attw is able to report issues that publint does not, so it's reco
 
 [eslint-plugin-package-json](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json) is an ESLint plugin that allows linting a `package.json` file. It performs checks that overlap with publint, e.g. ensuring field types are correct, validating the `"repository"` field, etc. It also implements other general-purpose checks that may be useful to ensure consistent and opinionated `package.json`s across projects.
 
-publint doesn't aim to implement all of its rules, only the ones that affect publishing are supported. But furthermore, publint is able to check for issues beyond the `package.json`, e.g. checking for ESM and CJS formats, file existence, etc.
+Publint doesn't aim to implement all of its rules, only the ones that affect publishing are supported. But furthermore, publint is able to check for issues beyond the `package.json`, e.g. checking for ESM and CJS formats, file existence, etc.
 
 You can use the tool without conflicts if you're looking to enforce a consistent `package.json` file across projects, or if you'd like to catch certain issues that publint doesn't.
 

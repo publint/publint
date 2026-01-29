@@ -4,7 +4,7 @@ title: Getting started
 
 # Getting started
 
-publint is a [linter](<https://en.wikipedia.org/wiki/Lint_(software)>) that checks [npm](https://npmjs.com) packages to ensure the widest compatibility across environments, such as [Vite](https://vite.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Node.js](https://nodejs.org), etc. It also reports best practices and common configuration mistakes that aim to improve the overall quality of the package.
+Publint is a [linter](<https://en.wikipedia.org/wiki/Lint_(software)>) that checks [npm](https://npmjs.com) packages to ensure the widest compatibility across environments, such as [Vite](https://vite.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Node.js](https://nodejs.org), etc. It also reports best practices and common configuration mistakes that aim to improve the overall quality of the package.
 
 Check out the [comparisons](./comparisons.md) page to see how publint differs from other tools.
 
@@ -101,7 +101,7 @@ If the package has a build step, it must be run first before running `publint` s
 
 ## Community integration
 
-publint can also be used through different tools below:
+Publint can also be used through different tools below:
 
 | Name                                                           | Description                                                                                                                                         |
 | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |

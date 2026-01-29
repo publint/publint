@@ -8,7 +8,7 @@ If the last log output was ``Packing files with `<pm> pack`...`` (where `<pm>` c
 
 There are several common reasons why it might hang:
 
-1. **The package manager it's using might not be the same as what you use for publishing**. For example, you may use pnpm to install dependencies, but npm to publish packages. publint is only able to make a [best guess](https://github.com/antfu-collective/package-manager-detector) of the preferred package manager based on the lock files.
+1. **The package manager it's using might not be the same as what you use for publishing**. For example, you may use pnpm to install dependencies, but npm to publish packages. Publint is only able to make a [best guess](https://github.com/antfu-collective/package-manager-detector) of the preferred package manager based on the lock files.
 
    Different package managers may interpret the `"files"` field in `package.json` differently, which may sometimes glob into `node_modules` or large directories that are not meant to be published.
 
@@ -22,7 +22,7 @@ There are several common reasons why it might hang:
 
 ## Yarn 1 is not supported
 
-publint doesn't support yarn 1. However, there are several workarounds:
+Publint doesn't support yarn 1. However, there are several workarounds:
 
 - Pass a different package manager to pack files, e.g. `publint --pack npm`. This will cause publint to call `npm pack` to pack files even though you're using yarn to install dependencies.
 
@@ -30,3 +30,7 @@ publint doesn't support yarn 1. However, there are several workarounds:
 
 - Or upgrade yarn to v3 or v4, which are officially supported.
 - Or pack the files manually and pass the tarball to publint, e.g. `publint ./mylib-1.0.0.tgz`.
+
+## Is it Publint or publint
+
+If you're writing about publint, use the lowercase "publint" wherever possible, unless it's at the start of a sentence, you can use "Publint".
