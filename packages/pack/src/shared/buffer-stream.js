@@ -1,4 +1,15 @@
-// Utilities between ArrayBuffer and ReadableStream
+/**
+ * @param {Uint8Array} uint8array
+ * @returns {ReadableStream<Uint8Array>}
+ */
+export function uint8ArrayToReadableStream(uint8array) {
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(uint8array)
+      controller.close()
+    },
+  })
+}
 
 /**
  * @param {ArrayBuffer} arrayBuffer

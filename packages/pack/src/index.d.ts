@@ -78,10 +78,13 @@ export interface UnpackResult {
 }
 /**
  * Unpacks the given tarball buffer (gzip-decompress + untar). It accepts
- * either an `ArrayBuffer` or a `ReadableStream`. In Node.js, `ArrayBuffer`
- * is faster, while in browsers, `ReadableStream` is faster.
+ * either a `ReadableStream`, `ArrayBuffer`, or `Uint8Array`. In Node.js,
+ * `ArrayBuffer` and `Uint8Array` are faster, while in browsers, `ReadableStream`
+ * is faster.
  *
- * For example when using `fetch()`, you can decide between both types with
- * its returned response: `response.arrayBuffer()` or `response.body`.
+ * For example, when using `fetch()` in Node.js, use `response.arrayBuffer()` or
+ * `response.bytes()`, while in browsers, use `response.body` directly.
  */
-export function unpack(tarball: ArrayBuffer | ReadableStream<Uint8Array>): Promise<UnpackResult>
+export function unpack(
+  tarball: ReadableStream<Uint8Array> | ArrayBuffer | Uint8Array,
+): Promise<UnpackResult>
