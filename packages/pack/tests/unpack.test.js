@@ -28,7 +28,9 @@ describe('browser unpack', () => {
   })
 
   test('with uint8array', async () => {
-    const tarball = await tarballResponse.clone().bytes()
+    const cloned = tarballResponse.clone()
+    if (cloned.bytes == null) return // Works in Node.js 22.3+ only
+    const tarball = await cloned.bytes()
     const result = await unpack(tarball)
     expect(result.files.length).toBeGreaterThan(0)
   })
@@ -51,7 +53,9 @@ describe('node unpack', () => {
   })
 
   test('with uint8array', async () => {
-    const tarball = await tarballResponse.clone().bytes()
+    const cloned = tarballResponse.clone()
+    if (cloned.bytes == null) return // Works in Node.js 22.3+ only
+    const tarball = await cloned.bytes()
     const result = await unpack(tarball)
     expect(result.files.length).toBeGreaterThan(0)
   })
