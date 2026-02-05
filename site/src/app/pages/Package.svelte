@@ -4,6 +4,7 @@
   import gitlabLogo from '../../assets/gitlab.svg?url'
   import gitLogo from '../../assets/git.svg?url'
   import npmLogo from '../../assets/npm.svg?url'
+  import npmxLogo from '../../assets/npmx.svg?url'
   import pkgPrNewLogo from '../../assets/stackblitz.svg?url'
   import jsdelivrLogo from '../../assets/jsdelivr.svg?url'
   import Header from '../components/Header.svelte'
@@ -73,9 +74,9 @@
     const repoUrl = normalizeGitUrl(gitUrl)
 
     if (repoUrl.includes('github.com')) {
-      return { logo: githubLogo, url: repoUrl }
+      return { logo: githubLogo, url: repoUrl, name: 'GitHub' }
     } else if (repoUrl.includes('gitlab.com')) {
-      return { logo: gitlabLogo, url: repoUrl }
+      return { logo: gitlabLogo, url: repoUrl, name: 'GitLab' }
     } else if (repoUrl) {
       return { logo: gitLogo, url: repoUrl }
     }
@@ -185,6 +186,9 @@
   let repo = $derived(
     result?.pkgJson?.repository ? extractRepoUrl(result?.pkgJson?.repository) : undefined,
   )
+  let npmxUrl = $derived(
+    `https://npmx.dev/package/${npmPkgName}${npmPkgVersion ? `/v/${npmPkgVersion}` : ''}`,
+  )
   let npmUrl = $derived(
     `https://www.npmjs.com/package/${npmPkgName}${npmPkgVersion ? `/v/${npmPkgVersion}` : ''}`,
   )
@@ -208,7 +212,11 @@
 
     <p class="flex flex-row justify-center items-end gap-4 mt-4 mb-10">
       {#if repo}
-        <a class="inline-block rounded @light:filter-invert" href={repo.url}>
+        <a
+          class="inline-block rounded @light:filter-invert"
+          href={repo.url}
+          title={`Open ${repo.name ? `in ${repo.name}` : 'repository'}`}
+        >
           <img class="block h-[20px]" src={repo.logo} alt="repo logo" height="20" />
         </a>
       {:else}
@@ -216,11 +224,13 @@
       {/if}
 
       {#if !isPkgPrNew}
-        <a class="inline-block rounded" href={npmUrl}>
+        <a class="inline-block rounded" href={npmxUrl} title="Open in npmx">
+          <img class="block h-[20px]" src={npmxLogo} alt="npmx logo" height="20" />
+        </a>
+        <a class="inline-block rounded" href={npmUrl} title="Open in npm">
           <img class="block h-[18px]" src={npmLogo} alt="npm logo" height="18" />
         </a>
-
-        <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
+        <a class="inline-block rounded bg-gray" href={jsdelivrUrl} title="Open in jsdelivr">
           <img class="block h-[20px]" src={jsdelivrLogo} alt="jsdelivr logo" height="20" />
         </a>
       {:else}
@@ -228,6 +238,7 @@
         <a
           class="inline-block rounded"
           href={`https://pkg.pr.new/${scope}${npmPkgName}@${npmPkgVersion}`}
+          title="Open in pkg.pr.new"
         >
           <img class="block h-[18px]" src={pkgPrNewLogo} alt="pkg.pr.new logo" height="18" />
         </a>
