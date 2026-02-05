@@ -1,5 +1,11 @@
 # @publint/pack
 
+## 0.1.4
+
+### Patch Changes
+
+- Allow passing `Uint8Array` in `unpack()` ([`30016ac`](https://github.com/publint/publint/commit/30016acdfaa3a4ea9a5d5862dcb81dcecd319355))
+
 ## 0.1.3
 
 ### Patch Changes
