@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.18
+
+### Patch Changes
+
+- Fix deprecated subpath mapping check crash and make `getPkgPathValue` from `publint/utils` return undefined if the path is invalid ([`ad2aa9c`](https://github.com/publint/publint/commit/ad2aa9c71d25f5cfbeade8c6585aec6f8bbd532b))
+
 ## 0.3.17
 
 ### Patch Changes
