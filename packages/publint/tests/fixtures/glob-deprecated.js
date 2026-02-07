@@ -9,6 +9,10 @@ export default {
     },
     exports: {
       './': './src/',
+      './conditions/': {
+        import: './src/conditions/import/',
+        require: './src/conditions/require/',
+      },
     },
   }),
 }

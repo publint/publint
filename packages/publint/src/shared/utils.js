@@ -466,7 +466,7 @@ export function formatMessagePath(path) {
 export function getPkgPathValue(pkg, path) {
   let v = /** @type {any} */ (pkg)
   for (const p of path) {
-    v = v[p]
+    v = v?.[p]
   }
   return v
 }
