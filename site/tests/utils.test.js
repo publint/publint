@@ -29,6 +29,7 @@ test('normalizeGitUrl', () => {
   // git@github.com: SSH format should be converted
   assert.equal(n('git@github.com:user/repo'), 'https://github.com/user/repo')
   assert.equal(n('git@github.com:user/repo.git'), 'https://github.com/user/repo')
+  assert.equal(n('git@github.com/user/repo:123'), 'https://github.com/user/repo:123')
 
   // Shorthand formats should be expanded
   assert.equal(n('github:user/repo'), 'https://github.com/user/repo')
