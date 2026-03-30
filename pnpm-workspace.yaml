@@ -3,9 +3,16 @@ packages:
   - site
   - 'packages/*'
 
+autoInstallPeers: false
 overrides:
   prettier: $prettier
   'vitepress>@docsearch/js': '-'
+  'vitepress>vite': '^8.0.3'
 onlyBuiltDependencies:
   - esbuild
   - sharp
+packageExtensions:
+  '@rolldown/binding-wasm32-wasi':
+    dependencies:
+      '@emnapi/core': '^1.7.1'
+      '@emnapi/runtime': '^1.7.1'
