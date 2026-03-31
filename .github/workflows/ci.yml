@@ -36,7 +36,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [18, 20, 22, 24]
+        # Technically we need to test node 18 too, but our tooling no longer support it.
+        # We'll rely on user reports for now.
+        node: [20, 22, 24]
         include:
           - os: windows-latest
             node: 22
