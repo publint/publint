@@ -106,7 +106,7 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))
+        version: 7.0.0(svelte@5.55.1)(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))
       '@unocss/core':
         specifier: ^66.6.7
         version: 66.6.7
@@ -118,7 +118,7 @@ importers:
         version: 66.6.7
       '@unocss/vite':
         specifier: ^66.6.7
-        version: 66.6.7(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))
+        version: 66.6.7(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))
       fs-fixture:
         specifier: ^2.13.0
         version: 2.13.0
@@ -127,16 +127,16 @@ importers:
         version: 2.0.0
       oxc-minify:
         specifier: ^0.121.0
-        version: 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+        version: 0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
       svelte:
         specifier: ^5.55.1
         version: 5.55.1
       vite:
-        specifier: ^8.0.3
-        version: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
+        specifier: ^8.0.5
+        version: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
       vitepress:
         specifier: ^2.0.0-alpha.17
-        version: 2.0.0-alpha.17(@types/node@25.5.0)(jiti@2.6.1)(oxc-minify@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(postcss@8.5.8)(typescript@6.0.2)
+        version: 2.0.0-alpha.17(@types/node@25.5.0)(jiti@2.6.1)(oxc-minify@0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(postcss@8.5.8)(typescript@6.0.2)
 
 packages:
 
@@ -242,14 +242,14 @@ packages:
   '@docsearch/sidepanel-js@4.6.2':
     resolution: {integrity: sha512-Pni85AP/GwRj7fFg8cBJp0U04tzbueBvWSd3gysgnOsVnQVSZwSYncfErUScLE1CAtR+qocPDFjmYR9AMRNJtQ==}
 
-  '@emnapi/core@1.9.1':
-    resolution: {integrity: sha512-mukuNALVsoix/w1BJwFzwXBN/dHeejQtuVzcDsfOEsdpCumXb/E9j8w11h5S54tT1xhifGfbbSm/ICrObRb3KA==}
+  '@emnapi/core@1.9.2':
+    resolution: {integrity: sha512-UC+ZhH3XtczQYfOlu3lNEkdW/p4dsJ1r/bP7H8+rhao3TTTMO1ATq/4DdIi23XuGoFY+Cz0JmCbdVl0hz9jZcA==}
 
-  '@emnapi/runtime@1.9.1':
-    resolution: {integrity: sha512-VYi5+ZVLhpgK4hQ0TAjiQiZ6ol0oe4mBx7mVv7IflsiEp0OWoVsp/+f9Vc1hOhE0TtkORVrI1GvzyreqpgWtkA==}
+  '@emnapi/runtime@1.9.2':
+    resolution: {integrity: sha512-3U4+MIWHImeyu1wnmVygh5WlgfYDtyf0k8AbLhMFxOipihf6nrWC4syIm/SwEeec0mNSafiiNnMJwbza/Is6Lw==}
 
-  '@emnapi/wasi-threads@1.2.0':
-    resolution: {integrity: sha512-N10dEJNSsUx41Z6pZsXU8FjPjpBEplgH24sfkmITrBED1/U2Esum9F3lfLrMjKHHjmi557zQn7kR9R+XWXu5Rg==}
+  '@emnapi/wasi-threads@1.2.1':
+    resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
 
   '@iconify-json/simple-icons@1.2.75':
     resolution: {integrity: sha512-KvcCUbvcBWb0sbqLIxHoY8z5/piXY08wcY9gfMhF+ph3AfzGMaSmZFkUY71HSXAljQngXkgs4bdKdekO0HQWvg==}
@@ -1547,6 +1547,49 @@ packages:
       yaml:
         optional: true
 
+  vite@8.0.5:
+    resolution: {integrity: sha512-nmu43Qvq9UopTRfMx2jOYW5l16pb3iDC1JH6yMuPkpVbzK0k+L7dfsEDH4jRgYFmsg0sTAqkojoZgzLMlwHsCQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^20.19.0 || >=22.12.0
+      '@vitejs/devtools': ^0.1.0
+      esbuild: ^0.27.0 || ^0.28.0
+      jiti: '>=1.21.0'
+      less: ^4.0.0
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      '@vitejs/devtools':
+        optional: true
+      esbuild:
+        optional: true
+      jiti:
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
+
   vitefu@1.1.2:
     resolution: {integrity: sha512-zpKATdUbzbsycPFBN71nS2uzBUQiVnFoOrr2rvqv34S1lcAgMKKkjWleLGeiJlZ8lwCXvtWaRn7R3ZC16SYRuw==}
     peerDependencies:
@@ -1796,18 +1839,18 @@ snapshots:
 
   '@docsearch/sidepanel-js@4.6.2': {}
 
-  '@emnapi/core@1.9.1':
+  '@emnapi/core@1.9.2':
     dependencies:
-      '@emnapi/wasi-threads': 1.2.0
+      '@emnapi/wasi-threads': 1.2.1
       tslib: 2.8.1
     optional: true
 
-  '@emnapi/runtime@1.9.1':
+  '@emnapi/runtime@1.9.2':
     dependencies:
       tslib: 2.8.1
     optional: true
 
-  '@emnapi/wasi-threads@1.2.0':
+  '@emnapi/wasi-threads@1.2.1':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -1860,10 +1903,10 @@ snapshots:
       globby: 11.1.0
       read-yaml-file: 1.1.0
 
-  '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
+  '@napi-rs/wasm-runtime@1.1.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:
-      '@emnapi/core': 1.9.1
-      '@emnapi/runtime': 1.9.1
+      '@emnapi/core': 1.9.2
+      '@emnapi/runtime': 1.9.2
       '@tybys/wasm-util': 0.10.1
     optional: true
 
@@ -1927,9 +1970,9 @@ snapshots:
   '@oxc-minify/binding-openharmony-arm64@0.121.0':
     optional: true
 
-  '@oxc-minify/binding-wasm32-wasi@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
+  '@oxc-minify/binding-wasm32-wasi@0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -1990,9 +2033,9 @@ snapshots:
 
   '@rolldown/binding-wasm32-wasi@1.0.0-rc.12':
     dependencies:
-      '@emnapi/core': 1.9.1
-      '@emnapi/runtime': 1.9.1
-      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      '@emnapi/core': 1.9.2
+      '@emnapi/runtime': 1.9.2
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
     optional: true
 
   '@rolldown/binding-win32-arm64-msvc@1.0.0-rc.12':
@@ -2049,14 +2092,14 @@ snapshots:
     dependencies:
       acorn: 8.16.0
 
-  '@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.1)(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))':
+  '@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.1)(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))':
     dependencies:
       deepmerge: 4.3.1
       magic-string: 0.30.21
       obug: 2.1.1
       svelte: 5.55.1
-      vite: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
-      vitefu: 1.1.2(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))
+      vite: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
+      vitefu: 1.1.2(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))
 
   '@svitejs/changesets-changelog-github-compact@1.2.0':
     dependencies:
@@ -2164,7 +2207,7 @@ snapshots:
       '@unocss/core': 66.6.7
       magic-string: 0.30.21
 
-  '@unocss/vite@66.6.7(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))':
+  '@unocss/vite@66.6.7(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))':
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@unocss/config': 66.6.7
@@ -2175,12 +2218,12 @@ snapshots:
       pathe: 2.0.3
       tinyglobby: 0.2.15
       unplugin-utils: 0.3.1
-      vite: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
+      vite: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
 
-  '@vitejs/plugin-vue@6.0.5(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))(vue@3.5.31(typescript@6.0.2))':
+  '@vitejs/plugin-vue@6.0.5(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))(vue@3.5.31(typescript@6.0.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-rc.2
-      vite: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
+      vite: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
       vue: 3.5.31(typescript@6.0.2)
 
   '@vitest/expect@4.1.2':
@@ -2665,7 +2708,7 @@ snapshots:
       regex: 6.1.0
       regex-recursion: 6.0.2
 
-  oxc-minify@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
+  oxc-minify@0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2):
     optionalDependencies:
       '@oxc-minify/binding-android-arm-eabi': 0.121.0
       '@oxc-minify/binding-android-arm64': 0.121.0
@@ -2683,7 +2726,7 @@ snapshots:
       '@oxc-minify/binding-linux-x64-gnu': 0.121.0
       '@oxc-minify/binding-linux-x64-musl': 0.121.0
       '@oxc-minify/binding-openharmony-arm64': 0.121.0
-      '@oxc-minify/binding-wasm32-wasi': 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      '@oxc-minify/binding-wasm32-wasi': 0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
       '@oxc-minify/binding-win32-arm64-msvc': 0.121.0
       '@oxc-minify/binding-win32-ia32-msvc': 0.121.0
       '@oxc-minify/binding-win32-x64-msvc': 0.121.0
@@ -2978,11 +3021,23 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.6.1
 
-  vitefu@1.1.2(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1)):
+  vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1):
+    dependencies:
+      lightningcss: 1.32.0
+      picomatch: 4.0.4
+      postcss: 8.5.8
+      rolldown: 1.0.0-rc.12
+      tinyglobby: 0.2.15
     optionalDependencies:
-      vite: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
+      '@types/node': 25.5.0
+      fsevents: 2.3.3
+      jiti: 2.6.1
 
-  vitepress@2.0.0-alpha.17(@types/node@25.5.0)(jiti@2.6.1)(oxc-minify@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(postcss@8.5.8)(typescript@6.0.2):
+  vitefu@1.1.2(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1)):
+    optionalDependencies:
+      vite: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
+
+  vitepress@2.0.0-alpha.17(@types/node@25.5.0)(jiti@2.6.1)(oxc-minify@0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(postcss@8.5.8)(typescript@6.0.2):
     dependencies:
       '@docsearch/css': 4.6.2
       '@docsearch/sidepanel-js': 4.6.2
@@ -2991,7 +3046,7 @@ snapshots:
       '@shikijs/transformers': 3.23.0
       '@shikijs/types': 3.23.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 6.0.5(vite@8.0.3(@types/node@25.5.0)(jiti@2.6.1))(vue@3.5.31(typescript@6.0.2))
+      '@vitejs/plugin-vue': 6.0.5(vite@8.0.5(@types/node@25.5.0)(jiti@2.6.1))(vue@3.5.31(typescript@6.0.2))
       '@vue/devtools-api': 8.1.1
       '@vue/shared': 3.5.31
       '@vueuse/core': 14.2.1(vue@3.5.31(typescript@6.0.2))
@@ -3000,10 +3055,10 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 7.2.0
       shiki: 3.23.0
-      vite: 8.0.3(@types/node@25.5.0)(jiti@2.6.1)
+      vite: 8.0.5(@types/node@25.5.0)(jiti@2.6.1)
       vue: 3.5.31(typescript@6.0.2)
     optionalDependencies:
-      oxc-minify: 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      oxc-minify: 0.121.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
       postcss: 8.5.8
     transitivePeerDependencies:
       - '@types/node'
