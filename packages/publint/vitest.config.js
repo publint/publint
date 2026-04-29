@@ -8,5 +8,8 @@ export default defineConfig({
     // This is needed so that test files use a single instance of `fs-fixture` and
     // it won't generate the same conflicting directory names among test files.
     fileParallelism: false,
+    env: {
+      PUBLINT_INTERNAL_SKIP_CLI_RUN: 'true',
+    },
   },
 })

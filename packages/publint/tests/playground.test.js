@@ -223,7 +223,7 @@ function testFixture(name, expectCodes, options) {
   /** @type {import('vitest').TestOptions} */
   const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
 
-  test(name, testOpts, async ({ expect }) => {
+  test(name, testOpts, async ({ expect, onTestFinished }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
     const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
     const fixturePath = path.resolve(fixtureDir, fixtureName)
@@ -234,39 +234,36 @@ function testFixture(name, expectCodes, options) {
       // project is much faster.
       tempDir: isWindowsCI ? fixtureDir : undefined,
     })
+    onTestFinished(() => fixture.rm())
 
-    try {
-      const { messages } = await publint({
-        pkgDir: fixture.path,
-        level: options?.level,
-        strict: options?.strict,
-        pack: options?.pack,
-      })
+    const { messages } = await publint({
+      pkgDir: fixture.path,
+      level: options?.level,
+      strict: options?.strict,
+      pack: options?.pack,
+    })
 
-      // unfortunately the messages are not always in order as checks are ran in parallel,
-      // here we sort it to make the tests more consistent
-      messages.sort((a, b) => a.code.localeCompare(b.code))
+    // unfortunately the messages are not always in order as checks are ran in parallel,
+    // here we sort it to make the tests more consistent
+    messages.sort((a, b) => a.code.localeCompare(b.code))
 
-      if (options?.debug) {
-        const pkg = JSON.parse(await fixture.readFile('package.json', 'utf-8'))
-        console.log()
-        console.log('Logs:', name)
-        for (const m of messages) {
-          console.log(formatMessage(m, pkg, { color: true }))
-        }
-        console.log()
+    if (options?.debug) {
+      const pkg = JSON.parse(await fixture.readFile('package.json', 'utf-8'))
+      console.log()
+      console.log('Logs:', name)
+      for (const m of messages) {
+        console.log(formatMessage(m, pkg, { color: true }))
       }
+      console.log()
+    }
 
-      // you can test an array of objects
-      if (typeof expectCodes[0] === 'object') {
-        const codes = messages.map((v) => ({ code: v.code, type: v.type }))
-        expect(codes).toEqual(expectCodes)
-      } else {
-        const codes = messages.map((v) => v.code)
-        expect(codes).toEqual(expectCodes)
-      }
-    } finally {
-      await fixture.rm()
+    // you can test an array of objects
+    if (typeof expectCodes[0] === 'object') {
+      const codes = messages.map((v) => ({ code: v.code, type: v.type }))
+      expect(codes).toEqual(expectCodes)
+    } else {
+      const codes = messages.map((v) => v.code)
+      expect(codes).toEqual(expectCodes)
     }
   })
 }

@@ -200,7 +200,9 @@ cli
     }
   })
 
-cli.parse(process.argv)
+if (!process.env.PUBLINT_INTERNAL_SKIP_CLI_RUN) {
+  cli.parse(process.argv)
+}
 
 /**
  * @param {string} pkgDir
