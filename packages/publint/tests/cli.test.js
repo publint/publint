@@ -14,7 +14,11 @@ const exec = util.promisify(cp.exec)
 async function runCliProcess(cwd, command = '') {
   let { stdout, stderr } = await exec(`node "${cliPath}" ${command}`, {
     cwd,
-    env: { ...process.env, PUBLINT_INTERNAL_SKIP_CLI_RUN: undefined },
+    env: {
+      ...process.env,
+      NO_COLOR: '1',
+      PUBLINT_INTERNAL_SKIP_CLI_RUN: undefined,
+    },
   })
   stdout = stdout.replace(/v\d+\.\d+\.\d+/g, 'v0.0.0')
   return { stdout, stderr }
