@@ -242,6 +242,12 @@ export function formatMessage(m, pkg, opts = {}) {
             : `${h.bold(fp(m.path))}`
       return `${start} sets both ${h.bold('exports.__esModule = true')} and ${h.bold('exports.default')}. This pattern breaks default imports when importing from an ESM-interpreted file in some bundlers. Consider using ESM syntax instead of CommonJS with ${h.bold('__esModule')} or avoid the default export.`
     }
+    case 'NESTED_PACKAGE_JSON_FIELD_IGNORED': {
+      const start = opts.reference
+        ? `The ${h.bold('"' + m.args.field + '"')} field`
+        : `${h.bold(m.args.filePath)} has an ${h.bold('"' + m.args.field + '"')} field, but it`
+      return `${start} is ignored by Node.js in nested ${h.bold('package.json')} files. Only the root ${h.bold('package.json')} ${h.bold('"exports"')} and ${h.bold('"imports"')} fields are read. Some bundlers may still pick this up, leading to inconsistent resolution. Consider removing it.`
+    }
     default:
       return
   }

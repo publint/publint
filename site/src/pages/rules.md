@@ -307,6 +307,10 @@ An example config that meets these criteria may look like this:
 
 This may be downgraded as a suggestion for no3 and no4 as they do not conflict with the npm behaviour and docs.
 
+### `NESTED_PACKAGE_JSON_FIELD_IGNORED` <RuleType type="warning" />
+
+Node.js only reads the `"type"` and `"main"` fields from nested `package.json` files; the `"exports"` and `"imports"` fields are silently ignored outside the package root (see [nodejs/node#58827](https://github.com/nodejs/node/issues/58827)). However, some bundlers may still pick them up, leading to inconsistent resolution between runtimes. Consider removing `"exports"` and `"imports"` from nested `package.json` files.
+
 ### `TYPES_NOT_EXPORTED` <RuleType type="warning" />
 
 Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler) which has stricter rules on loading types (Additionally also affected by `"node16"` and `nodenext"`, and the [`"resolvePackageJsonExports"` compiler option](https://www.typescriptlang.org/tsconfig#resolvePackageJsonExports)).

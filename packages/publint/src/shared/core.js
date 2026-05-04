@@ -83,6 +83,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
 
+  // Check if any nested package.json files have "exports" or "imports" fields, which
+  // Node.js ignores outside the package root (see https://github.com/nodejs/node/issues/58827).
+  // Some bundlers may still read them which can lead to inconsistent resolution.
+  promiseQueue.push(async () => {
+    await crawlNestedPackageJson(pkgDir)
+  })
+
   // Check if package published internal tests or config files
   if (rootPkg.files == null) {
     promiseQueue.push(async () => {
@@ -1212,6 +1219,65 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // TODO: handle nested exports key
     }
     return typesFilePath
+  }
+
+  /**
+   * @param {string} dir
+   */
+  async function crawlNestedPackageJson(dir) {
+    const nestedPackageJsonFields = /** @type {const} */ (['exports', 'imports'])
+    let items
+    try {
+      items = await vfs.readDir(dir)
+    } catch {
+      return
+    }
+    for (const item of items) {
+      if (item === 'node_modules') continue
+      const itemPath = vfs.pathJoin(dir, item)
+      if (await vfs.isPathDir(itemPath)) {
+        // If packed files are known, skip directories that don't contain
+        // any published files to reduce unnecessary traversal.
+        if (_packedFiles && !_packedFiles.some((f) => isPathNestedWithin(f, itemPath))) {
+          continue
+        }
+        await crawlNestedPackageJson(itemPath)
+        continue
+      }
+      if (item !== 'package.json' || itemPath === rootPkgPath) continue
+      if (_packedFiles && !_packedFiles.includes(itemPath)) continue
+      let content
+      try {
+        content = await vfs.readFile(itemPath)
+      } catch {
+        continue
+      }
+      let nestedPkg
+      try {
+        nestedPkg = JSON.parse(content)
+      } catch {
+        continue
+      }
+      const filePath = './' + vfs.pathRelative(pkgDir, itemPath)
+      for (const field of nestedPackageJsonFields) {
+        if (nestedPkg[field] != null) {
+          messages.push({
+            code: 'NESTED_PACKAGE_JSON_FIELD_IGNORED',
+            args: { field, filePath },
+            path: ['name'],
+            type: 'warning',
+          })
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {string} childPath
+   * @param {string} dirPath
+   */
+  function isPathNestedWithin(childPath, dirPath) {
+    return childPath.startsWith(dirPath + '/') || childPath.startsWith(dirPath + '\\')
   }
 
   /**
