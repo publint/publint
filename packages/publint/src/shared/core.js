@@ -156,6 +156,19 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  const [engines] = getPublishedField(rootPkg, 'engines')
+  if (
+    rootPkg.private !== true &&
+    (engines == null || typeof engines !== 'object' || engines.node == null)
+  ) {
+    messages.push({
+      code: 'USE_ENGINES_NODE',
+      args: {},
+      path: ['engines', 'node'],
+      type: 'suggestion',
+    })
+  }
+
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)

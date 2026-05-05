@@ -59,6 +59,10 @@ testFixture('missing-files', [
 
 testFixture('missing-license', ['USE_LICENSE'])
 
+testFixture('engines-node-missing', ['USE_ENGINES_NODE'])
+
+testFixture('engines-node-present', [])
+
 testFixture('no-exports-module', [])
 
 testFixture('not-missing-files', [])
