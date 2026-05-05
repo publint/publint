@@ -132,6 +132,10 @@ export type Message =
   | BaseMessage<'IMPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'IMPORTS_FALLBACK_ARRAY_USE'>
   | BaseMessage<'CJS_WITH_ESMODULE_DEFAULT_EXPORT', { filePath?: string }>
+  | BaseMessage<
+      'NESTED_PACKAGE_JSON_FIELD_IGNORED',
+      { field: 'exports' | 'imports'; filePath: string }
+    >
 
 export interface PackFile {
   name: string

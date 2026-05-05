@@ -205,6 +205,11 @@ testFixture('imports-external-package', [])
 
 testFixture('imports-field-invalid', ['IMPORTS_KEY_INVALID'])
 
+testFixture('nested-package-json', [
+  'NESTED_PACKAGE_JSON_FIELD_IGNORED',
+  'NESTED_PACKAGE_JSON_FIELD_IGNORED',
+])
+
 /**
  * @typedef {{
  *  level?: import('../src/index.d.ts').Options['level']
