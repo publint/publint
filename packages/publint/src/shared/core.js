@@ -157,8 +157,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   const [engines] = getPublishedField(rootPkg, 'engines')
+  const hasNodeConditionInExports = exports != null && objectHasKeyNested(exports, 'node')
+  const hasCjsEntrypoint = main != null || (exports != null && objectHasKeyNested(exports, 'require'))
   if (
     rootPkg.private !== true &&
+    (hasNodeConditionInExports || hasCjsEntrypoint) &&
     (engines == null || typeof engines !== 'object' || engines.node == null)
   ) {
     messages.push({

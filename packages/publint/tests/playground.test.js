@@ -61,6 +61,10 @@ testFixture('missing-license', ['USE_LICENSE'])
 
 testFixture('engines-node-missing', ['USE_ENGINES_NODE'])
 
+testFixture('engines-node-missing-cjs-entrypoint', ['USE_ENGINES_NODE'])
+
+testFixture('engines-node-missing-no-node-condition', [])
+
 testFixture('engines-node-present', [])
 
 testFixture('no-exports-module', [])
