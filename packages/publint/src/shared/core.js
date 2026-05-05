@@ -49,9 +49,8 @@ import {
  */
 
 /**
- * Includes internal _include that used to filter paths that is packed.
+ * Includes internal _packedFiles that used to filter paths that is packed.
  * Mainly for node.js local usage only. So that we lint files that are packed only.
- * Currently only used if pkg has no `exports`
  * @typedef {Omit<Required<import('../index.d.ts').Options>, 'pack'> & {
  *   vfs: Vfs,
  *   _packedFiles?: string[]
@@ -82,13 +81,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
-
-  // Check if any nested package.json files have "exports" or "imports" fields, which
-  // Node.js ignores outside the package root (see https://github.com/nodejs/node/issues/58827).
-  // Some bundlers may still read them which can lead to inconsistent resolution.
-  promiseQueue.push(async () => {
-    await crawlNestedPackageJson(pkgDir)
-  })
 
   // Check if package published internal tests or config files
   if (rootPkg.files == null) {
@@ -435,6 +427,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   if (imports && ensureTypeOfField(imports, ['object'], importsPkgPath)) {
     crawlExportsOrImports(imports, importsPkgPath, true)
   }
+
+  // Check if any nested package.json files have "exports" or "imports" fields, which
+  // Node.js ignores outside the package root (see https://github.com/nodejs/node/issues/58827).
+  // Some bundlers may still read them which can lead to inconsistent resolution.
+  promiseQueue.push(async () => {
+    await crawlNestedPackageJson(pkgDir)
+  })
 
   await promiseQueue.wait()
 
@@ -1246,14 +1245,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
       if (item !== 'package.json' || itemPath === rootPkgPath) continue
       if (_packedFiles && !_packedFiles.includes(itemPath)) continue
-      let content
-      try {
-        content = await vfs.readFile(itemPath)
-      } catch {
-        continue
-      }
       let nestedPkg
       try {
+        const content = await vfs.readFile(itemPath)
         nestedPkg = JSON.parse(content)
       } catch {
         continue

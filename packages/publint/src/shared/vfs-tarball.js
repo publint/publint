@@ -21,9 +21,17 @@ export function createTarballVfs(files) {
     pathRelative: (from, to) => to.replace(from, '').slice(1),
     readDir: async (path) => {
       path = path.endsWith('/') ? path : path + '/'
-      return files
-        .filter((file) => file.name.startsWith(path) && file.name !== path)
-        .map((file) => file.name.slice(path.length))
+      /** @type {string[]} */
+      const items = []
+      for (const file of files) {
+        if (file.name.startsWith(path) && file.name !== path) {
+          const item = file.name.slice(path.length).replace(/\/.*$/, '')
+          if (!items.includes(item)) {
+            items.push(item)
+          }
+        }
+      }
+      return items
     },
     readFile: async (path) => {
       const file = files.find((file) => file.name === path)

@@ -309,7 +309,7 @@ This may be downgraded as a suggestion for no3 and no4 as they do not conflict w
 
 ### `NESTED_PACKAGE_JSON_FIELD_IGNORED` <RuleType type="warning" />
 
-Node.js only reads the `"type"` and `"main"` fields from nested `package.json` files; the `"exports"` and `"imports"` fields are silently ignored outside the package root (see [nodejs/node#58827](https://github.com/nodejs/node/issues/58827)). However, some bundlers may still pick them up, leading to inconsistent resolution between runtimes. Consider removing `"exports"` and `"imports"` from nested `package.json` files.
+Node.js only reads the `"type"` and `"main"` fields from nested `package.json` files. The `"exports"` and `"imports"` fields are silently ignored outside the package root (see [nodejs/node#58827](https://github.com/nodejs/node/issues/58827)). However, some bundlers may still pick them up, leading to inconsistent resolution between runtimes. Consider removing `"exports"` and `"imports"` from nested `package.json` files.
 
 ### `TYPES_NOT_EXPORTED` <RuleType type="warning" />
 
