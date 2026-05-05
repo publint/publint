@@ -7,7 +7,8 @@
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "node ./scripts/preview.js",
-    "test": "node --test",
+    "test": "vitest run",
+    "test-dev": "vitest",
     "typecheck": "tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
@@ -27,6 +28,7 @@
     "oxc-minify": "^0.128.0",
     "svelte": "^5.55.5",
     "vite": "^8.0.10",
-    "vitepress": "^2.0.0-alpha.17"
+    "vitepress": "^2.0.0-alpha.17",
+    "vitest": "^4.1.5"
   }
 }
