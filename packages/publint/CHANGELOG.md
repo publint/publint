@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.19
+
+### Patch Changes
+
+- Add `NESTED_PACKAGE_JSON_FIELD_IGNORED` to warn when published nested `package.json` files define `"exports"` or `"imports"`, which Node.js ignores outside the package root. ([#224](https://github.com/publint/publint/pull/224))
+
+- Fix internal browser directory traversal logic ([#224](https://github.com/publint/publint/pull/224))
+
 ## 0.3.18
 
 ### Patch Changes
