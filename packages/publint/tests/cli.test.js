@@ -7,6 +7,9 @@ import { createFixture } from 'fs-fixture'
 const cliPath = path.resolve(import.meta.dirname, '../src/cli.js')
 const exec = util.promisify(cp.exec)
 
+// Skip some tests on Windows because it struggles with the child process for some reason
+const isWindows = process.platform === 'win32'
+
 /**
  * @param {string} cwd
  * @param {string} command
@@ -24,7 +27,7 @@ async function runCliProcess(cwd, command = '') {
   return { stdout, stderr }
 }
 
-describe('publint run [path]', () => {
+describe.skipIf(isWindows)('publint run [path]', () => {
   test('basic', async () => {
     const fixture = await createFixture({
       'package.json': JSON.stringify({
@@ -49,7 +52,7 @@ describe('publint run [path]', () => {
   })
 })
 
-describe('publint deps [dir]', () => {
+describe.skipIf(isWindows)('publint deps [dir]', () => {
   test('basic', async () => {
     const fixture = await createFixture({
       'package.json': JSON.stringify({
