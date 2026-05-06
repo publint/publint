@@ -414,3 +414,9 @@ A license file is published but the `"license"` field is not set in `package.jso
 ### `USE_TYPE` <RuleType type="suggestion" />
 
 [Module syntax detection](https://nodejs.org/api/packages.html#determining-module-system) attempts to detect ESM syntax, and re-run as an ES module when no `"type"` field is present. It was enabled by default in [Node.js v20.19.0](https://nodejs.org/en/blog/release/v20.19.0) and [Node.js v22.7.0](https://nodejs.org/en/blog/release/v22.7.0). Detection increases startup time for ES modules, so Node is encouraging everyone — especially package authors — to add a type field to `package.json`, even for the default `"type": "commonjs"`.
+
+### `USE_ENGINES_NODE` <RuleType type="suggestion" />
+
+The package targets Node.js (for example using `"main"`, `"exports"."require"`, or `"exports"."node"`) but does not declare [`"engines"."node"`](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#engines), so consumers may install it on unsupported Node.js versions.
+
+Consider adding the field with the minimum Node.js version you actually support. Tightening this range can be a semver-breaking change, and if `"publishConfig"."engines"` is set, that published value is used.
