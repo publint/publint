@@ -3,7 +3,9 @@ export default {
     name: 'publint-engines-node-missing-cjs-entrypoint',
     version: '0.0.1',
     type: 'commonjs',
-    main: './index.cjs',
+    exports: {
+      require: './index.cjs',
+    },
   }),
   'index.cjs': 'module.exports = {}',
 }

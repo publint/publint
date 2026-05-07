@@ -157,19 +157,37 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   const [engines, enginesPkgPath] = getPublishedField(rootPkg, 'engines')
-  const hasNodeConditionInExports = exports != null && objectHasKeyNested(exports, 'node')
-  const hasCjsEntrypoint =
-    main != null || (exports != null && objectHasKeyNested(exports, 'require'))
-  if (
-    (hasNodeConditionInExports || hasCjsEntrypoint) &&
-    (engines == null || typeof engines !== 'object' || engines.node == null)
-  ) {
-    messages.push({
-      code: 'USE_ENGINES_NODE',
-      args: {},
-      path: enginesPkgPath.concat(['node']),
-      type: 'suggestion',
-    })
+  const isEngineNodeMissing = engines == null || typeof engines !== 'object' || engines.node == null
+  if (isEngineNodeMissing) {
+    let hasUseEnginesNodeSuggestion = false
+    const suggestUseEnginesNode = () => {
+      if (hasUseEnginesNodeSuggestion) return
+      hasUseEnginesNodeSuggestion = true
+      messages.push({
+        code: 'USE_ENGINES_NODE',
+        args: {},
+        path: enginesPkgPath.concat(['node']),
+        type: 'suggestion',
+      })
+    }
+
+    const hasNodeConditionInExports = exports != null && objectHasKeyNested(exports, 'node')
+    const hasCjsEntrypoint = exports != null && objectHasKeyNested(exports, 'require')
+    if (hasNodeConditionInExports || hasCjsEntrypoint) {
+      suggestUseEnginesNode()
+    }
+
+    // `main` isn't always CJS, so only use it as a signal when the file content is CJS.
+    if (typeof main === 'string') {
+      promiseQueue.push(async () => {
+        const mainPath = vfs.pathJoin(pkgDir, main)
+        const mainContent = await readFile(mainPath, undefined, ['.js', '/index.js'])
+        if (mainContent === false) return
+        if (getCodeFormat(mainContent) === 'CJS') {
+          suggestUseEnginesNode()
+        }
+      })
+    }
   }
 
   // Relies on default node resolution

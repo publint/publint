@@ -52,18 +52,13 @@ testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
-  'USE_ENGINES_NODE',
 ])
 
-testFixture('invalid-jsx-extensions', [
-  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION'),
-  'USE_ENGINES_NODE',
-])
+testFixture('invalid-jsx-extensions', [...Array(4).fill('FILE_INVALID_JSX_EXTENSION')])
 
 testFixture('missing-files', [
   ...Array(9).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
-  'USE_ENGINES_NODE',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
@@ -73,15 +68,13 @@ testFixture('engines-node-missing', ['USE_ENGINES_NODE'])
 
 testFixture('engines-node-missing-cjs-entrypoint', ['USE_ENGINES_NODE'])
 
-testFixture('engines-node-missing-private', ['USE_ENGINES_NODE'])
-
 testFixture('engines-node-missing-no-node-condition', [])
 
 testFixture('engines-node-present', [])
 
 testFixture('no-exports-module', [])
 
-testFixture('not-missing-files', ['USE_ENGINES_NODE'])
+testFixture('not-missing-files', [])
 
 testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE', 'USE_ENGINES_NODE'])
 
@@ -193,12 +186,7 @@ testFixture('types-versions', [])
 
 testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT', 'USE_ENGINES_NODE'])
 
-testFixture('deprecated-fields', [
-  'DEPRECATED_FIELD_JSNEXT',
-  'DEPRECATED_FIELD_JSNEXT',
-  'USE_ENGINES_NODE',
-  'USE_TYPE',
-])
+testFixture('deprecated-fields', ['DEPRECATED_FIELD_JSNEXT', 'DEPRECATED_FIELD_JSNEXT', 'USE_TYPE'])
 
 testFixture('invalid-repository-value-string-not-url', [
   {
