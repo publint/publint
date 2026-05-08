@@ -62,6 +62,7 @@ export type Message =
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'EXPORTS_MISSING_ROOT_ENTRYPOINT', { mainFields: string[] }>
   | BaseMessage<'EXPORTS_FALLBACK_ARRAY_USE'>
+  | BaseMessage<'USE_ENGINES_NODE'>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
   | BaseMessage<'USE_FILES'>

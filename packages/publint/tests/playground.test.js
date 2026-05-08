@@ -11,12 +11,16 @@ testFixture('exports-browser-conflict', [
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
-testFixture('exports-esmodule-with-default', ['CJS_WITH_ESMODULE_DEFAULT_EXPORT'])
+testFixture('exports-esmodule-with-default', [
+  'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'USE_ENGINES_NODE',
+])
 testFixture('exports-esmodule-with-default-with-import-condition', [
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'USE_ENGINES_NODE',
 ])
 
 testFixture('exports-styles', [
@@ -39,6 +43,7 @@ testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_MATCHED_FILES',
   'EXPORTS_GLOB_NO_MATCHED_FILES',
   'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+  'USE_ENGINES_NODE',
 ])
 
 testFixture('invalid-field-types', [
@@ -59,15 +64,23 @@ testFixture('missing-files', [
 
 testFixture('missing-license', ['USE_LICENSE'])
 
+testFixture('engines-node-missing', ['USE_ENGINES_NODE'])
+
+testFixture('engines-node-missing-cjs-entrypoint', ['USE_ENGINES_NODE'])
+
+testFixture('engines-node-missing-no-node-condition', [])
+
+testFixture('engines-node-present', [])
+
 testFixture('no-exports-module', [])
 
 testFixture('not-missing-files', [])
 
-testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
+testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE', 'USE_ENGINES_NODE'])
 
 testFixture('exports-custom-condition', [])
 
-testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
+testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_ENGINES_NODE', 'USE_EXPORTS_BROWSER'])
 
 // This needs to run with pnpm as only it supports `publishConfig.directory`
 testFixture('publish-config-directory', [], { pack: 'pnpm' })
@@ -90,6 +103,7 @@ testFixture('test-2', [
   'FILE_DOES_NOT_EXIST',
   'FILE_INVALID_FORMAT',
   'FILE_INVALID_FORMAT',
+  'USE_ENGINES_NODE',
   'USE_EXPORTS_BROWSER',
 ])
 
@@ -135,12 +149,13 @@ testFixture(
     { code: 'FILE_DOES_NOT_EXIST', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
+    { code: 'USE_ENGINES_NODE', type: 'suggestion' },
     { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' },
   ],
   { strict: true },
 )
 
-testFixture('types', ['TYPES_NOT_EXPORTED'])
+testFixture('types', ['TYPES_NOT_EXPORTED', 'USE_ENGINES_NODE'])
 
 testFixture('types-exports-resolution', [])
 
@@ -148,20 +163,28 @@ testFixture('types-exports-resolution-cjs', [])
 
 testFixture('types-exports-resolution-cjs-explicit', ['EXPORTS_TYPES_INVALID_FORMAT'])
 
-testFixture('types-exports-resolution-dual', ['TYPES_NOT_EXPORTED', 'TYPES_NOT_EXPORTED'])
+testFixture('types-exports-resolution-dual', [
+  'TYPES_NOT_EXPORTED',
+  'TYPES_NOT_EXPORTED',
+  'USE_ENGINES_NODE',
+])
 
-testFixture('types-exports-resolution-dual-explicit', ['EXPORTS_TYPES_INVALID_FORMAT'])
+testFixture('types-exports-resolution-dual-explicit', [
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'USE_ENGINES_NODE',
+])
 
 testFixture('types-exports-resolution-custom-conditions', [
   'EXPORTS_TYPES_INVALID_FORMAT',
   'EXPORTS_TYPES_INVALID_FORMAT',
+  'USE_ENGINES_NODE',
 ])
 
 testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])
 
-testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
+testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT', 'USE_ENGINES_NODE'])
 
 testFixture('deprecated-fields', ['DEPRECATED_FIELD_JSNEXT', 'DEPRECATED_FIELD_JSNEXT', 'USE_TYPE'])
 

@@ -134,6 +134,8 @@ export function formatMessage(m, pkg, opts = {}) {
       return `The package ${h.bold('publishes internal tests or config files')}. You can use ${h.bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'USE_TYPE':
       return `The package does not specify the ${h.bold('"type"')} field. Node.js may attempt to detect the package type causing a small performance hit. Consider adding ${h.bold('"type"')}: "${h.bold('commonjs')}".`
+    case 'USE_ENGINES_NODE':
+      return `The package does not specify the ${h.bold('"engines.node"')} field. Consumers may install it on an unsupported Node.js version. Consider adding the field with your actual minimum supported Node.js version. (This may be a breaking change)`
     case 'USE_LICENSE':
       return `The package does not specify the ${h.bold('"license"')} field but a license file was detected at ${h.bold(m.args.licenseFilePath)}. Consider adding a ${h.bold('"license"')} field so it's displayed on npm.`
     case 'TYPES_NOT_EXPORTED': {

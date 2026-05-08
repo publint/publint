@@ -156,6 +156,41 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // Check if is Node.js package and the "engines.node" field is missing
+  const [engines, enginesPkgPath] = getPublishedField(rootPkg, 'engines')
+  if (engines == null || typeof engines !== 'object' || engines.node == null) {
+    promiseQueue.push(async () => {
+      /** @type {import('../index.d.ts').Message} */
+      const msg = {
+        code: 'USE_ENGINES_NODE',
+        args: {},
+        path: engines != null ? enginesPkgPath : ['name'],
+        type: 'suggestion',
+      }
+
+      // `node` and `require` conditions are treated as a signal CJS code is published, which
+      // is mostly applicable for Node.js only
+      if (
+        exports != null &&
+        typeof exports === 'object' &&
+        (objectHasKeyNested(exports, 'node') || objectHasKeyNested(exports, 'require'))
+      ) {
+        messages.push(msg)
+        return
+      }
+
+      // `main` isn't always CJS, so only use it as a signal when the file content is CJS.
+      if (main != null && typeof main === 'string') {
+        const mainPath = vfs.pathJoin(pkgDir, main)
+        const mainContent = await readFile(mainPath, undefined, ['.js', '/index.js'])
+        if (mainContent && getCodeFormat(mainContent) === 'CJS') {
+          messages.push(msg)
+          return
+        }
+      }
+    })
+  }
+
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
