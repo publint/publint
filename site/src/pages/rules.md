@@ -343,7 +343,7 @@ If the package isn't meant for Node.js usage, it is safe to ignore this suggesti
 
 The package targets Node.js (e.g. using `"main"`, `"exports.require"`, or `"exports.node"`) but does not declare [`"engines.node"`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#engines), so consumers may install it on unsupported Node.js versions.
 
-Consider adding the field with the minimum Node.js version you actually support. Tightening this range can be a semver-breaking change if it also used to work (or happened to work) in older Node.js versions.
+Consider adding the field with the minimum Node.js version you actually support. Tightening this range can be a breaking change if it also used to work (or happened to work) in older Node.js versions.
 
 ### `USE_EXPORTS_BROWSER` <RuleType type="suggestion" />
 

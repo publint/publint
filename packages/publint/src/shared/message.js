@@ -71,9 +71,9 @@ export function formatMessage(m, pkg, opts = {}) {
         return `${h.bold(fp(m.path))} is ${h.bold(pv(m.path))} but the file is not published. Is it specified in ${h.bold('pkg.files')}?`
       }
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
-      return `${h.bold('pkg.main')} is an ESM file, but it is usually better to use ${h.bold('pkg.exports')} instead. If you don't support Node.js 12.6 and below, you can also remove ${h.bold('pkg.main')}. (This will be a breaking change)`
+      return `${h.bold('pkg.main')} is an ESM file, but it is usually better to use ${h.bold('pkg.exports')} instead. If you don't support Node.js 12.6 and below, you can also remove ${h.bold('pkg.main')}. (This may be a breaking change)`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
-      return `${h.bold('pkg.module')} is used to output ESM, but ${h.bold('pkg.exports')} is not defined. As Node.js doesn't read ${h.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${h.bold('pkg.exports')} to export the ESM output. ${h.bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
+      return `${h.bold('pkg.module')} is used to output ESM, but ${h.bold('pkg.exports')} is not defined. As Node.js doesn't read ${h.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${h.bold('pkg.exports')} to export the ESM output. ${h.bold('pkg.module')} can usually be removed alongside too. (This may be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
     case 'IMPORTS_MODULE_SHOULD_BE_ESM': {
@@ -126,10 +126,10 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'USE_EXPORTS_BROWSER':
       return (
         `${h.bold('pkg.browser')} with a string value can be refactored to use ${h.bold('pkg.exports')} and the ${h.bold('"browser"')} condition to declare browser-specific exports. ` +
-        `e.g. ${h.bold('pkg.exports["."].browser')}: "${h.bold(pv(m.path))}". (This will be a breaking change)`
+        `e.g. ${h.bold('pkg.exports["."].browser')}: "${h.bold(pv(m.path))}". (This may be a breaking change)`
       )
     case 'USE_EXPORTS_OR_IMPORTS_BROWSER':
-      return `${h.bold('pkg.browser')} with an object value can be refactored to use ${h.bold('pkg.exports')}/${h.bold('pkg.imports')} and the ${h.bold('"browser"')} condition to declare browser-specific exports. (This will be a breaking change)`
+      return `${h.bold('pkg.browser')} with an object value can be refactored to use ${h.bold('pkg.exports')}/${h.bold('pkg.imports')} and the ${h.bold('"browser"')} condition to declare browser-specific exports. (This may be a breaking change)`
     case 'USE_FILES':
       return `The package ${h.bold('publishes internal tests or config files')}. You can use ${h.bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'USE_TYPE':
