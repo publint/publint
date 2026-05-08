@@ -164,7 +164,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const msg = {
         code: 'USE_ENGINES_NODE',
         args: {},
-        path: enginesPkgPath.concat(['node']),
+        path: engines != null ? enginesPkgPath : ['name'],
         type: 'suggestion',
       }
 
