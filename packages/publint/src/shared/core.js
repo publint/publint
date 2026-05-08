@@ -156,38 +156,39 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // Check if is Node.js package and the "engines.node" field is missing
   const [engines, enginesPkgPath] = getPublishedField(rootPkg, 'engines')
-  const isEngineNodeMissing = engines == null || typeof engines !== 'object' || engines.node == null
-  if (isEngineNodeMissing) {
-    let hasUseEnginesNodeSuggestion = false
-    const suggestUseEnginesNode = () => {
-      if (hasUseEnginesNodeSuggestion) return
-      hasUseEnginesNodeSuggestion = true
-      messages.push({
+  if (engines == null || typeof engines !== 'object' || engines.node == null) {
+    promiseQueue.push(async () => {
+      /** @type {import('../index.d.ts').Message} */
+      const msg = {
         code: 'USE_ENGINES_NODE',
         args: {},
         path: enginesPkgPath.concat(['node']),
         type: 'suggestion',
-      })
-    }
+      }
 
-    const hasNodeConditionInExports = exports != null && objectHasKeyNested(exports, 'node')
-    const hasCjsEntrypoint = exports != null && objectHasKeyNested(exports, 'require')
-    if (hasNodeConditionInExports || hasCjsEntrypoint) {
-      suggestUseEnginesNode()
-    }
+      // `node` and `require` conditions are treated as a signal CJS code is published, which
+      // is mostly applicable for Node.js only
+      if (
+        exports != null &&
+        typeof exports === 'object' &&
+        (objectHasKeyNested(exports, 'node') || objectHasKeyNested(exports, 'require'))
+      ) {
+        messages.push(msg)
+        return
+      }
 
-    // `main` isn't always CJS, so only use it as a signal when the file content is CJS.
-    if (typeof main === 'string') {
-      promiseQueue.push(async () => {
+      // `main` isn't always CJS, so only use it as a signal when the file content is CJS.
+      if (main != null && typeof main === 'string') {
         const mainPath = vfs.pathJoin(pkgDir, main)
         const mainContent = await readFile(mainPath, undefined, ['.js', '/index.js'])
-        if (mainContent === false) return
-        if (getCodeFormat(mainContent) === 'CJS') {
-          suggestUseEnginesNode()
+        if (mainContent && getCodeFormat(mainContent) === 'CJS') {
+          messages.push(msg)
+          return
         }
-      })
-    }
+      }
+    })
   }
 
   // Relies on default node resolution

@@ -136,7 +136,6 @@ export function getCodeFormat(code) {
   const isCjs = isCodeCjs(code)
   // In reality, a file can't have mixed ESM and CJS. It's syntactically incompatible in both environments.
   // But since we use regex, we can't correct identify ESM and CJS, so when this happens we should bail instead.
-  // TODO: Yak shave a correct implementation.
   if (isEsm && isCjs) {
     return 'mixed'
   } else if (isEsm) {
