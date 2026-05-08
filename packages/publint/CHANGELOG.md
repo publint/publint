@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.20
+
+### Patch Changes
+
+- Suggest adding `engines.node` when it is missing from detected Node.js packages ([#226](https://github.com/publint/publint/pull/226))
+
+- Loosen "breaking change" wording in lint messages ([`7bb3f4f`](https://github.com/publint/publint/commit/7bb3f4fd03415d0c860dda0c252d7029144b9f94))
+
 ## 0.3.19
 
 ### Patch Changes
