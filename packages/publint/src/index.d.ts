@@ -77,17 +77,6 @@ export type Message =
       }
     >
   | BaseMessage<
-      'EXPORTS_TYPES_INVALID_FORMAT',
-      {
-        condition: string
-        actualFormat: string
-        expectFormat: string
-        actualExtension: string
-        expectExtension: string
-        expectPath: string[]
-      }
-    >
-  | BaseMessage<
       'FIELD_INVALID_VALUE_TYPE',
       {
         actualType: string
