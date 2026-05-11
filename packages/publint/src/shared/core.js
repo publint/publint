@@ -383,8 +383,33 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
-  // check file existence for browser field
   const [browser, browserPkgPath] = getPublishedField(rootPkg, 'browser')
+
+  // Check if package likely targets bundlers and can benefit from sideEffects hinting
+  if (!Object.prototype.hasOwnProperty.call(rootPkg, 'sideEffects')) {
+    const [importsForSideEffects] = getPublishedField(rootPkg, 'imports')
+    const hasBundlerSignals =
+      module != null ||
+      browser != null ||
+      (exports != null &&
+        typeof exports === 'object' &&
+        (objectHasKeyNested(exports, 'browser') || objectHasKeyNested(exports, 'module'))) ||
+      (importsForSideEffects != null &&
+        typeof importsForSideEffects === 'object' &&
+        (objectHasKeyNested(importsForSideEffects, 'browser') ||
+          objectHasKeyNested(importsForSideEffects, 'module')))
+
+    if (hasBundlerSignals) {
+      messages.push({
+        code: 'USE_SIDE_EFFECTS',
+        args: {},
+        path: ['name'],
+        type: 'suggestion',
+      })
+    }
+  }
+
+  // check file existence for browser field
   if (browser) {
     crawlBrowser(browser, browserPkgPath, !!exports)
   }
