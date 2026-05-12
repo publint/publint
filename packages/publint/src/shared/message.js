@@ -133,7 +133,7 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'USE_FILES':
       return `The package ${h.bold('publishes internal tests or config files')}. You can use ${h.bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'USE_SIDE_EFFECTS':
-      return `The package appears to be consumed by bundlers but does not specify ${h.bold('"sideEffects"')}. Consider adding ${h.bold('"sideEffects"')}: ${h.bold('false')} so bundlers can optimize tree-shaking when your package has no side effects.`
+      return `The package appears to be consumed by bundlers but does not specify ${h.bold('"sideEffects"')}. Consider adding ${h.bold('"sideEffects"')}: ${h.bold('false')} so bundlers can optimize tree-shaking if your package has no side effects.`
     case 'USE_TYPE':
       return `The package does not specify the ${h.bold('"type"')} field. Node.js may attempt to detect the package type causing a small performance hit. Consider adding ${h.bold('"type"')}: "${h.bold('commonjs')}".`
     case 'USE_ENGINES_NODE':

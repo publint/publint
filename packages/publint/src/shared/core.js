@@ -80,7 +80,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   const rootPkg = JSON.parse(rootPkgContent)
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
+  const [browser, browserPkgPath] = getPublishedField(rootPkg, 'browser')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
+  const [imports, importsPkgPath] = getPublishedField(rootPkg, 'imports')
 
   // Check if package published internal tests or config files
   if (rootPkg.files == null) {
@@ -383,21 +385,17 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
-  const [browser, browserPkgPath] = getPublishedField(rootPkg, 'browser')
-
   // Check if package likely targets bundlers and can benefit from sideEffects hinting
-  if (!Object.prototype.hasOwnProperty.call(rootPkg, 'sideEffects')) {
-    const [importsForSideEffects] = getPublishedField(rootPkg, 'imports')
+  if (rootPkg.sideEffects == null) {
     const hasBundlerSignals =
       module != null ||
       browser != null ||
       (exports != null &&
         typeof exports === 'object' &&
         (objectHasKeyNested(exports, 'browser') || objectHasKeyNested(exports, 'module'))) ||
-      (importsForSideEffects != null &&
-        typeof importsForSideEffects === 'object' &&
-        (objectHasKeyNested(importsForSideEffects, 'browser') ||
-          objectHasKeyNested(importsForSideEffects, 'module')))
+      (imports != null &&
+        typeof imports === 'object' &&
+        (objectHasKeyNested(imports, 'browser') || objectHasKeyNested(imports, 'module')))
 
     if (hasBundlerSignals) {
       messages.push({
@@ -483,7 +481,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   // recursively check imports
-  const [imports, importsPkgPath] = getPublishedField(rootPkg, 'imports')
   if (imports && ensureTypeOfField(imports, ['object'], importsPkgPath)) {
     crawlExportsOrImports(imports, importsPkgPath, true)
   }
