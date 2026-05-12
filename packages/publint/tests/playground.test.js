@@ -9,18 +9,21 @@ const isWindowsCI = process.env.CI !== undefined && process.platform === 'win32'
 testFixture('exports-browser-conflict', [
   'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
+  'USE_SIDE_EFFECTS',
 ])
 
 testFixture('exports-esmodule-with-default', [
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'USE_ENGINES_NODE',
 ])
+
 testFixture('exports-esmodule-with-default-with-import-condition', [
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'USE_ENGINES_NODE',
+  'USE_SIDE_EFFECTS',
 ])
 
 testFixture('exports-styles', [
@@ -52,14 +55,19 @@ testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
+  'USE_SIDE_EFFECTS',
 ])
 
-testFixture('invalid-jsx-extensions', [...Array(4).fill('FILE_INVALID_JSX_EXTENSION')])
+testFixture('invalid-jsx-extensions', [
+  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION'),
+  'USE_SIDE_EFFECTS',
+])
 
 testFixture('missing-files', [
   ...Array(9).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
+  'USE_SIDE_EFFECTS',
 ])
 
 testFixture('missing-license', ['USE_LICENSE'])
@@ -76,11 +84,24 @@ testFixture('no-exports-module', [])
 
 testFixture('not-missing-files', [])
 
-testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE', 'USE_ENGINES_NODE'])
+testFixture('exports-module', [
+  'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE',
+  'USE_ENGINES_NODE',
+  'USE_SIDE_EFFECTS',
+])
+
+testFixture('side-effects-missing', ['USE_SIDE_EFFECTS'])
+
+testFixture('side-effects-present', [])
 
 testFixture('exports-custom-condition', [])
 
-testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_ENGINES_NODE', 'USE_EXPORTS_BROWSER'])
+testFixture('publish-config', [
+  'FILE_DOES_NOT_EXIST',
+  'USE_ENGINES_NODE',
+  'USE_EXPORTS_BROWSER',
+  'USE_SIDE_EFFECTS',
+])
 
 // This needs to run with pnpm as only it supports `publishConfig.directory`
 testFixture('publish-config-directory', [], { pack: 'pnpm' })
@@ -105,6 +126,7 @@ testFixture('test-2', [
   'FILE_INVALID_FORMAT',
   'USE_ENGINES_NODE',
   'USE_EXPORTS_BROWSER',
+  'USE_SIDE_EFFECTS',
 ])
 
 testFixture(
@@ -151,6 +173,7 @@ testFixture(
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
     { code: 'USE_ENGINES_NODE', type: 'suggestion' },
     { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' },
+    { code: 'USE_SIDE_EFFECTS', type: 'suggestion' },
   ],
   { strict: true },
 )
@@ -178,6 +201,7 @@ testFixture('types-exports-resolution-custom-conditions', [
   'EXPORTS_TYPES_INVALID_FORMAT',
   'EXPORTS_TYPES_INVALID_FORMAT',
   'USE_ENGINES_NODE',
+  'USE_SIDE_EFFECTS',
 ])
 
 testFixture('types-exports-versioned', [])

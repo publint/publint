@@ -413,6 +413,18 @@ Internal tests or config files are published, which are usually not needed and u
 }
 ```
 
+### `USE_SIDE_EFFECTS` <RuleType type="suggestion" />
+
+For packages that are consumed by bundlers, the [`"sideEffects"`](https://webpack.js.org/guides/tree-shaking/) field is often used to hint whether the package or which parts of the package that have side effects. Side effects are defined as code that relies on being executed for its behavior, e.g. polyfills, global variable mutations, etc.
+
+If your package has no side effects, consider adding `"sideEffects": false` to allow bundlers to safely and quickly optimize tree-shaking of your package.
+
+```json
+{
+  "sideEffects": false
+}
+```
+
 ### `USE_LICENSE` <RuleType type="suggestion" />
 
 A license file is published but the `"license"` field is not set in `package.json`. Consider adding a `"license"` field so that it's correctly displayed on npm and allows other tooling to parse the package license.
