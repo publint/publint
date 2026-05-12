@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.21
+
+### Patch Changes
+
+- Suggest adding `"sideEffects": false` when bundler-oriented package fields or conditions are detected and the field is missing. ([#228](https://github.com/publint/publint/pull/228))
+
 ## 0.3.20
 
 ### Patch Changes
