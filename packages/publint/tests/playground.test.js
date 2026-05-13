@@ -161,7 +161,7 @@ testFixture('types-exports-resolution', [])
 
 testFixture('types-exports-resolution-cjs', [])
 
-testFixture('types-exports-resolution-cjs-explicit', [])
+testFixture('types-exports-resolution-cjs-explicit', ['EXPORTS_TYPES_INVALID_FORMAT'])
 
 testFixture('types-exports-resolution-dual', [
   'TYPES_NOT_EXPORTED',
@@ -169,9 +169,16 @@ testFixture('types-exports-resolution-dual', [
   'USE_ENGINES_NODE',
 ])
 
-testFixture('types-exports-resolution-dual-explicit', ['USE_ENGINES_NODE'])
+testFixture('types-exports-resolution-dual-explicit', [
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'USE_ENGINES_NODE',
+])
 
-testFixture('types-exports-resolution-custom-conditions', ['USE_ENGINES_NODE'])
+testFixture('types-exports-resolution-custom-conditions', [
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'USE_ENGINES_NODE',
+])
 
 testFixture('types-exports-versioned', [])
 

@@ -151,6 +151,24 @@ export function formatMessage(m, pkg, opts = {}) {
         return `${start} types is not exported. Consider adding ${h.bold(fp(m.path) + '.types')}: "${h.bold(typesFilePath)}" to be compatible with TypeScript's ${h.bold('"moduleResolution": "bundler"')} compiler option.`
       }
     }
+    case 'EXPORTS_TYPES_INVALID_FORMAT': {
+      let additionalMessage = ''
+      // ambiguous default export
+      if (m.args.expectFormat === 'ESM' && m.args.actualFormat === 'CJS') {
+        additionalMessage = `This causes the types to be ambiguous when default importing the package due to its implied interop. `
+      }
+      // incorrect dynamic import restriction
+      else if (m.args.expectFormat === 'CJS' && m.args.actualFormat === 'ESM') {
+        additionalMessage = `This causes the types to only work when dynamically importing the package, even though the package exports CJS. `
+      }
+      const start = opts.reference ? 'The' : h.bold(fp(m.path))
+      return (
+        `${start} types is interpreted as ${m.args.actualFormat} when resolving with the "${h.bold(m.args.condition)}" condition. ` +
+        additionalMessage +
+        `Consider splitting out two ${h.bold('"types"')} conditions for ${h.bold('"import"')} and ${h.bold('"require"')}, and use the ${h.warn(m.args.expectExtension)} extension, ` +
+        `e.g. ${h.bold(fp(m.args.expectPath))}: "${h.bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
+      )
+    }
     case 'FIELD_INVALID_VALUE_TYPE': {
       let expectStr = m.args.expectTypes[0]
       for (let i = 1; i < m.args.expectTypes.length; i++) {

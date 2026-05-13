@@ -1136,7 +1136,66 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             const typesResolvedPath = vfs.pathJoin(pkgDir, typesResult.value)
             if (!(await vfs.isPathExist(typesResolvedPath))) continue
 
-            if (!isDtsFile(typesResult.value)) {
+            if (isDtsFile(typesResult.value)) {
+              // if we have resolve to a dts file, it might not be ours because typescript requires
+              // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
+              // check if we're hitting this case :(
+              const dtsActualFormat = await getDtsFilePathFormat(typesResolvedPath, vfs)
+
+              /** @type {'ESM' | 'CJS' | undefined} */
+              let dtsExpectFormat = undefined
+
+              // get the intended format from the conditions without types, e.g. if the adjacent file
+              // is a CJS file, despite resolving with the "import" condition, make sure the dts format
+              // is expected to be CJS too.
+              // only run this if not dual publish since we know dual publish should have both ESM and CJS
+              // versions of the dts file, and we don't need to be lenient.
+              // NOTE: could there be setups with CJS code and ESM types? seems a bit weird.
+              if (!isDualPublish) {
+                const jsResult = format === 'import' ? importResult : requireResult
+                if (jsResult) {
+                  const jsResolvedPath = vfs.pathJoin(pkgDir, jsResult.value)
+                  if (await vfs.isPathExist(jsResolvedPath)) {
+                    dtsExpectFormat = await getFilePathFormat(jsResolvedPath, vfs)
+                  }
+                }
+              }
+
+              // fallback if we can't determine the non types format, we base on the condition instead.
+              // NOTE: this favours "import" condition over "require" when the library doesn't dual publish
+              // because we run "import" first in the for loop.
+              if (dtsExpectFormat == null) {
+                dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
+              }
+
+              if (dtsActualFormat !== dtsExpectFormat) {
+                // convert ['exports', 'types'] -> ['exports', '<format>', 'types']
+                // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<format>']
+                const expectPath = typesResult.path.slice()
+                // Sometimes the path already includes the condition, but it's still in an invalid format
+                if (!expectPath.includes(format)) {
+                  const typesIndex = expectPath.findIndex((p) => p === 'types')
+                  if (typesIndex === expectPath.length - 1) {
+                    expectPath.splice(typesIndex, 0, format)
+                  } else {
+                    expectPath.push(format)
+                  }
+                }
+                messages.push({
+                  code: 'EXPORTS_TYPES_INVALID_FORMAT',
+                  args: {
+                    condition: format,
+                    actualFormat: dtsActualFormat,
+                    expectFormat: dtsExpectFormat,
+                    actualExtension: vfs.getExtName(typesResult.value),
+                    expectExtension: getDtsCodeFormatExtension(dtsExpectFormat),
+                    expectPath,
+                  },
+                  path: typesResult.path,
+                  type: 'warning',
+                })
+              }
+            } else {
               // adjacent dts file here is always in the correct format
               const hasAdjacentDtsFile = await vfs.isPathExist(
                 vfs.pathJoin(pkgDir, getAdjacentDtsPath(typesResult.value)),

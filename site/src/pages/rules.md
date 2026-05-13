@@ -66,6 +66,57 @@ Ensure the `"module"` condition comes before the `"require"` condition. Due to t
 
 (Works similarly to [IMPORTS_MODULE_SHOULD_PRECEDE_REQUIRE](#imports_module_should_precede_require)).
 
+### `EXPORTS_TYPES_INVALID_FORMAT` <RuleType type="error" />
+
+Since TypeScript 5.0, it has emphasized that type files (`*.d.ts`) are also affected by its ESM and CJS context, and both contexts affect how the exported types is interpreted. This means that you can't share a single type file for both ESM and CJS exports of your library. You need to have two type files (albeit largely similar contents) when dual-publishing your library.
+
+When specifying the `"types"` conditions in the `"exports"` field, the types format is determined via its extension or its closest `package.json` `"type"` value, similar to the rule in [`IMPLICIT_INDEX_JS_INVALID_FORMAT`](#implicit_index_js_invalid_format). In short:
+
+- If the file ends with `.d.mts`, or if it's `.d.ts` and the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
+- If the file ends with `.d.cjs`, or if it's `.d.ts` and the closest `package.json` does not have `"type": "module"`, it's interpreted as CJS.
+
+This rule is inspired from https://arethetypeswrong.github.io which has a more in-depth explanation. If you get a message of:
+
+1. `... types is interpreted as CJS ...`: see [Masquerading as CJS](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseCJS.md).
+2. `... types is interpreted as ESM ...`: see [Masquerading as ESM](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseESM.md).
+
+An example of a correct configuration looks like this:
+
+```json
+{
+  "exports": {
+    "import": {
+      "types": "./index.d.mts",
+      "default": "./index.mjs"
+    },
+    "require": {
+      "types": "./index.d.cts",
+      "default": "./index.cjs"
+    }
+  }
+}
+```
+
+::: tip Reducing file size
+
+Having both `.d.mts` and `.d.cts` files that entirely consist of the same code feels redundant. However, there's a way to reduce the file size.
+
+As you may notice from the extended documentation above ([Masquerading as CJS](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseCJS.md) and [Masquerading as ESM](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseESM.md)), the core issue is that default exports are handled differently between ESM and CJS. If your library does not have default exports, the ESM types can directly re-export from the CJS types without caveats (note that the inverse is not true):
+
+`index.d.cts`:
+
+```ts
+export declare const api: string
+```
+
+`index.d.mts`:
+
+```ts
+export * from './index.cjs'
+```
+
+:::
+
 ### `EXPORTS_TYPES_SHOULD_BE_FIRST` <RuleType type="error" />
 
 Ensure `"types"` condition to be the first. As `"exports"` conditions are order-sensitive, in order for TypeScript to be able to resolve the types first, the `"types"` condition should be the first condition before any other JS exports. See the [TypeScript docs](https://www.typescriptlang.org/docs/handbook/modules/reference.html#packagejson-exports) for more information.
@@ -272,7 +323,7 @@ When an `"exports"` field is found, only the `"types"` condition declared is res
 
 The root `"types"` field is ignored to respect the `"exports"` field module resolution algorithm.
 
-For how TypeScript interprets declaration files as ESM or CJS (including masquerading problems), see [arethetypeswrong.github.io](https://arethetypeswrong.github.io/) and its [problem docs](https://github.com/arethetypeswrong/arethetypeswrong.github.io/tree/main/docs/problems).
+This message may also provide helpful hints depending on the types format, which is explained at [`EXPORTS_TYPES_INVALID_FORMAT`](#exports_types_invalid_format).
 
 ## Suggestions
 
