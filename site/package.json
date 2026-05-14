@@ -26,7 +26,7 @@
     "fs-fixture": "^2.13.0",
     "github-slugger": "^2.0.0",
     "oxc-minify": "^0.128.0",
-    "svelte": "^5.55.5",
+    "svelte": "^5.55.7",
     "vite": "^8.0.10",
     "vitepress": "^2.0.0-alpha.17",
     "vitest": "^4.1.5"
