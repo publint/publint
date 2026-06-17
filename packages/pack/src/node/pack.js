@@ -2,28 +2,27 @@ import cp from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import util from 'node:util'
+import { resolvePackageManagerCommand } from './utils.js'
 
 /** @type {import('../index.d.ts').pack} */
 export async function pack(dir, opts) {
   const packageManager = opts?.packageManager ?? 'npm'
 
-  let command = `${packageManager} pack`
-  if (packageManager === 'bun') {
-    command = command.replace('bun', 'bun pm')
-  }
+  const command = resolvePackageManagerCommand(packageManager)
+  command.push('pack')
 
   // Handle tarball output
   const packDestination = opts?.destination ?? dir
   if (opts?.destination) {
     switch (packageManager) {
       case 'yarn':
-        command += ` --out \"${path.join(packDestination, 'package.tgz')}\"`
+        command.push('--out', path.join(packDestination, 'package.tgz'))
         break
       case 'bun':
-        command += ` --destination \"${packDestination}\"`
+        command.push('--destination', packDestination)
         break
       default:
-        command += ` --pack-destination \"${packDestination}\"`
+        command.push('--pack-destination', packDestination)
         break
     }
   }
@@ -32,18 +31,21 @@ export async function pack(dir, opts) {
   if (opts?.ignoreScripts) {
     switch (packageManager) {
       case 'pnpm':
-        command += ' --config.ignore-scripts=true'
+        command.push('--config.ignore-scripts=true')
         break
       case 'yarn':
         // yarn does not support ignoring scripts
         break
       default:
-        command += ' --ignore-scripts'
+        command.push('--ignore-scripts')
         break
     }
   }
 
-  const output = await util.promisify(cp.exec)(command, { cwd: dir })
+  const output = await util.promisify(cp.execFile)(command[0], command.slice(1), {
+    cwd: dir,
+    shell: false,
+  })
 
   // Get first file that ends with `.tgz` in the pack destination.
   // Also double-check against stdout as usually the package manager also prints
