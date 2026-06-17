@@ -1,7 +1,7 @@
-import cp from 'child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { createFixture } from 'fs-fixture'
+import { exec } from 'tinyexec'
 
 const fixtureDir = path.resolve('../packages/publint/tests/fixtures')
 const fixtures = await fs.readdir(fixtureDir)
@@ -18,13 +18,11 @@ await Promise.all(
     const fixtureContent = (await import(fixturePath)).default
     const fixture = await createFixture(fixtureContent)
 
-    const proc = cp.exec(`npm pack ${fixture.path} --pack-destination=./public/temp/`)
-    return new Promise((resolve, reject) => {
-      proc.addListener('exit', () => resolve())
-      proc.addListener('error', () => reject())
-    }).finally(async () => {
+    try {
+      await exec('npm', ['pack', fixture.path, '--pack-destination=./public/temp/'])
+    } finally {
       await fixture.rm()
-    })
+    }
   }),
 )
 

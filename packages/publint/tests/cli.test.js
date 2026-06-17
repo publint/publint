@@ -1,11 +1,9 @@
 import path from 'node:path'
-import cp from 'node:child_process'
-import util from 'node:util'
 import { describe, expect, onTestFinished, test } from 'vitest'
 import { createFixture } from 'fs-fixture'
+import { exec } from 'tinyexec'
 
 const cliPath = path.resolve(import.meta.dirname, '../src/cli.js')
-const execFile = util.promisify(cp.execFile)
 
 // Skip some tests on Windows because it struggles with the child process for some reason
 const isWindows = process.platform === 'win32'
@@ -15,12 +13,14 @@ const isWindows = process.platform === 'win32'
  * @param {string[]} command
  */
 async function runCliProcess(cwd, command = []) {
-  let { stdout, stderr } = await execFile('node', [cliPath, ...command], {
-    cwd,
-    env: {
-      ...process.env,
-      NO_COLOR: '1',
-      PUBLINT_INTERNAL_SKIP_CLI_RUN: undefined,
+  let { stdout, stderr } = await exec('node', [cliPath, ...command], {
+    nodeOptions: {
+      cwd,
+      env: {
+        ...process.env,
+        NO_COLOR: '1',
+        PUBLINT_INTERNAL_SKIP_CLI_RUN: undefined,
+      },
     },
   })
   stdout = stdout.replace(/v\d+\.\d+\.\d+/g, 'v0.0.0')

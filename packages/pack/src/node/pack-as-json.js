@@ -1,6 +1,5 @@
-import cp from 'node:child_process'
 import fs from 'node:fs/promises'
-import util from 'node:util'
+import { exec } from 'tinyexec'
 import { getTempPackDir, resolvePackageManagerCommand } from './utils.js'
 
 /** @type {import('../index.d.ts').packAsJson} */
@@ -40,10 +39,7 @@ export async function packAsJson(dir, opts) {
     }
   }
 
-  let { stdout } = await util.promisify(cp.execFile)(command[0], command.slice(1), {
-    cwd: dir,
-    shell: false,
-  })
+  let { stdout } = await exec(command[0], command.slice(1), { nodeOptions: { cwd: dir } })
 
   try {
     stdout = stdout.trim()

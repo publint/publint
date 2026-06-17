@@ -27,6 +27,7 @@
     "github-slugger": "^2.0.0",
     "oxc-minify": "^0.136.0",
     "svelte": "^5.56.3",
+    "tinyexec": "^1.2.4",
     "vite": "^8.0.16",
     "vitepress": "^2.0.0-alpha.17",
     "vitest": "^4.1.9"

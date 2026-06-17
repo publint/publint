@@ -1,7 +1,6 @@
-import cp from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import util from 'node:util'
+import { exec } from 'tinyexec'
 import { resolvePackageManagerCommand } from './utils.js'
 
 /** @type {import('../index.d.ts').pack} */
@@ -42,10 +41,7 @@ export async function pack(dir, opts) {
     }
   }
 
-  const output = await util.promisify(cp.execFile)(command[0], command.slice(1), {
-    cwd: dir,
-    shell: false,
-  })
+  const output = await exec(command[0], command.slice(1), { nodeOptions: { cwd: dir } })
 
   // Get first file that ends with `.tgz` in the pack destination.
   // Also double-check against stdout as usually the package manager also prints

@@ -55,6 +55,7 @@
     "@types/prompts": "^2.4.9",
     "fs-fixture": "^2.14.0",
     "prompts": "^2.4.2",
+    "tinyexec": "^1.2.4",
     "vitest": "^4.1.9"
   }
 }
