@@ -5,17 +5,17 @@ import { describe, expect, onTestFinished, test } from 'vitest'
 import { createFixture } from 'fs-fixture'
 
 const cliPath = path.resolve(import.meta.dirname, '../src/cli.js')
-const exec = util.promisify(cp.exec)
+const execFile = util.promisify(cp.execFile)
 
 // Skip some tests on Windows because it struggles with the child process for some reason
 const isWindows = process.platform === 'win32'
 
 /**
  * @param {string} cwd
- * @param {string} command
+ * @param {string[]} command
  */
-async function runCliProcess(cwd, command = '') {
-  let { stdout, stderr } = await exec(`node "${cliPath}" ${command}`, {
+async function runCliProcess(cwd, command = []) {
+  let { stdout, stderr } = await execFile('node', [cliPath, ...command], {
     cwd,
     env: {
       ...process.env,
@@ -64,7 +64,7 @@ describe.skipIf(isWindows)('publint deps [dir]', () => {
     })
     onTestFinished(() => fixture.rm())
 
-    const { stdout, stderr } = await runCliProcess(fixture.path, 'deps')
+    const { stdout, stderr } = await runCliProcess(fixture.path, ['deps'])
 
     expect(stdout).toMatchInlineSnapshot(`
       "The \`publint deps\` command is deprecated. You can use a different tool to run \`publint\` in dependencies instead. e.g. \`npx renoma --filter-rules "publint"\`

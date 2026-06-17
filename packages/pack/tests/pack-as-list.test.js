@@ -4,12 +4,13 @@ import { test } from 'vitest'
 import { packAsListWithJson, packAsListWithPack } from '../src/node/pack-as-list.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
+import { resolvePackageManagerCommand } from '../src/node/utils.js'
 
 const isCI = process.env.CI !== undefined
 // For some very weird reason, package manager binaries with corepack do not work
 // on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
 const isWindowsCI = isCI && process.platform === 'win32'
-const exec = util.promisify(cp.exec)
+const execFile = util.promisify(cp.execFile)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
@@ -55,8 +56,10 @@ async function packlistWithFixture(
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
+      const command = resolvePackageManagerCommand(name)
+      command.push('--version')
       // Should be using corepack with the correct version. Double check here.
-      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
+      const { stdout } = await execFile(command[0], command.slice(1), { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
     }
 
