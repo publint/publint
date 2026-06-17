@@ -51,11 +51,6 @@ jobs:
         with:
           persist-credentials: false
 
-      # Corepack is removed in node 26
-      - name: Setup corepack
-        if: ${{ matrix.node == 26 }}
-        run: npm i -g corepack@0.35.0
-
       - name: Setup pnpm
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
@@ -67,6 +62,11 @@ jobs:
       # Bun is only used in tests. This isn't required for other workflows.
       - name: Setup bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+      # Corepack is removed in node 26
+      - name: Setup corepack
+        if: ${{ matrix.node == 26 }}
+        run: npm i -g corepack@0.35.0
 
       - name: Install dependencies
         run: pnpm install
