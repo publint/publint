@@ -15,9 +15,6 @@ export function resolvePackageManagerCommand(packageManager) {
   if (packageManager === 'bun') {
     command.push('pm')
   }
-  if (process.platform === 'win32') {
-    command[0] += '.cmd'
-  }
   return command
 }
 

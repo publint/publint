@@ -43,7 +43,7 @@ jobs:
         node: [22, 24, 26]
         include:
           - os: windows-latest
-            node: 22
+            node: 24
       fail-fast: false
     steps:
       - name: Checkout repo
