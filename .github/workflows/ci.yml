@@ -51,7 +51,9 @@ jobs:
         with:
           persist-credentials: false
 
+      # Corepack is removed in node 26
       - name: Setup corepack
+        if: ${{ matrix.node == 26 }}
         run: npm i -g corepack@0.35.0
 
       - name: Setup pnpm
