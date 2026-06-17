@@ -1,5 +1,11 @@
 # @publint/pack
 
+## 0.1.5
+
+### Patch Changes
+
+- Use proper command interpolation to prevent command injection on untrusted input. As it's not expected that this package is used with untrusted input, a vulnerability is not published. However, the fix is made still as a caution. ([#238](https://github.com/publint/publint/pull/238))
+
 ## 0.1.4
 
 ### Patch Changes
