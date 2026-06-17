@@ -37,6 +37,9 @@
     "unpack",
     "npm"
   ],
+  "dependencies": {
+    "tinyexec": "^1.2.4"
+  },
   "devDependencies": {
     "fs-fixture": "^2.14.0",
     "vitest": "^4.1.9"

@@ -1,7 +1,6 @@
-import cp from 'node:child_process'
 import fs from 'node:fs/promises'
-import util from 'node:util'
-import { getTempPackDir } from './utils.js'
+import { exec } from 'tinyexec'
+import { getTempPackDir, resolvePackageManagerCommand } from './utils.js'
 
 /** @type {import('../index.d.ts').packAsJson} */
 export async function packAsJson(dir, opts) {
@@ -10,7 +9,8 @@ export async function packAsJson(dir, opts) {
     throw new Error('`packAsJson` is not supported for `bun`')
   }
 
-  let command = `${packageManager} pack --json`
+  const command = resolvePackageManagerCommand(packageManager)
+  command.push('pack', '--json')
 
   // Handle tarball output. Try `--dry-run` if possible to not output any tarball,
   // otherwise pack to a temporary directory and delete it later
@@ -18,28 +18,28 @@ export async function packAsJson(dir, opts) {
   /** @type {string | undefined} */
   let packDestination
   if (supportsDryRun) {
-    command += ' --dry-run'
+    command.push('--dry-run')
   } else {
     packDestination = await getTempPackDir()
-    command += ` --pack-destination ${packDestination}`
+    command.push('--pack-destination', packDestination)
   }
 
   // Handle ignore-scripts
   if (opts?.ignoreScripts) {
     switch (packageManager) {
       case 'pnpm':
-        command += ' --config.ignore-scripts=true'
+        command.push('--config.ignore-scripts=true')
         break
       case 'yarn':
         // yarn does not support ignoring scripts
         break
       default:
-        command += ' --ignore-scripts'
+        command.push('--ignore-scripts')
         break
     }
   }
 
-  let { stdout } = await util.promisify(cp.exec)(command, { cwd: dir })
+  let { stdout } = await exec(command[0], command.slice(1), { nodeOptions: { cwd: dir } })
 
   try {
     stdout = stdout.trim()

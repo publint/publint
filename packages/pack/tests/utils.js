@@ -1,14 +1,13 @@
-import cp from 'node:child_process'
-import util from 'node:util'
 import { afterAll, beforeAll } from 'vitest'
+import { exec } from 'tinyexec'
 
 const isCI = process.env.CI !== undefined
-const exec = util.promisify(cp.exec)
 const cwd = new URL('./', import.meta.url)
+const execOpts = { throwOnError: true, nodeOptions: { cwd } }
 
 export async function isBunInstalled() {
   try {
-    await exec('bun -v', { cwd })
+    await exec('bun', ['-v'], execOpts)
     return true
   } catch {
     return false
@@ -27,13 +26,13 @@ export async function setupCorepackAndTestHooks() {
   if (!isCorepackEnabled) {
     beforeAll(async () => {
       console.info('Corepack not enabled for `@publint/pack` tests. Enabling.')
-      await exec('corepack enable', { cwd })
-      isCI && (await exec('corepack enable npm', { cwd }))
+      await exec('corepack', ['enable'], execOpts)
+      isCI && (await exec('corepack', ['enable', 'npm'], execOpts))
     })
     afterAll(async () => {
       console.info('Disabling corepack for `@publint/pack` tests.')
-      await exec('corepack disable', { cwd })
-      isCI && (await exec('corepack disable npm', { cwd }))
+      await exec('corepack', ['disable'], execOpts)
+      isCI && (await exec('corepack', ['disable', 'npm'], execOpts))
     })
   }
   // If corepack is enabled, but its npm support is not, we temporarily enable it,
@@ -41,11 +40,11 @@ export async function setupCorepackAndTestHooks() {
   else if (isCI && !isCorepackNpmEnabled) {
     beforeAll(async () => {
       console.info('Corepack npm support not enabled for `@publint/pack` tests. Enabling.')
-      await exec('corepack enable npm', { cwd })
+      await exec('corepack', ['enable', 'npm'], execOpts)
     })
     afterAll(async () => {
       console.info('Disabling corepack npm support for `@publint/pack` tests.')
-      await exec('corepack disable npm', { cwd })
+      await exec('corepack', ['disable', 'npm'], execOpts)
     })
   }
 }
@@ -54,7 +53,7 @@ async function checkCorepackNpmEnabled() {
   // If corepack npm is enabled (which is disabled by default unless with `corepack enable npm`),
   // then calling `npm -v` here should error out because this project is configured with pnpm.
   try {
-    await exec('npm -v', { cwd: new URL('./', import.meta.url) })
+    await exec('npm', ['-v'], execOpts)
     return false
   } catch {
     return true

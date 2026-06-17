@@ -54,6 +54,10 @@ importers:
         version: link:../packages/publint
 
   packages/pack:
+    dependencies:
+      tinyexec:
+        specifier: ^1.2.4
+        version: 1.2.4
     devDependencies:
       fs-fixture:
         specifier: ^2.14.0
@@ -86,6 +90,9 @@ importers:
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
+      tinyexec:
+        specifier: ^1.2.4
+        version: 1.2.4
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@25.9.3)(jiti@2.7.0)(yaml@2.9.0)
@@ -129,6 +136,9 @@ importers:
       svelte:
         specifier: ^5.56.3
         version: 5.56.3
+      tinyexec:
+        specifier: ^1.2.4
+        version: 1.2.4
       vite:
         specifier: ^8.0.16
         version: 8.0.16(@types/node@25.9.3)(jiti@2.7.0)(yaml@2.9.0)
