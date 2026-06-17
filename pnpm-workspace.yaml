@@ -8,6 +8,6 @@ allowBuilds:
   esbuild: true
   sharp: true
 overrides:
-  prettier: $prettier
   'vitepress>@docsearch/js': '-'
+  "vitepress>@docsearch/sidepanel-js": "-"
   'vitepress>vite': '^8.0.10'
