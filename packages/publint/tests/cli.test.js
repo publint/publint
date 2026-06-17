@@ -51,27 +51,3 @@ describe.skipIf(isWindows)('publint run [path]', () => {
     expect(stderr).toMatchInlineSnapshot(`""`)
   })
 })
-
-describe.skipIf(isWindows)('publint deps [dir]', () => {
-  test('basic', async () => {
-    const fixture = await createFixture({
-      'package.json': JSON.stringify({
-        name: 'test',
-        version: '0.0.1',
-        private: true,
-        type: 'module',
-      }),
-    })
-    onTestFinished(() => fixture.rm())
-
-    const { stdout, stderr } = await runCliProcess(fixture.path, 'deps')
-
-    expect(stdout).toMatchInlineSnapshot(`
-      "The \`publint deps\` command is deprecated. You can use a different tool to run \`publint\` in dependencies instead. e.g. \`npx renoma --filter-rules "publint"\`
-      Running publint v0.0.0 for test deps...
-      No dependencies found
-      "
-    `)
-    expect(stderr).toMatchInlineSnapshot(`""`)
-  })
-})

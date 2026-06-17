@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises'
-import fsSync from 'node:fs'
 import path from 'node:path'
 import { createRequire } from 'node:module'
 import sade from 'sade'
 import c from 'picocolors'
 import { publint } from './index-node.js'
 import { formatMessage } from './shared/message.js'
-import { createPromiseQueue } from './shared/utils.js'
 
 const version = createRequire(import.meta.url)('../package.json').version
 const cli = sade('publint', false)
@@ -83,123 +81,6 @@ cli
     }
   })
 
-cli
-  .command('deps [dir]', 'Lint dependencies declared in package.json (deprecated)')
-  .option('-P, --prod', 'Only check dependencies')
-  .option('-D, --dev', 'Only check devDependencies')
-  .action(async (dir, opts) => {
-    console.log(
-      c.bold(
-        c.yellow(
-          'The `publint deps` command is deprecated. You can use a different tool to run `publint` in dependencies instead. ' +
-            'e.g. `npx renoma --filter-rules "publint"`',
-        ),
-      ),
-    )
-
-    opts = normalizeOpts(opts)
-
-    const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const packageJson = await getPackageJson(pkgDir).catch(() => {
-      console.log(c.red(`Unable to read package.json at ${pkgDir}`))
-      process.exitCode = 1
-    })
-    if (packageJson == null) return
-    const { pkgName, pkgJson } = packageJson
-
-    console.log(`Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)} deps...`)
-
-    /** @type {string[]} */
-    const deps = []
-    if (!opts.dev) deps.push(...Object.keys(pkgJson.dependencies || {}))
-    if (!opts.prod) deps.push(...Object.keys(pkgJson.devDependencies || {}))
-
-    if (deps.length === 0) {
-      console.log(c.yellow('No dependencies found'))
-      return
-    }
-
-    let hasMessages = false
-
-    const pq = createPromiseQueue()
-    let waitingDepIndex = 0
-    /** @type {Function[]} */
-    const waitingDepIndexListeners = []
-    /**
-     * @param {Function} cb
-     */
-    const listenWaitingDepIndex = (cb) => {
-      waitingDepIndexListeners.push(cb)
-      // unlisten
-      return () => {
-        const i = waitingDepIndexListeners.indexOf(cb)
-        if (i > -1) waitingDepIndexListeners.splice(i, 1)
-      }
-    }
-
-    // lint deps in parallel, but log results in order asap
-    for (let i = 0; i < deps.length; i++) {
-      pq.push(async () => {
-        const depDir = await findDepPath(deps[i], pkgDir)
-        /** @type {Function} */
-        let log = () => {
-          waitingDepIndex++
-          waitingDepIndexListeners.forEach((cb) => cb())
-        }
-
-        if (depDir) {
-          const depPackageJson = await getPackageJson(depDir).catch(() => {
-            console.log(c.red(`Unable to read package.json at ${depDir}`))
-            process.exitCode = 1
-          })
-          if (depPackageJson) {
-            const { pkgName: depPkgName, pkgJson: depPkgJson } = depPackageJson
-            const { messages } = await publint({
-              pkgDir: depDir,
-              level: opts.level,
-              strict: opts.strict,
-              // Linting dependencies in node_modules also means that the dependency
-              // is already packed, so we don't need to pack it again by passing `false`.
-              // Otherwise if it's a local-linked dependency, we use the pack option.
-              pack: depDir.includes('node_modules') ? false : opts.pack,
-            })
-            const logs = formatMessages(messages, depPkgJson)
-            if (messages.length > 0) {
-              logs.unshift(c.bold(`${c.red('x')} ${depPkgName}`))
-              logs.push('') // insert new line so easier to read
-              hasMessages = true
-            }
-
-            log = () => {
-              logs.forEach((l) => console.log(l))
-              waitingDepIndex++
-              waitingDepIndexListeners.forEach((cb) => cb())
-            }
-          }
-        }
-
-        // log when it's our turn so that the results are ordered alphabetically,
-        // though all deps are linted in parallel
-        if (waitingDepIndex === i) {
-          log()
-        } else {
-          const unlisten = listenWaitingDepIndex(() => {
-            if (waitingDepIndex === i) {
-              log()
-              unlisten()
-            }
-          })
-        }
-      })
-    }
-
-    await pq.wait()
-
-    if (!hasMessages) {
-      console.log(c.bold(c.green('All good!')))
-    }
-  })
-
 if (!process.env.PUBLINT_INTERNAL_SKIP_CLI_RUN) {
   cli.parse(process.argv)
 }
@@ -245,34 +126,6 @@ function formatMessages(messages, pkgJson) {
   }
 
   return logs
-}
-
-/** @type {import('pnpapi')} */
-let pnp
-if (process.versions.pnp) {
-  try {
-    const { createRequire } = (await import('module')).default
-    pnp = createRequire(import.meta.url)('pnpapi')
-  } catch {}
-}
-
-/**
- * @param {string} dep
- * @param {string} parent
- */
-async function findDepPath(dep, parent) {
-  if (pnp) {
-    const depRoot = pnp.resolveToUnqualified(dep, parent)
-    if (!depRoot) return undefined
-  } else {
-    const depRoot = path.join(parent, 'node_modules', dep)
-    try {
-      await fs.access(depRoot)
-      return fsSync.realpathSync(depRoot)
-    } catch {
-      return undefined
-    }
-  }
 }
 
 /**
