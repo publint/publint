@@ -20,13 +20,15 @@ const packageManagers = /** @type {string[]} */ (
   [
     'empty',
     isCI && 'npm@9.9.4',
-    isCI && 'npm@10.9.2',
-    isCI && 'npm@11.1.0',
+    isCI && 'npm@10.9.8',
+    isCI && 'npm@11.18.0',
+    isCI && 'npm@12.0.1',
     'yarn@3.8.7',
-    'yarn@4.7.0',
+    'yarn@4.17.1',
     'pnpm@8.15.9',
-    'pnpm@9.15.5',
-    'pnpm@10.5.2',
+    'pnpm@9.15.9',
+    'pnpm@10.34.5',
+    'pnpm@11.15.1',
     'bun',
   ].filter(Boolean)
 )

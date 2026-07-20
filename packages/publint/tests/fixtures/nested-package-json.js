@@ -4,6 +4,7 @@ export default {
     version: '0.0.1',
     private: true,
     type: 'module',
+    files: ['dist'],
     exports: {
       '.': './dist/index.js',
     },

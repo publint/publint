@@ -4,6 +4,7 @@ export default {
     version: '0.0.1',
     private: true,
     type: 'module',
+    files: ['dist'],
     exports: {
       './ts': {
         '@scope/custom-condition': './src/index-ts.ts',
@@ -17,7 +18,7 @@ export default {
       },
     },
   }),
-  // NOTE: `.ts` amd `.tsx` files can be not published as they're local specific
+  // NOTE: `.ts` and `.tsx` files can be not published as they're local specific
   'dist/index-ts.d.ts': "export declare const foo = 'bar';",
   'dist/index-ts.js': "export const foo = 'bar';",
   'dist/index-tsx.d.ts': "export declare const foo = 'bar';",
