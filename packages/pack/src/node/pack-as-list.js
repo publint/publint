@@ -71,7 +71,15 @@ export async function packAsListWithPack(dir, packageManager, ignoreScripts) {
  * @returns {string[]}
  */
 function parseNpmPackJson(stdoutJson) {
-  return stdoutJson[0].files.map((/** @type {any} */ file) => file.path)
+  // npm <=11
+  if (Array.isArray(stdoutJson)) {
+    return stdoutJson[0].files.map((/** @type {any} */ file) => file.path)
+  }
+  // npm >=12
+  else {
+    const key = Object.keys(stdoutJson)[0]
+    return stdoutJson[key].files.map((/** @type {any} */ file) => file.path)
+  }
 }
 
 /**
