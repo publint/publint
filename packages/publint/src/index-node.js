@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { getPackDirectory, packAsList, unpack } from '@publint/pack'
+import { getPackDirectory, packAsList, supportedPackageManagers, unpack } from '@publint/pack'
 import { createNodeVfs } from './node/vfs-node.js'
 import { core } from './shared/core.js'
 import { createTarballVfs } from './shared/vfs-tarball.js'
@@ -72,19 +72,19 @@ export async function publint(options) {
  * @return {Promise<import('@publint/pack').PackageManager>}
  */
 async function detectPackageManager(pkgDir, pack) {
-  let packageManager = pack
-
-  if (packageManager === 'auto') {
+  if (pack === 'auto') {
     const { detect } = await import('package-manager-detector/detect')
-    let detected = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
-    // Deno is not supported in `@publint/pack` (doesn't have a pack command)
-    if (detected === 'deno' || detected === 'nub' || detected === 'aube') {
-      detected = 'npm'
+    const detected = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
+    // @ts-expect-error ts struggles to narrow the type here
+    if (supportedPackageManagers.includes(detected)) {
+      // @ts-expect-error ts struggles to narrow the type here
+      return detected
+    } else {
+      return 'npm'
     }
-    packageManager = detected
   }
 
-  return packageManager
+  return pack
 }
 
 /**
