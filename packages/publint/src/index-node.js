@@ -78,7 +78,7 @@ async function detectPackageManager(pkgDir, pack) {
     const { detect } = await import('package-manager-detector/detect')
     let detected = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
     // Deno is not supported in `@publint/pack` (doesn't have a pack command)
-    if (detected === 'deno') {
+    if (detected === 'deno' || detected === 'nub' || detected === 'aube') {
       detected = 'npm'
     }
     packageManager = detected
