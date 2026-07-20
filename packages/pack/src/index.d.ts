@@ -1,5 +1,11 @@
 export type PackageManager = 'npm' | 'yarn' | 'pnpm' | 'bun'
 
+/**
+ * Package managers supported by `@publint/pack`. Useful to validate if a detected
+ * package manager works with this library.
+ */
+export const supportedPackageManagers: PackageManager[]
+
 interface SharedPackOptions {
   /**
    * The package manager to use for packing.

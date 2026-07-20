@@ -15,3 +15,4 @@ export function getPackDirectory() {
 }
 
 export { unpack } from './browser/unpack.js'
+export { supportedPackageManagers } from './shared/constants.js'
