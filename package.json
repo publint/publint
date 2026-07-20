@@ -15,8 +15,8 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.0-next.7",
     "@changesets/cli": "^3.0.0-next.9",
-    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/node": "^26.1.1",
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.9.5",

@@ -1,0 +1,13 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 511a6dc917be4f2956a40855281a3797225a3e1e..491cbff73db960d2bc5dfb77e289605c1f1fe9c0 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -87,7 +87,7 @@ function determineDependents({ releases, packagesByName, rootDir, dependencyGrap
+ 			if (shouldSkipPackage(dependentPackage, {
+ 				ignore: config.ignore,
+ 				allowPrivatePackages: config.privatePackages.version
+-			})) type = "none";
++			})) type = undefined;
+ 			else {
+ 				const dependencyPackage = mapGetOrThrowInternal(packagesByName, nextRelease.name, "Dependency map is incorrect");
+ 				const dependencyVersionRanges = getDependencyVersionRanges(rootDir, dependentPackage.packageJson, nextRelease, dependencyPackage);

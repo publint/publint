@@ -1,14 +1,20 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
+  "$schema": "https://unpkg.com/@changesets/config@4.0.0-next.7/schema.json",
   "changelog": [
-		"@svitejs/changesets-changelog-github-compact",
-		{ "repo": "publint/publint" }
-	],
+    "@changesets/changelog-github",
+    {
+      "repo": "publint/publint",
+      "disableThanks": true
+    }
+  ],
   "commit": false,
   "access": "public",
   "fixed": [],
   "linked": [],
   "baseBranch": "master",
   "updateInternalDependencies": "minor",
+  "privatePackages": {
+    "version": false
+  },
   "ignore": []
 }
