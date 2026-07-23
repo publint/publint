@@ -108,6 +108,8 @@ testFixture('publish-config-directory', [], { pack: 'pnpm' })
 
 testFixture('npmignore', [])
 
+testFixture('use-files', ['USE_FILES'])
+
 testFixture('test-1', [
   'FILE_INVALID_FORMAT',
   'LOCAL_DEPENDENCY',

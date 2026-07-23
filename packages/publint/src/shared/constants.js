@@ -24,11 +24,40 @@ export const commonInternalPaths = [
   'test/',
   'tests/',
   '__tests__/',
-  // files
+  'e2e/',
+  '.circleci/',
+  '.github/',
+  '.husky/',
+  '.vscode/',
+  // config files
   '.prettierrc',
+  '.prettierignore',
   'prettier.config.js',
   '.eslintrc',
   '.eslintrc.js',
+  '.eslintignore',
+  'eslint.config.js',
+  'eslint.config.mjs',
+  'eslint.config.cjs',
+  // CI files
+  '.travis.yml',
+  'azure-pipelines.yml',
+  'appveyor.yml',
+  // git files
+  '.gitattributes',
+  '.gitignore',
+  // lockfiles
+  'package-lock.json',
+  'yarn.lock',
+  'pnpm-lock.yaml',
+  'bun.lock',
+  'bun.lockb',
+  // misc
+  'CONTRIBUTING.md',
+  'CODE_OF_CONDUCT.md',
+  'CODEOWNERS',
+  'Dockerfile',
+  'tsconfig.tsbuildinfo',
 ]
 
 // https://github.com/npm/npm-packlist/blob/53b2a4f42b7fef0f63e8f26a3ea4692e23a58fed/lib/index.js#L284-L286
