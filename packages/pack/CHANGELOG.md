@@ -1,5 +1,13 @@
 # @publint/pack
 
+## 0.1.6
+
+### Patch Changes
+
+- [#242](https://github.com/publint/publint/pull/242) [`4a8dc75`](https://github.com/publint/publint/commit/4a8dc757f7928dd884c762c9315f6e99d8805917) - Export `supportedPackageManagers` for list of supported package managers in the library
+
+- [#241](https://github.com/publint/publint/pull/241) [`7740a62`](https://github.com/publint/publint/commit/7740a62fe60cc874de25fe491793eaf2bfc11d9e) - Support npm v12 and pnpm v11
+
 ## 0.1.5
 
 ### Patch Changes
