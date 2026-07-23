@@ -74,7 +74,9 @@ export function stripComments(code) {
 
 // Reference: https://git-scm.com/docs/git-clone#_git_urls and https://github.com/npm/hosted-git-info
 const GIT_URL_RE =
-  /^(?:(git\+https?|git\+ssh|https?|ssh|git):\/\/)?(?:[\w._-]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[\w._/-]+)\/?$/
+  /^(?:(git\+https?|git\+ssh|https?|ssh|git):\/\/)?(?:[^@/]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[^?#]+)\/?$/
+// |----------------------------------------------||----------||-------||--------------||---------------|
+//                   protocol (1)                    username   host (2)    port (3)      pathname (4)
 /**
  * @param {string} url
  */

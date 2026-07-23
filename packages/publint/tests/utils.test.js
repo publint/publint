@@ -188,6 +188,7 @@ test('isGitUrl', () => {
   expect(isGitUrl('https://host.xz/path/to/repo.git/')).toEqual(true)
   expect(isGitUrl('http://host.xz/path/to/repo.git/')).toEqual(true)
   expect(isGitUrl('https://host.xz/path/to/repo.git')).toEqual(true)
+  expect(isGitUrl('https://host.xz/~path/~to/~repo.git')).toEqual(true)
   expect(isGitUrl('https://subdomain.host.xz/path/to/repo.git')).toEqual(true)
   expect(isGitUrl('https://192.168.0.1/path/to/repo.git')).toEqual(true)
   expect(isGitUrl('https://192.168.0.1:1234/path/to/repo.git')).toEqual(true)
