@@ -1,5 +1,17 @@
 # publint
 
+## 0.3.22
+
+### Patch Changes
+
+- [#241](https://github.com/publint/publint/pull/241) [`7740a62`](https://github.com/publint/publint/commit/7740a62fe60cc874de25fe491793eaf2bfc11d9e) - Support npm v12 and pnpm v11
+
+- [`cad0425`](https://github.com/publint/publint/commit/cad0425333aaa3c7a2dbca492477c80a7bd7fd09) - Relax git url regex for repository validation
+
+- [#244](https://github.com/publint/publint/pull/244) [`393ac4d`](https://github.com/publint/publint/commit/393ac4d2fda4b26b8f921e021bf6efeab2849467) - Recognize more common internal files for the `USE_FILES` suggestion.
+
+- [#242](https://github.com/publint/publint/pull/242) [`4a8dc75`](https://github.com/publint/publint/commit/4a8dc757f7928dd884c762c9315f6e99d8805917) - Refactor supported package manager handling from `@publint/pack`
+
 ## 0.3.21
 
 ### Patch Changes
