@@ -110,15 +110,21 @@ testFixture('npmignore', [])
 
 testFixture('use-files', ['USE_FILES'])
 
-test('use-files reports triggering paths', { concurrent: true }, async ({ expect, onTestFinished }) => {
-  const fixtureContent = (await import(path.resolve(process.cwd(), 'tests/fixtures/use-files.js'))).default
-  const fixture = await createFixture(fixtureContent)
-  onTestFinished(() => fixture.rm())
+test(
+  'use-files reports triggering paths',
+  { concurrent: true },
+  async ({ expect, onTestFinished }) => {
+    const fixtureContent = (
+      await import(path.resolve(process.cwd(), 'tests/fixtures/use-files.js'))
+    ).default
+    const fixture = await createFixture(fixtureContent)
+    onTestFinished(() => fixture.rm())
 
-  const { messages } = await publint({ pkgDir: fixture.path })
-  const msg = messages.find((m) => m.code === 'USE_FILES')
-  expect(msg?.args).toEqual({ internalFilePaths: ['/.github/'] })
-})
+    const { messages } = await publint({ pkgDir: fixture.path })
+    const msg = messages.find((m) => m.code === 'USE_FILES')
+    expect(msg?.args).toEqual({ internalFilePaths: ['/.github/'] })
+  },
+)
 
 testFixture('test-1', [
   'FILE_INVALID_FORMAT',
