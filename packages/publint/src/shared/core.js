@@ -87,20 +87,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   // Check if package published internal tests or config files
   if (rootPkg.files == null) {
     promiseQueue.push(async () => {
+      /** @type {string[]} */
+      const internalFilePaths = []
       for (const p of commonInternalPaths) {
         const internalPath = vfs.pathJoin(pkgDir, p)
         if (_packedFiles && _packedFiles.every((f) => !f.startsWith(internalPath))) {
           continue
         }
         if (await vfs.isPathExist(internalPath)) {
-          messages.push({
-            code: 'USE_FILES',
-            args: {},
-            path: ['name'],
-            type: 'suggestion',
-          })
-          break
+          internalFilePaths.push('/' + p)
         }
+      }
+      if (internalFilePaths.length > 0) {
+        messages.push({
+          code: 'USE_FILES',
+          args: { internalFilePaths },
+          path: ['name'],
+          type: 'suggestion',
+        })
       }
     })
   }

@@ -130,8 +130,15 @@ export function formatMessage(m, pkg, opts = {}) {
       )
     case 'USE_EXPORTS_OR_IMPORTS_BROWSER':
       return `${h.bold('pkg.browser')} with an object value can be refactored to use ${h.bold('pkg.exports')}/${h.bold('pkg.imports')} and the ${h.bold('"browser"')} condition to declare browser-specific exports. (This may be a breaking change)`
-    case 'USE_FILES':
-      return `The package ${h.bold('publishes internal tests or config files')}. You can use ${h.bold('pkg.files')} to only publish certain files and save user bandwidth.`
+    case 'USE_FILES': {
+      const paths = m.args.internalFilePaths
+      const shown = paths
+        .slice(0, 5)
+        .map((p) => h.bold(p))
+        .join(', ')
+      const rest = paths.length > 5 ? ` and ${paths.length - 5} more` : ''
+      return `The package ${h.bold('publishes internal tests or config files')} (${shown}${rest}). You can use ${h.bold('pkg.files')} to only publish certain files and save user bandwidth.`
+    }
     case 'USE_SIDE_EFFECTS':
       return `The package appears to be consumed by bundlers but does not specify ${h.bold('"sideEffects"')}. Consider adding ${h.bold('"sideEffects"')}: ${h.bold('false')} so bundlers can optimize tree-shaking if your package has no side effects.`
     case 'USE_TYPE':
