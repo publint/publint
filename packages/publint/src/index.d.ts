@@ -65,7 +65,7 @@ export type Message =
   | BaseMessage<'USE_ENGINES_NODE'>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
-  | BaseMessage<'USE_FILES'>
+  | BaseMessage<'USE_FILES', { internalFilePaths: string[] }>
   | BaseMessage<'USE_SIDE_EFFECTS'>
   | BaseMessage<'USE_TYPE'>
   | BaseMessage<'USE_LICENSE', { licenseFilePath: string }>
