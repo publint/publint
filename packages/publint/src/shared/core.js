@@ -1326,7 +1326,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         commonInternalTestFileRegex.test(item) &&
         (!_packedFiles || _packedFiles.includes(itemPath))
       ) {
-        internalTestFilePaths.push('/' + vfs.pathRelative(pkgDir, itemPath))
+        // Normalize Windows separators as the path is joined with `/` below
+        internalTestFilePaths.push('/' + vfs.pathRelative(pkgDir, itemPath).replace(/\\/g, '/'))
       }
       if (item !== 'package.json' || itemPath === rootPkgPath) continue
       if (_packedFiles && !_packedFiles.includes(itemPath)) continue
