@@ -1,5 +1,6 @@
 import {
   commonInternalPaths,
+  commonInternalTestFileRegex,
   invalidJsxExtensions,
   knownBrowserishConditions,
   licenseFiles,
@@ -84,20 +85,42 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
   const [imports, importsPkgPath] = getPublishedField(rootPkg, 'imports')
 
+  // Check if any nested package.json files have "exports" or "imports" fields, which
+  // Node.js ignores outside the package root (see https://github.com/nodejs/node/issues/58827).
+  // Some bundlers may still read them which can lead to inconsistent resolution.
+  // The walk also collects nested test files for the `USE_FILES` check below.
+  /** @type {string[]} */
+  const internalTestFilePaths = []
+  const crawlNestedPackageJsonPromise = crawlNestedPackageJson(pkgDir)
+  promiseQueue.push(() => crawlNestedPackageJsonPromise)
+
   // Check if package published internal tests or config files
   if (rootPkg.files == null) {
     promiseQueue.push(async () => {
       /** @type {string[]} */
       const internalFilePaths = []
       for (const p of commonInternalPaths) {
+        // `pathJoin` preserves the trailing slash of directories, so `startsWith`
+        // matches at directory boundaries. Files must match exactly.
         const internalPath = vfs.pathJoin(pkgDir, p)
-        if (_packedFiles && _packedFiles.every((f) => !f.startsWith(internalPath))) {
-          continue
+        if (_packedFiles) {
+          const isPacked = p.endsWith('/')
+            ? _packedFiles.some((f) => f.startsWith(internalPath))
+            : _packedFiles.includes(internalPath)
+          if (!isPacked) continue
         }
         if (await vfs.isPathExist(internalPath)) {
           internalFilePaths.push('/' + p)
         }
       }
+      // Wait for the recursive walk to finish collecting nested test files, then
+      // skip those already covered by a matched directory, e.g. don't report
+      // both `/test/` and `/test/foo.test.js`
+      await crawlNestedPackageJsonPromise
+      const matchedDirs = internalFilePaths.filter((p) => p.endsWith('/'))
+      internalFilePaths.push(
+        ...internalTestFilePaths.filter((p) => !matchedDirs.some((d) => p.startsWith(d))),
+      )
       if (internalFilePaths.length > 0) {
         messages.push({
           code: 'USE_FILES',
@@ -488,13 +511,6 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   if (imports && ensureTypeOfField(imports, ['object'], importsPkgPath)) {
     crawlExportsOrImports(imports, importsPkgPath, true)
   }
-
-  // Check if any nested package.json files have "exports" or "imports" fields, which
-  // Node.js ignores outside the package root (see https://github.com/nodejs/node/issues/58827).
-  // Some bundlers may still read them which can lead to inconsistent resolution.
-  promiseQueue.push(async () => {
-    await crawlNestedPackageJson(pkgDir)
-  })
 
   await promiseQueue.wait()
 
@@ -1303,6 +1319,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
         await crawlNestedPackageJson(itemPath)
         continue
+      }
+      // Piggyback on this walk to also detect nested test files for `USE_FILES`
+      if (
+        rootPkg.files == null &&
+        commonInternalTestFileRegex.test(item) &&
+        (!_packedFiles || _packedFiles.includes(itemPath))
+      ) {
+        internalTestFilePaths.push('/' + vfs.pathRelative(pkgDir, itemPath))
       }
       if (item !== 'package.json' || itemPath === rootPkgPath) continue
       if (_packedFiles && !_packedFiles.includes(itemPath)) continue

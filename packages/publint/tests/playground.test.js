@@ -122,7 +122,10 @@ test(
 
     const { messages } = await publint({ pkgDir: fixture.path })
     const msg = messages.find((m) => m.code === 'USE_FILES')
-    expect(msg?.args).toEqual({ internalFilePaths: ['/.github/'] })
+    // `/test/bar.spec.ts` is not reported as it's covered by `/test/` already
+    expect(msg?.args).toEqual({
+      internalFilePaths: ['/test/', '/.github/', '/src/foo.test.js'],
+    })
   },
 )
 
