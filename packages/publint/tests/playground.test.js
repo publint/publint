@@ -115,8 +115,7 @@ test(
   { concurrent: true, timeout: process.env.CI ? 8000 : 5000 },
   async ({ expect, onTestFinished }) => {
     const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
-    const fixtureContent = (await import(path.resolve(fixtureDir, 'use-files.js')))
-      .default
+    const fixtureContent = (await import(path.resolve(fixtureDir, 'use-files.js'))).default
     const fixture = await createFixture(fixtureContent, {
       // See `testFixture` on why `tempDir` is set on Windows CI
       tempDir: isWindowsCI ? fixtureDir : undefined,
