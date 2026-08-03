@@ -1321,6 +1321,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         continue
       }
       // Piggyback on this walk to also detect nested test files for `USE_FILES`
+      // TODO: Separate this and optimize multiple walks in the future
       if (
         rootPkg.files == null &&
         commonInternalTestFileRegex.test(item) &&
