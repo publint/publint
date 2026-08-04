@@ -405,7 +405,7 @@ Depending on your setup, you can also use the `"exports"` field to directly expo
 
 ### `USE_FILES` <RuleType type="suggestion" />
 
-Internal tests or config files are published, which are usually not needed and unused. Besides common top-level files and directories, test files (e.g. `*.test.js`, `*.spec.ts`) anywhere in the package also trigger this suggestion. You can use the [`"files"` field](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files) to only publish certain files. For example:
+Internal tests or config files are published, which are usually not needed and unused. You can use the [`"files"` field](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files) to only publish certain files. For example:
 
 ```json
 {
