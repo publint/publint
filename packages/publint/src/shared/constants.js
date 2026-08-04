@@ -60,5 +60,9 @@ export const commonInternalPaths = [
   'tsconfig.tsbuildinfo',
 ]
 
+// NOTE: like `commonInternalPaths`, this is intentionally non-exhaustive and
+// loose detection purpose for `pkg.files`.
+export const commonInternalTestFileRegex = /\.(test|spec)\.[cm]?[jt]sx?$/
+
 // https://github.com/npm/npm-packlist/blob/53b2a4f42b7fef0f63e8f26a3ea4692e23a58fed/lib/index.js#L284-L286
 export const licenseFiles = [/^copying/i, /^licence/i, /^license/i]

@@ -11,5 +11,11 @@ export default {
       'ci.yml': 'name: CI',
     },
   },
+  src: {
+    'foo.test.js': "import { foo } from '../main.js'",
+  },
+  test: {
+    'bar.spec.ts': 'export {}',
+  },
   'main.js': "export const foo = 'foo'",
 }
