@@ -108,28 +108,14 @@ testFixture('publish-config-directory', [], { pack: 'pnpm' })
 
 testFixture('npmignore', [])
 
-testFixture('use-files', ['USE_FILES'])
-
-test(
-  'use-files reports triggering paths',
-  { concurrent: true, timeout: process.env.CI ? 8000 : 5000 },
-  async ({ expect, onTestFinished }) => {
-    const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
-    const fixtureContent = (await import(path.resolve(fixtureDir, 'use-files.js'))).default
-    const fixture = await createFixture(fixtureContent, {
-      // See `testFixture` on why `tempDir` is set on Windows CI
-      tempDir: isWindowsCI ? fixtureDir : undefined,
-    })
-    onTestFinished(() => fixture.rm())
-
-    const { messages } = await publint({ pkgDir: fixture.path })
-    const msg = messages.find((m) => m.code === 'USE_FILES')
-    // `/test/bar.spec.ts` is not reported as it's covered by `/test/` already
-    expect(msg?.args).toEqual({
-      internalFilePaths: ['/test/', '/.github/', '/src/foo.test.js'],
-    })
+// `/test/bar.spec.ts` is not reported as it's covered by `/test/` already
+testFixture('use-files', [
+  {
+    code: 'USE_FILES',
+    type: 'suggestion',
+    args: { internalFilePaths: ['/test/', '/.github/', '/src/foo.test.js'] },
   },
-)
+])
 
 testFixture('test-1', [
   'FILE_INVALID_FORMAT',
@@ -291,7 +277,7 @@ testFixture('nested-package-json', [
 
 /**
  * @param {string} name
- * @param {import('../src/index.d.ts').Message['code'][] | Pick<import('../src/index.d.ts').Message, 'code' | 'type'>[]} expectCodes
+ * @param {import('../src/index.d.ts').Message['code'][] | (Pick<import('../src/index.d.ts').Message, 'code' | 'type'> & Partial<Pick<import('../src/index.d.ts').Message, 'args'>>)[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
@@ -332,10 +318,9 @@ function testFixture(name, expectCodes, options) {
       console.log()
     }
 
-    // you can test an array of objects
+    // you can test an array of objects (matched partially, e.g. `args` is optional)
     if (typeof expectCodes[0] === 'object') {
-      const codes = messages.map((v) => ({ code: v.code, type: v.type }))
-      expect(codes).toEqual(expectCodes)
+      expect(messages).toMatchObject(expectCodes)
     } else {
       const codes = messages.map((v) => v.code)
       expect(codes).toEqual(expectCodes)
