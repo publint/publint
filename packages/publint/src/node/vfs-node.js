@@ -28,7 +28,7 @@ export function createNodeVfs() {
       return nodePath.join(...parts)
     },
     pathRelative(from, to) {
-      return nodePath.relative(from, to)
+      return nodePath.relative(from, to).replaceAll(nodePath.sep, '/')
     },
     getDirName(path) {
       return nodePath.dirname(path)

@@ -44,7 +44,7 @@ import {
  * @property {(path: string) => Promise<boolean>} isPathDir
  * @property {(path: string) => Promise<boolean>} isPathExist
  * @property {(...paths: string[]) => string} pathJoin
- * @property {(from: string, to: string) => string} pathRelative
+ * @property {(from: string, to: string) => string} pathRelative Returned path uses `/` separators
  * @property {(path: string) => string} getDirName
  * @property {(path: string) => string} getExtName
  */
@@ -1327,8 +1327,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         commonInternalTestFileRegex.test(item) &&
         (!_packedFiles || _packedFiles.includes(itemPath))
       ) {
-        // Normalize Windows separators as the path is joined with `/` below
-        internalTestFilePaths.push('/' + vfs.pathRelative(pkgDir, itemPath).replace(/\\/g, '/'))
+        internalTestFilePaths.push('/' + vfs.pathRelative(pkgDir, itemPath))
       }
       if (item !== 'package.json' || itemPath === rootPkgPath) continue
       if (_packedFiles && !_packedFiles.includes(itemPath)) continue
