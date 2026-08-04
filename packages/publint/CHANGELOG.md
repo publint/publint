@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.23
+
+### Patch Changes
+
+- [#248](https://github.com/publint/publint/pull/248) [`9ff88ac`](https://github.com/publint/publint/commit/9ff88ac3784a33cb36d9d78064586588de07e9e1) - Recursively detect test files (e.g. `*.test.js`, `*.spec.ts`) for the `USE_FILES` suggestion.
+
+- [#245](https://github.com/publint/publint/pull/245) [`ad737a3`](https://github.com/publint/publint/commit/ad737a386b1b8e8e4b2dce1bf7a7ce8d4506ebba) - The `USE_FILES` message now reports which internal files or directories triggered it via `args.internalFilePaths`
+
 ## 0.3.22
 
 ### Patch Changes
