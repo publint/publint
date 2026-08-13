@@ -15,13 +15,13 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "^1.0.0-next.7",
-    "@changesets/cli": "^3.0.0-next.9",
-    "@types/node": "^26.1.1",
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.0",
+    "@types/node": "^26.2.0",
     "@types/pnpapi": "^0.0.5",
-    "prettier": "^3.9.5",
+    "prettier": "^3.9.6",
     "prettier-plugin-svelte": "^4.1.1",
-    "svelte": "^5.56.6",
+    "svelte": "^5.56.8",
     "typescript": "~6.0.3"
   }
 }

@@ -38,7 +38,7 @@
     "npm"
   ],
   "dependencies": {
-    "tinyexec": "^1.2.4"
+    "tinyexec": "^1.3.0"
   },
   "devDependencies": {
     "fs-fixture": "^2.14.0",
