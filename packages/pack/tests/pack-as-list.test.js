@@ -8,6 +8,10 @@ const isCI = process.env.CI !== undefined
 // For some very weird reason, package manager binaries with corepack do not work
 // on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
 const isWindowsCI = isCI && process.platform === 'win32'
+
+const supportsIgnoreScripts = (/** @type {string} */ pm) =>
+  pm.startsWith('yarn') || pm === 'pnpm@12.0.0-rc.6'
+
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
@@ -20,15 +24,16 @@ const packageManagers = /** @type {string[]} */ (
   [
     'empty',
     isCI && 'npm@9.9.4',
-    isCI && 'npm@10.9.8',
-    isCI && 'npm@11.18.0',
-    isCI && 'npm@12.0.1',
+    isCI && 'npm@10.9.9',
+    isCI && 'npm@11.19.0',
+    isCI && 'npm@12.0.2',
     'yarn@3.8.7',
-    'yarn@4.17.1',
+    'yarn@4.18.0',
     'pnpm@8.15.9',
     'pnpm@9.15.9',
     'pnpm@10.34.5',
-    'pnpm@11.15.1',
+    'pnpm@11.22.0',
+    'pnpm@12.0.0-rc.6',
     'bun',
   ].filter(Boolean)
 )
@@ -164,8 +169,7 @@ for (const pm of packageManagers) {
       },
     )
 
-    // skipping yarn as it does not support ignoring scripts
-    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(
+    test.skipIf(isWindowsCI || !supportsIgnoreScripts(pm))(
       `packlist - ${pm} / ${strategy} / ignore-scripts-true`,
       testOpts,
       async ({ expect }) => {
@@ -194,8 +198,7 @@ for (const pm of packageManagers) {
       },
     )
 
-    // skipping yarn as it does not support ignoring scripts
-    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(
+    test.skipIf(isWindowsCI || !supportsIgnoreScripts(pm))(
       `packlist - ${pm} / ${strategy} / ignore-scripts-false`,
       testOpts,
       async ({ expect }) => {
