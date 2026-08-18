@@ -9,19 +9,19 @@ export function parseTar(buffer) {
 
   let offset = 0
   while (offset + 512 <= buffer.byteLength) {
-    // The end-of-archive marker is a zero-filled block. It can't be detected from
-    // the type alone, as '\0' is also a valid type for a regular file (see below).
-    if (new Uint8Array(buffer, offset, 512).every((byte) => byte === 0)) break
+    // Get file size from header (from offset 124, 12 bytes)
+    const size = parseInt(read(buffer, decoder, offset + 124, 12), 8)
+
+    // This may be NaN (because of parseInt("\0", 8)) which is used here as a fast-path
+    // for detecting the end-of-archive marker, or if the tarball is corrupted
+    if (Number.isNaN(size)) break
 
     // Get file type from header (from offset 156, 1 byte)
     const type = read(buffer, decoder, offset + 156, 1)
 
-    // Get file size from header (from offset 124, 12 bytes)
-    const size = parseInt(read(buffer, decoder, offset + 124, 12), 8)
-
     // Only handle files ('0', or '\0' as written by pre-POSIX archivers). Packed
-    // packages often only contain files and no directories.
-    // It may contain PAX headers (x) and global PAX headers (g), but we don't need to handle those.
+    // packages often only contain files and no directories. It may contain
+    // PAX headers (x) and global PAX headers (g), but we don't need to handle those.
     if (type === '0' || type === '\0') {
       // Get file name from header (from offset 0, 100 bytes)
       const name = read(buffer, decoder, offset, 100).split('\0', 1)[0]
