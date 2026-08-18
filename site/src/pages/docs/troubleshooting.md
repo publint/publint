@@ -16,7 +16,7 @@ There are several common reasons why it might hang:
 
 2. **Circular execution via [lifecycle scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts#life-cycle-scripts)**. While publint tries to add additional flags internally to prevent lifecycle scripts from running, some package managers do not respect or support these flags.
 
-   For example, [`npm pack`](https://docs.npmjs.com/cli/v11/using-npm/scripts#npm-pack) can be set to ignore `prepack` and `postpack` scripts, but it'll still run the `prepare` script. [`yarn pack`](https://yarnpkg.com/advanced/lifecycle-scripts#prepack-and-postpack) does not support ignoring the `prepack` and `postpack` scripts.
+   For example, [`npm pack`](https://docs.npmjs.com/cli/v11/using-npm/scripts#npm-pack) can be set to ignore `prepack` and `postpack` scripts, but it'll still run the `prepare` script. [`yarn pack`](https://yarnpkg.com/advanced/lifecycle-scripts#prepack-and-postpack) and `pnpm@12 pack` do not support ignoring the `prepack` and `postpack` scripts.
 
    **To fix this**, avoiding calling `publint` in these lifecycle scripts, and run `publint` in a separate step instead.
 

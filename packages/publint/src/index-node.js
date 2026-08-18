@@ -97,15 +97,13 @@ async function getPackedFiles(pkgDir, packDir, packageManager, log) {
   // When packing, we want to ignore scripts as `publint` itself could be used in one of them and could
   // cause an infinite loop. Also, running scripts might be slow and unexpected.
 
-  // Yarn does not support ignoring scripts. If we know we're in a lifecycle event, try to warn about an infinite loop.
+  // Yarn and pnpm 12 do not support ignoring scripts. If we know we're in a lifecycle event, try to warn about an infinite loop.
   // NOTE: this is not foolproof as one could invoke `yarn run <something>` within the lifecycle event, causing us
   // to unable to check if we're in a problematic lifecycle event.
-  if (
-    packageManager === 'yarn' &&
-    ['prepack', 'postpack'].includes(process.env.npm_lifecycle_event ?? '')
-  ) {
+  // NOTE 2: run this for all pms in case new versions execute lifecycle scripts somehow.
+  if (['prepack', 'postpack'].includes(process.env.npm_lifecycle_event ?? '')) {
     throw new Error(
-      `[publint] publint requires running \`yarn pack\` to lint the package, however, ` +
+      `[publint] publint requires running \`${packageManager} pack\` to lint the package, however, ` +
         `it is also being executed in the "${process.env.npm_lifecycle_event}" lifecycle event, ` +
         `which causes an infinite loop. Try to run publint outside of the lifecycle event instead.`,
     )
