@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.24
+
+### Patch Changes
+
+- [#257](https://github.com/publint/publint/pull/257) [`7c4d25a`](https://github.com/publint/publint/commit/7c4d25a4a03d8a8332221248df8c386d4cd97f30) - Check the `repository.url` value even when `repository.type` is omitted. `type` is optional and defaults to git, so packages using the object form without it were previously skipped for the deprecated-protocol, invalid-git-url, and shorthand-URL checks.
+
 ## 0.3.23
 
 ### Patch Changes
