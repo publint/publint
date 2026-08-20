@@ -22,13 +22,23 @@ testFixture('exports-esmodule-with-default-with-import-condition', [
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
   'CJS_WITH_ESMODULE_DEFAULT_EXPORT',
+  'EXPORTS_IMPORT_CONDITION_ONLY',
   'USE_ENGINES_NODE',
   'USE_SIDE_EFFECTS',
 ])
 
+testFixture('exports-import-condition-only', [
+  'EXPORTS_IMPORT_CONDITION_ONLY',
+  'EXPORTS_IMPORT_CONDITION_ONLY',
+  'EXPORTS_IMPORT_CONDITION_ONLY',
+])
+
+testFixture('exports-import-condition-only-resolvable', [])
+
 testFixture('exports-styles', [
   'EXPORTS_FALLBACK_ARRAY_USE',
   'EXPORTS_FALLBACK_ARRAY_USE',
+  'EXPORTS_IMPORT_CONDITION_ONLY',
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',
   'FILE_DOES_NOT_EXIST',
@@ -187,9 +197,9 @@ testFixture(
   { strict: true },
 )
 
-testFixture('types', ['TYPES_NOT_EXPORTED', 'USE_ENGINES_NODE'])
+testFixture('types', ['EXPORTS_IMPORT_CONDITION_ONLY', 'TYPES_NOT_EXPORTED', 'USE_ENGINES_NODE'])
 
-testFixture('types-exports-resolution', [])
+testFixture('types-exports-resolution', ['EXPORTS_IMPORT_CONDITION_ONLY'])
 
 testFixture('types-exports-resolution-cjs', [])
 

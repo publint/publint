@@ -444,6 +444,8 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     crawlExportsOrImports(exports, exportsPkgPath)
     // make sure types are exported for moduleResolution bundler
     doCheckTypesExported()
+    // make sure the entrypoints can be required and not only imported
+    doCheckImportConditionOnly()
   } else {
     // all files can be accessed. verify them all
     promiseQueue.push(async () => {
@@ -1300,6 +1302,65 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // TODO: handle nested exports key
     }
     return typesFilePath
+  }
+
+  /**
+   * Check each `"exports"` entrypoint that resolves with the `"import"` condition but
+   * doesn't resolve at all with the `"require"` condition.
+   */
+  function doCheckImportConditionOnly() {
+    if (typeof exports !== 'object' || exports === null || Array.isArray(exports)) return
+
+    const exportsKeys = Object.keys(exports)
+    if (exportsKeys.length === 0) return
+
+    // check if the `exports` directly map to condition keys (doesn't start with '.').
+    // if so, we work on it directly. else it holds one or more entrypoints instead.
+    if (!exportsKeys[0].startsWith('.')) {
+      checkImportConditionOnly(exports, exportsPkgPath)
+    } else {
+      for (const key of exportsKeys) {
+        checkImportConditionOnly(exports[key], exportsPkgPath.concat(key))
+      }
+    }
+  }
+
+  /**
+   * Node.js is able to `require()` ESM files today, so an ESM-only entrypoint that is
+   * gated behind the `"import"` condition only causes `require()` to fail resolving,
+   * even though the file could have been loaded. Resolving to a file also gives a much
+   * clearer error when the file really can't be required, e.g. it uses top-level await.
+   * @param {any} entrypointValue
+   * @param {string[]} entrypointPath
+   */
+  function checkImportConditionOnly(entrypointValue, entrypointPath) {
+    if (typeof entrypointValue !== 'object' || entrypointValue === null) return
+    // fallback arrays resolve differently between tools and are already reported by
+    // `EXPORTS_FALLBACK_ARRAY_USE`, so skip them here
+    if (Array.isArray(entrypointValue)) return
+    // if a `"require"` condition is written anywhere in the entrypoint, the author has
+    // already considered `require`, e.g. by deliberately blocking it with a `null` value
+    if (objectHasKeyNested(entrypointValue, 'require')) return
+
+    const importResult = resolveExports(entrypointValue, ['import', 'node'], entrypointPath)
+    if (!importResult) return
+    // only report files that could be required in the first place, e.g. skip assets like CSS
+    if (!isFilePathLintable(importResult.value)) return
+
+    // `"module-sync"` is used by Node.js when requiring, so it counts as resolvable too
+    // https://nodejs.org/api/packages.html#conditional-exports
+    if (resolveExports(entrypointValue, ['require', 'module-sync', 'node'], entrypointPath)) return
+
+    // point at the `"import"` condition that is shadowing `require`, which is the key to rename
+    const importKeyIndex = importResult.path.lastIndexOf('import')
+    if (importKeyIndex === -1) return
+
+    messages.push({
+      code: 'EXPORTS_IMPORT_CONDITION_ONLY',
+      args: {},
+      path: importResult.path.slice(0, importKeyIndex + 1),
+      type: 'warning',
+    })
   }
 
   /**
