@@ -594,7 +594,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           type: 'warning',
         })
       }
-    } else if (typeof repository === 'object' && repository.url && repository.type === 'git') {
+    } else if (
+      typeof repository === 'object' &&
+      repository.url &&
+      // `type` is optional and defaults to git; only skip for other VCS (e.g. svn)
+      (repository.type === 'git' || repository.type == null)
+    ) {
       if (!isGitUrl(repository.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',

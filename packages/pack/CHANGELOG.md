@@ -1,5 +1,11 @@
 # @publint/pack
 
+## 0.1.7
+
+### Patch Changes
+
+- [#253](https://github.com/publint/publint/pull/253) [`1ad881b`](https://github.com/publint/publint/commit/1ad881b79aa38f7e2bbfbd8063f0d227856508f0) - Support tarballs whose regular file entries use a NUL typeflag, as written by pnpm 12
+
 ## 0.1.6
 
 ### Patch Changes

@@ -253,6 +253,13 @@ testFixture('invalid-repository-value-object-deprecated', [
   },
 ])
 
+testFixture('invalid-repository-value-object-deprecated-no-type', [
+  {
+    code: 'INVALID_REPOSITORY_VALUE',
+    type: 'suggestion',
+  },
+])
+
 testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
 
 testFixture('bin-file-not-lintable', [])
