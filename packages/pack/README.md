@@ -6,7 +6,7 @@ Zero-dependencies utilities for packing and unpacking npm packages. Supports:
 
 - npm (v9, v10, v11, v12)
 - yarn (v3, v4)
-- pnpm (v8, v9, v10, v11)
+- pnpm (v8, v9, v10, v11, v12)
 - bun
 
 Older versions of these package managers may still work, but they're not officially tested. Yarn 1 is also explicitly not supported.
