@@ -9,8 +9,8 @@ const isCI = process.env.CI !== undefined
 // on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
 const isWindowsCI = isCI && process.platform === 'win32'
 
-const doesntSupportIgnoreScripts = (/** @type {string} */ pm) =>
-  pm.startsWith('yarn') || pm.startsWith('pnpm@12.')
+const supportsIgnoreScripts = (/** @type {string} */ pm) =>
+  pm.startsWith('yarn') || pm === 'pnpm@12.0.0-rc.6'
 
 const defaultPackageJsonData = {
   name: 'test-package',
@@ -169,7 +169,7 @@ for (const pm of packageManagers) {
       },
     )
 
-    test.skipIf(isWindowsCI || doesntSupportIgnoreScripts(pm))(
+    test.skipIf(isWindowsCI || !supportsIgnoreScripts(pm))(
       `packlist - ${pm} / ${strategy} / ignore-scripts-true`,
       testOpts,
       async ({ expect }) => {
@@ -198,7 +198,7 @@ for (const pm of packageManagers) {
       },
     )
 
-    test.skipIf(isWindowsCI || doesntSupportIgnoreScripts(pm))(
+    test.skipIf(isWindowsCI || !supportsIgnoreScripts(pm))(
       `packlist - ${pm} / ${strategy} / ignore-scripts-false`,
       testOpts,
       async ({ expect }) => {
