@@ -59,7 +59,7 @@ testFixture('invalid-field-types', [
 ])
 
 testFixture('invalid-jsx-extensions', [
-  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION'),
+  ...Array(6).fill('FILE_INVALID_JSX_EXTENSION'),
   'USE_SIDE_EFFECTS',
 ])
 
