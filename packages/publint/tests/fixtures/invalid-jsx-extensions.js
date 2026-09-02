@@ -9,4 +9,6 @@ export default {
   }),
   'main.cjsx': '',
   'main.mjsx': '',
+  'main.mtsx': '',
+  'main.ctsx': '',
 }
