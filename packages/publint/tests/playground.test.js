@@ -266,6 +266,8 @@ testFixture('bin-file-not-lintable', [])
 
 testFixture('imports-external-package', [])
 
+testFixture('browser-external-package', [])
+
 testFixture('imports-field-invalid', ['IMPORTS_KEY_INVALID'])
 
 testFixture('nested-package-json', [
