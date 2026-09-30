@@ -53,9 +53,9 @@
   },
   "devDependencies": {
     "@types/prompts": "^2.4.9",
-    "fs-fixture": "^2.14.0",
+    "fs-fixture": "^2.16.0",
     "prompts": "^2.4.2",
-    "tinyexec": "^1.3.0",
-    "vitest": "^4.1.10"
+    "tinyexec": "^1.3.1",
+    "vitest": "^5.0.2"
   }
 }
