@@ -755,7 +755,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   /**
    * @param {string} exportsValue
-   * @param {string} exportsKey
+   * @param {string | undefined} exportsKey
    * @param {Record<string, any>} exports
    */
   async function getExportsFiles(exportsValue, exportsKey, exports) {
@@ -1126,10 +1126,13 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       if (!exportsKeys[0].startsWith('.')) {
         checkTypesExported()
       }
-      // else this `exports` may have multiple export entrypoints, check for '.'
-      // TODO: check for other entrypoints, move logic into `crawlExports`
-      else if ('.' in exports) {
-        checkTypesExported('.')
+      // else this `exports` has one or more export entrypoints, check each of them
+      else {
+        for (const exportsKey of exportsKeys) {
+          if (exports[exportsKey] != null) {
+            checkTypesExported(exportsKey)
+          }
+        }
       }
     }
   }
@@ -1139,8 +1142,11 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
    */
   function checkTypesExported(exportsRootKey = undefined) {
     promiseQueue.push(async () => {
-      const typesFilePath = await findTypesFilePath(exportsRootKey)
       const exportsRootValue = exportsRootKey ? exports[exportsRootKey] : exports
+      const conditionSets = getConditionSets(exportsRootValue)
+      const typesFilePath = await findTypesFilePath(exportsRootKey, conditionSets)
+      /** @type {Map<string, string[]>} */
+      const exportsFilePathsCache = new Map()
 
       // detect if this package intend to ship types
       if (typesFilePath) {
@@ -1160,36 +1166,41 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           )
         }
 
-        // NOTE: got lazy. here we check for the import/require result in different environments
-        // to make sure we cover possible cases. however, a better way it to resolve the exports
-        // and scan also the possible environment conditions, and return an array instead.
-        for (const env of [undefined, 'node', 'browser', 'worker']) {
-          const importResult = _resolveExports(['import', env])
-          const requireResult = _resolveExports(['require', env])
+        // Check import/require results across each condition combination found in this entrypoint.
+        for (const conditions of conditionSets) {
+          const suggestedTypesFilePath =
+            (await findTypesFilePath(exportsRootKey, [conditions], true)) ?? typesFilePath
+          const importResult = _resolveExports(['import', ...conditions])
+          const requireResult = _resolveExports(['require', ...conditions])
           const isDualPublish =
             importResult && requireResult && importResult.value !== requireResult.value
 
           for (const format of ['import', 'require']) {
-            // the types resolved result for the corresponding js
-            const typesResult = _resolveExports(['types', format, env])
+            const jsResult = format === 'import' ? importResult : requireResult
+            const typesResult = _resolveExports(['types', format, ...conditions])
             if (!typesResult) continue
 
-            // cache by the types path to help deduplicate the linting if we've already done so
-            // for the same environment or format. if it's dual publishing, we want to lint both times
-            // so we add the `format` to the key here.
-            const seenKey = typesResult.path.join('.') + (isDualPublish ? format : '')
+            // Cache by both resolved paths. This deduplicates a shared runtime branch across
+            // custom condition sets while still checking distinct dual-publish targets.
+            const seenKey = JSON.stringify([typesResult.path, jsResult?.path, jsResult?.value])
             if (seenResolvedKeys.has(seenKey)) continue
             seenResolvedKeys.add(seenKey)
 
             // if path doesn't exist, let the missing file error message take over instead
-            const typesResolvedPath = vfs.pathJoin(pkgDir, typesResult.value)
-            if (!(await vfs.isPathExist(typesResolvedPath))) continue
+            const typesResolvedPaths = await getExportsFilePaths(typesResult.value)
+            if (typesResolvedPaths.length === 0) continue
 
             if (isDtsFile(typesResult.value)) {
+              // Pattern targets can span nested packages with different module types. Without
+              // pairing each declaration with its concrete runtime target, a single format
+              // diagnostic would depend on filesystem traversal order. Missing-types checks
+              // still run for pattern targets in the non-dts branch below.
+              if (typesResult.value.includes('*')) continue
+
               // if we have resolve to a dts file, it might not be ours because typescript requires
               // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
               // check if we're hitting this case :(
-              const dtsActualFormat = await getDtsFilePathFormat(typesResolvedPath, vfs)
+              const dtsActualFormat = await getDtsFilePathFormat(typesResolvedPaths[0], vfs)
 
               /** @type {'ESM' | 'CJS' | undefined} */
               let dtsExpectFormat = undefined
@@ -1201,11 +1212,20 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // versions of the dts file, and we don't need to be lenient.
               // NOTE: could there be setups with CJS code and ESM types? seems a bit weird.
               if (!isDualPublish) {
-                const jsResult = format === 'import' ? importResult : requireResult
                 if (jsResult) {
-                  const jsResolvedPath = vfs.pathJoin(pkgDir, jsResult.value)
-                  if (await vfs.isPathExist(jsResolvedPath)) {
-                    dtsExpectFormat = await getFilePathFormat(jsResolvedPath, vfs)
+                  const jsResolvedPaths = await getExportsFilePaths(jsResult.value)
+                  if (jsResolvedPaths.length > 0) {
+                    const jsFormats = await Promise.all(
+                      jsResolvedPaths.map((filePath) => getFilePathFormat(filePath, vfs)),
+                    )
+                    const firstJsFormat = jsFormats[0]
+                    if (jsFormats.every((jsFormat) => jsFormat === firstJsFormat)) {
+                      dtsExpectFormat = firstJsFormat
+                    } else {
+                      // A single declaration target cannot be checked against multiple runtime
+                      // formats without pairing their concrete pattern matches.
+                      continue
+                    }
                   }
                 }
               }
@@ -1246,33 +1266,48 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               }
             } else {
               // adjacent dts file here is always in the correct format
-              const hasAdjacentDtsFile = await vfs.isPathExist(
-                vfs.pathJoin(pkgDir, getAdjacentDtsPath(typesResult.value)),
-              )
+              const hasAdjacentDtsFile = (
+                await Promise.all(
+                  typesResolvedPaths.map((filePath) =>
+                    vfs.isPathExist(getAdjacentDtsPath(filePath)),
+                  ),
+                )
+              ).every(Boolean)
               // if there's no adjacent dts file, it's likely they don't support moduleResolution: bundler.
               // try to provide a warning.
               if (!hasAdjacentDtsFile) {
                 // before we recommend using `typesFilePath` for this export condition, we need to make sure
                 // it's of a matching format
-                const dtsActualFormat = await getDtsFilePathFormat(
-                  vfs.pathJoin(pkgDir, typesFilePath),
-                  vfs,
+                const suggestedTypesFilePaths = await getExportsFilePaths(suggestedTypesFilePath)
+                const suggestedTypesFormats = await Promise.all(
+                  (suggestedTypesFilePaths.length > 0
+                    ? suggestedTypesFilePaths
+                    : [vfs.pathJoin(pkgDir, suggestedTypesFilePath)]
+                  ).map((filePath) => getDtsFilePathFormat(filePath, vfs)),
                 )
                 const dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
                 // if it's a matching format, we can recommend using the types file for this exports condition too.
                 // if not, we need to tell them to create a `.d.[mc]ts` file and not use `typesFilePath`.
                 // this is signalled in `matchingFormat`, where the message handler should check for it.
-                const isMatchingFormat = dtsActualFormat === dtsExpectFormat
+                const isMatchingFormat = suggestedTypesFormats.every(
+                  (typesFormat) => typesFormat === dtsExpectFormat,
+                )
+                const messagePath = typesResult.path.slice()
+                while (messagePath.at(-1) === 'default' || /^\d+$/.test(messagePath.at(-1) ?? '')) {
+                  messagePath.pop()
+                }
                 messages.push({
                   code: 'TYPES_NOT_EXPORTED',
                   args: {
-                    typesFilePath,
-                    actualExtension: isMatchingFormat ? undefined : vfs.getExtName(typesFilePath),
+                    typesFilePath: suggestedTypesFilePath,
+                    actualExtension: isMatchingFormat
+                      ? undefined
+                      : vfs.getExtName(suggestedTypesFilePath),
                     expectExtension: isMatchingFormat
                       ? undefined
                       : getDtsCodeFormatExtension(dtsExpectFormat),
                   },
-                  path: typesResult.path,
+                  path: messagePath,
                   type: 'warning',
                 })
               }
@@ -1280,13 +1315,95 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           }
         }
       }
+
+      /**
+       * @param {string} filePath
+       */
+      async function getExportsFilePaths(filePath) {
+        const cached = exportsFilePathsCache.get(filePath)
+        if (cached) return cached
+
+        let filePaths
+        if (filePath.includes('*')) {
+          filePaths = await getExportsFiles(filePath, exportsRootKey, exports)
+        } else {
+          const resolvedPath = vfs.pathJoin(pkgDir, filePath)
+          filePaths = (await vfs.isPathExist(resolvedPath)) ? [resolvedPath] : []
+        }
+        exportsFilePathsCache.set(filePath, filePaths)
+        return filePaths
+      }
     })
   }
 
   /**
-   * @param {string | undefined} exportsKey
+   * Collect the condition combinations that can select branches in an export entrypoint.
+   * Structural conditions are supplied separately while resolving each import/require path.
+   * @param {any} exportsValue
    */
-  async function findTypesFilePath(exportsKey) {
+  function getConditionSets(exportsValue) {
+    /** @type {string[][]} */
+    const conditionSets = [[]]
+    const seen = new Set([''])
+    visit(exportsValue, [])
+    return conditionSets
+
+    /**
+     * @param {any} value
+     * @param {string[]} conditions
+     */
+    function visit(value, conditions) {
+      if (Array.isArray(value)) {
+        for (const item of value) visit(item, conditions)
+      } else if (value && typeof value === 'object') {
+        for (const key in value) {
+          let nextConditions = conditions
+          if (
+            key !== 'default' &&
+            key !== 'import' &&
+            key !== 'require' &&
+            key !== 'types' &&
+            !key.startsWith('types@')
+          ) {
+            nextConditions = conditions.concat(key)
+            const seenKey = nextConditions.join('\0')
+            if (!seen.has(seenKey)) {
+              seen.add(seenKey)
+              conditionSets.push(nextConditions)
+            }
+          }
+          visit(value[key], nextConditions)
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {string | undefined} exportsKey
+   * @param {string[][]} conditionSets
+   * @param {boolean} [preferExports]
+   */
+  async function findTypesFilePath(exportsKey, conditionSets, preferExports = false) {
+    const exportsValue = exportsKey ? exports[exportsKey] : exports
+    const findTypesInExports = () => {
+      for (const conditions of conditionSets) {
+        for (const format of ['import', 'require']) {
+          const typesResult = resolveExports(exportsValue, ['types', format, ...conditions])
+          if (
+            typesResult?.path.includes('types') &&
+            (isDtsFile(typesResult.value) || isFilePathRawTs(typesResult.value))
+          ) {
+            return typesResult.value
+          }
+        }
+      }
+    }
+
+    if (preferExports) {
+      const typesFilePath = findTypesInExports()
+      if (typesFilePath) return typesFilePath
+    }
+
     let typesFilePath
     if (exportsKey == null || exportsKey === '.') {
       const [types] = getPublishedField(rootPkg, 'types')
@@ -1298,8 +1415,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       } else if (await readFile(vfs.pathJoin(pkgDir, './index.d.ts'))) {
         typesFilePath = './index.d.ts'
       }
-    } else {
-      // TODO: handle nested exports key
+    }
+
+    if (!typesFilePath) {
+      typesFilePath = findTypesInExports()
     }
     return typesFilePath
   }
