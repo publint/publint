@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.25
+
+### Patch Changes
+
+- [#260](https://github.com/publint/publint/pull/260) [`54aebea`](https://github.com/publint/publint/commit/54aebea9b7817af07abfce8a4dc3efa5601d6a16) - Fix `FILE_INVALID_JSX_EXTENSION` not detecting the `.ctsx` extension
+
+- [#265](https://github.com/publint/publint/pull/265) [`78604f3`](https://github.com/publint/publint/commit/78604f3fc5d7c006346ed9e16e7b158077ae54ae) - Skip file existence check for `browser` field values that point at another package
+
 ## 0.3.24
 
 ### Patch Changes
