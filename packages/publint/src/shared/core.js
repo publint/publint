@@ -721,7 +721,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       })
     } else if (typeof fieldValue === 'object') {
       for (const key in fieldValue) {
-        if (typeof fieldValue[key] === 'string') {
+        // if value doesn't start with `.`, assume that it's a module in another
+        // package that the bundler resolves, like it does for the key
+        if (typeof fieldValue[key] === 'string' && fieldValue[key].startsWith('.')) {
           promiseQueue.push(async () => {
             const browserPath = vfs.pathJoin(pkgDir, fieldValue[key])
             await readFile(browserPath, currentPath.concat(key), ['.js', '/index.js'])
