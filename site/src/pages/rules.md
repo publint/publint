@@ -215,6 +215,25 @@ If the `"exports"` field contains glob paths, but it doesn't match any files, re
 
 (Works similarly to [IMPORTS_GLOB_NO_MATCHED_FILES](#imports_glob_no_matched_files)).
 
+### `EXPORTS_IMPORT_CONDITION_ONLY` <RuleType type="warning" />
+
+When an `"exports"` entrypoint resolves with the `"import"` condition but does not resolve at all with the `"require"` condition, the entrypoint cannot be required. Node.js is able to [`require()` ESM files](https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require) today, so an ESM-only package usually doesn't need to gate its entrypoint behind the `"import"` condition. For example:
+
+```json
+{
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
+  }
+}
+```
+
+Renaming the `"import"` condition to `"default"` lets the same file resolve for both `import` and `require`. Resolving to a file is also preferable when the file cannot be required, e.g. it uses top-level await, because Node.js can then report why the file failed to load instead of a resolution error like `Cannot find module`.
+
+The rule is not reported when the entrypoint writes a `"require"` condition anywhere, including `"require": null`, as that means requiring the entrypoint was already considered. It is also not reported when the entrypoint resolves with the `"node"` or `"module-sync"` conditions, or when the resolved file is not a `.js`, `.mjs`, or `.cjs` file.
+
 ### `EXPORTS_MISSING_ROOT_ENTRYPOINT` <RuleType type="warning" />
 
 When a library has the `"main"`, `"module"`, or similar root entrypoint fields, and it also defines the `"exports"` field, the `"exports"` value should also export the root entrypoint as when it's defined, it will always take the highest priority over the other fields, including `"main"` and `"module"`.

@@ -116,6 +116,17 @@ export function formatMessage(m, pkg, opts = {}) {
       const start = opts.reference ? 'The value' : h.bold(fp(m.path))
       return `${start} uses fallback arrays which is not recommended. It picks the first value that can be parsed and does not have a use case in Node.js currently. It also works differently in some tools and may face inconsistent behaviors.`
     }
+    case 'EXPORTS_IMPORT_CONDITION_ONLY': {
+      const suggestPath = fp(m.path.slice(0, -1).concat('default'))
+      const start = opts.reference
+        ? 'This entrypoint'
+        : `${h.bold(fp(m.path))} means the entrypoint`
+      return (
+        `${start} can be imported but not required. Node.js is able to ${h.bold('require()')} ESM files today, so gating it behind the "${h.bold('import')}" condition only makes ${h.bold('require()')} fail to resolve. ` +
+        `Consider renaming the condition to "${h.bold('default')}", e.g. ${h.bold(suggestPath)}, so the entrypoint resolves in both cases. ` +
+        `If the file really can't be required, such as when it uses top-level await, Node.js will report that instead of a resolution error.`
+      )
+    }
     case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
       const mainField = m.args.mainFields[0]
       const start = opts.reference
