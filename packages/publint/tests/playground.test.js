@@ -129,6 +129,7 @@ testFixture('test-2', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
   'EXPORTS_MISSING_ROOT_ENTRYPOINT',
   'EXPORTS_MODULE_SHOULD_BE_ESM',
+  'EXPORTS_TYPES_INVALID_FORMAT',
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',
   'FILE_INVALID_FORMAT',
@@ -143,6 +144,7 @@ testFixture(
   [
     'EXPORTS_MISSING_ROOT_ENTRYPOINT',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'EXPORTS_TYPES_INVALID_FORMAT',
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
@@ -162,6 +164,7 @@ testFixture(
   [
     'EXPORTS_MISSING_ROOT_ENTRYPOINT',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'EXPORTS_TYPES_INVALID_FORMAT',
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
@@ -176,6 +179,7 @@ testFixture(
     { code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING', type: 'suggestion' },
     { code: 'EXPORTS_MISSING_ROOT_ENTRYPOINT', type: 'error' },
     { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
+    { code: 'EXPORTS_TYPES_INVALID_FORMAT', type: 'error' },
     { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
     { code: 'FILE_DOES_NOT_EXIST', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
@@ -190,6 +194,70 @@ testFixture(
 testFixture('types', ['TYPES_NOT_EXPORTED', 'USE_ENGINES_NODE'])
 
 testFixture('types-exports-resolution', [])
+
+testFixture('types-exports-resolution-partial', [
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', '.', 'require'],
+    args: { typesFilePath: './main.d.ts' },
+  },
+  { code: 'USE_ENGINES_NODE', type: 'suggestion' },
+])
+
+testFixture('types-exports-resolution-partial-subpath', [
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', './feature', 'require'],
+    args: { typesFilePath: './feature.d.ts' },
+  },
+  { code: 'USE_ENGINES_NODE', type: 'suggestion' },
+])
+
+testFixture('types-exports-resolution-partial-pattern', [
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', './*', 'require'],
+    args: { typesFilePath: './lib/*.d.ts' },
+  },
+  { code: 'USE_ENGINES_NODE', type: 'suggestion' },
+])
+
+testFixture('types-exports-resolution-partial-environments', [
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', '.', 'node', 'require'],
+    args: { typesFilePath: './node.d.ts' },
+  },
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', '.', 'browser', 'require'],
+    args: { typesFilePath: './browser.d.ts' },
+  },
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', '.', 'deno', 'require'],
+    args: { typesFilePath: './deno.d.ts' },
+  },
+  { code: 'USE_ENGINES_NODE', type: 'suggestion' },
+  { code: 'USE_SIDE_EFFECTS', type: 'suggestion' },
+])
+
+testFixture('types-exports-resolution-partial-shared-condition', [
+  {
+    code: 'TYPES_NOT_EXPORTED',
+    type: 'warning',
+    path: ['exports', '.', 'require'],
+    args: { typesFilePath: './node.d.ts' },
+  },
+  { code: 'USE_ENGINES_NODE', type: 'suggestion' },
+  { code: 'USE_SIDE_EFFECTS', type: 'suggestion' },
+])
 
 testFixture('types-exports-resolution-cjs', [])
 
@@ -286,7 +354,7 @@ testFixture('nested-package-json', [
 
 /**
  * @param {string} name
- * @param {import('../src/index.d.ts').Message['code'][] | (Pick<import('../src/index.d.ts').Message, 'code' | 'type'> & Partial<Pick<import('../src/index.d.ts').Message, 'args'>>)[]} expectCodes
+ * @param {import('../src/index.d.ts').Message['code'][] | (Pick<import('../src/index.d.ts').Message, 'code' | 'type'> & Partial<Pick<import('../src/index.d.ts').Message, 'args' | 'path'>>)[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
