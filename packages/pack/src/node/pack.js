@@ -9,6 +9,9 @@ export async function pack(dir, opts) {
 
   const command = resolvePackageManagerCommand(packageManager)
   command.push('pack')
+  if (packageManager === 'npm') {
+    command.push('--dry-run=false')
+  }
 
   // Handle tarball output
   const packDestination = opts?.destination ?? dir

@@ -1,6 +1,9 @@
-import { test } from 'vitest'
+import fs from 'node:fs/promises'
+import { afterEach, describe, test, vi } from 'vitest'
 import { createFixture } from 'fs-fixture'
 import { exec } from 'tinyexec'
+import { pack } from '../src/node/pack.js'
+import { unpack } from '../src/node/unpack.js'
 import { packAsListWithJson, packAsListWithPack } from '../src/node/pack-as-list.js'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
@@ -224,3 +227,81 @@ for (const pm of packageManagers) {
     )
   }
 }
+
+// Keep environment changes separate from the concurrent package manager tests above.
+describe('npm pack with dry-run configured', { concurrent: false }, () => {
+  afterEach(() => vi.unstubAllEnvs())
+
+  const npmPackageManagers = isCI
+    ? packageManagers.filter((pm) => pm.startsWith('npm@'))
+    : [undefined]
+
+  for (const packageManager of npmPackageManagers) {
+    for (const config of [
+      'unset',
+      'false',
+      'lowercase',
+      'uppercase',
+      'npmrc',
+      'scripts',
+      'failed-script',
+    ]) {
+      test.skipIf(isWindowsCI)(`${packageManager ?? 'npm'} / ${config}`, async ({ expect }) => {
+        vi.stubEnv(
+          'npm_config_dry_run',
+          ['lowercase', 'scripts', 'failed-script'].includes(config) ? 'true' : undefined,
+        )
+        vi.stubEnv('NPM_CONFIG_DRY_RUN', config === 'uppercase' ? 'true' : undefined)
+        if (config === 'false') vi.stubEnv('npm_config_dry_run', 'false')
+        const originalLowercase = process.env.npm_config_dry_run
+        const originalUppercase = process.env.NPM_CONFIG_DRY_RUN
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...(packageManager ? { packageManager } : {}),
+            scripts: {
+              prepack:
+                config === 'failed-script'
+                  ? 'node -e "process.exit(1)"'
+                  : "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
+            },
+          }),
+          'a.js': 'export const value = 42\n',
+          ...(config === 'npmrc' ? { '.npmrc': 'dry-run=true\n' } : {}),
+          destination: {},
+        })
+        try {
+          if (packageManager) {
+            const { stdout } = await exec('npm', ['--version'], {
+              nodeOptions: { cwd: fixture.path },
+            })
+            expect(stdout.trim()).toBe(packageManager.split('@')[1])
+          }
+          const packing = pack(fixture.path, {
+            packageManager: 'npm',
+            destination: `${fixture.path}/destination`,
+            ignoreScripts: !['scripts', 'failed-script'].includes(config),
+          })
+          if (config === 'failed-script') {
+            await expect(packing).rejects.toThrow()
+            expect(await fs.readdir(`${fixture.path}/destination`)).toEqual([])
+          } else {
+            const tarball = await packing
+            const { files } = await unpack(await fs.readFile(tarball))
+            const expectedFiles = ['package/a.js', 'package/package.json']
+            if (config === 'scripts') expectedFiles.push('package/prepack.js')
+            expect(files.map((file) => file.name).sort()).toEqual(expectedFiles.sort())
+            expect(
+              new TextDecoder().decode(files.find((file) => file.name === 'package/a.js')?.data),
+            ).toBe('export const value = 42\n')
+            expect(await fixture.exists('prepack.js')).toBe(config === 'scripts')
+          }
+          expect(process.env.npm_config_dry_run).toBe(originalLowercase)
+          expect(process.env.NPM_CONFIG_DRY_RUN).toBe(originalUppercase)
+        } finally {
+          await fixture.rm()
+        }
+      })
+    }
+  }
+})
