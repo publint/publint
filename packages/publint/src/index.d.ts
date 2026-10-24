@@ -119,6 +119,7 @@ export type Message =
     >
   | BaseMessage<'LOCAL_DEPENDENCY'>
   | BaseMessage<'BIN_FILE_NOT_EXECUTABLE'>
+  | BaseMessage<'BIN_PATH_NOT_NORMALIZED', { normalizedPath: string }>
   | BaseMessage<
       'IMPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
       {

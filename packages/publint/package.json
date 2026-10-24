@@ -5,7 +5,7 @@
   "type": "module",
   "author": "Bjorn Lu",
   "license": "MIT",
-  "bin": "./src/cli.js",
+  "bin": "src/cli.js",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",

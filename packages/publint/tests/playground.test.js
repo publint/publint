@@ -264,6 +264,8 @@ testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
 
 testFixture('bin-file-not-lintable', [])
 
+testFixture('bin-path-not-normalized', ['BIN_PATH_NOT_NORMALIZED'])
+
 testFixture('imports-external-package', [])
 
 testFixture('browser-external-package', [])

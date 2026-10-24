@@ -239,6 +239,12 @@ export function formatMessage(m, pkg, opts = {}) {
         : `${h.bold(fp(m.path))} is ${h.bold(pv(m.path))} but the file`
       return `${start} is not executable. It should start with a shebang, e.g. ${h.bold('#!/usr/bin/env node')}.`
     }
+    case 'BIN_PATH_NOT_NORMALIZED': {
+      const start = opts.reference
+        ? 'This bin path'
+        : `${h.bold(fp(m.path))} is ${h.bold(pv(m.path))} which`
+      return `${start} is not normalized. npm rewrites it to ${h.bold(m.args.normalizedPath)} when publishing and warns that the package.json was auto-corrected. Use ${h.bold(m.args.normalizedPath)} instead.`
+    }
     case 'IMPORTS_KEY_INVALID':
       const start = opts.reference
         ? `The imports key is invalid as it`

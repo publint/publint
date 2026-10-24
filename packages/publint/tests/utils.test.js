@@ -14,6 +14,7 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments,
+  normalizeBinPath,
   hasEsModuleAndExportsDefault,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
@@ -302,4 +303,18 @@ test('getAdjacentDtsPath', () => {
   expect(getAdjacentDtsPath('foo.jsx')).toEqual('foo.d.ts')
   expect(getAdjacentDtsPath('foo.test.js')).toEqual('foo.test.d.ts')
   expect(getAdjacentDtsPath('path/foo.js')).toEqual('path/foo.d.ts')
+})
+
+test('normalizeBinPath', () => {
+  expect(normalizeBinPath('cli.js')).toBe('cli.js')
+  expect(normalizeBinPath('bin/cli.js')).toBe('bin/cli.js')
+  expect(normalizeBinPath('./bin/cli.js')).toBe('bin/cli.js')
+  expect(normalizeBinPath('/bin/cli.js')).toBe('bin/cli.js')
+  expect(normalizeBinPath('bin//cli.js')).toBe('bin/cli.js')
+  expect(normalizeBinPath('bin\\cli.js')).toBe('bin/cli.js')
+  expect(normalizeBinPath('bin/../cli.js')).toBe('cli.js')
+  expect(normalizeBinPath('../../cli.js')).toBe('cli.js')
+  expect(normalizeBinPath('bin/')).toBe('bin/')
+  expect(normalizeBinPath('./')).toBe('')
+  expect(normalizeBinPath('..')).toBe('')
 })

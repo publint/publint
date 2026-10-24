@@ -18,6 +18,7 @@ import {
   isFileContentLintable,
   getAdjacentDtsPath,
   resolveExports,
+  normalizeBinPath,
   isDtsFile,
   getDtsFilePathFormat,
   getDtsCodeFormatExtension,
@@ -1373,6 +1374,17 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
    */
   function crawlBin(binValue, currentPath) {
     if (typeof binValue === 'string') {
+      // npm normalizes bin paths on publish (e.g. strips a leading `./`) and
+      // warns that the package.json was auto-corrected
+      const normalizedBinValue = normalizeBinPath(binValue)
+      if (normalizedBinValue && normalizedBinValue !== binValue) {
+        messages.push({
+          code: 'BIN_PATH_NOT_NORMALIZED',
+          args: { normalizedPath: normalizedBinValue },
+          path: currentPath,
+          type: 'warning',
+        })
+      }
       promiseQueue.push(async () => {
         const binPath = vfs.pathJoin(pkgDir, binValue)
         const binContent = await readFile(binPath, currentPath, ['.js', '/index.js'])

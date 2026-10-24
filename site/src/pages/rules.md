@@ -185,6 +185,10 @@ The `module` field should be ESM only as per convention.
 
 ## Warnings
 
+### `BIN_PATH_NOT_NORMALIZED` <RuleType type="warning" />
+
+Ensure the paths in the `"bin"` field are normalized, e.g. `"bin/cli.js"` instead of `"./bin/cli.js"`. npm normalizes `"bin"` paths when publishing (removing leading `./` and `/`, resolving `.` and `..` segments, and converting `\` to `/`), and warns that it auto-corrected the `package.json`, suggesting to run `npm pkg fix`.
+
 ### `CJS_WITH_ESMODULE_DEFAULT_EXPORT` <RuleType type="warning" />
 
 It is discouraged to use `default` exports in CJS files that are transpiled from ESM as the default export may have a different value depending on the bundler or the runtime.

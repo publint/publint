@@ -580,3 +580,24 @@ export function replaceLast(str, search, replace) {
 export function startsWithShebang(code) {
   return /^#!\s*\/usr\/bin\/env/.test(code)
 }
+
+/**
+ * Normalize a `"bin"` field path the same way npm does when publishing
+ * (`secureAndUnixifyPath` in `@npmcli/package-json`): backslashes become
+ * forward slashes, `.` and `..` segments are resolved without escaping the
+ * package root, and leading or duplicate slashes are removed. Returns an empty
+ * string if nothing is left, in which case npm removes the bin entry.
+ * @param {string} binPath
+ */
+export function normalizeBinPath(binPath) {
+  /** @type {string[]} */
+  const segments = []
+  for (const segment of binPath.replace(/\\/g, '/').split('/')) {
+    if (segment === '' || segment === '.') continue
+    if (segment === '..') segments.pop()
+    else segments.push(segment)
+  }
+  const normalized = segments.join('/')
+  // like `path.join`, keep a trailing slash
+  return normalized && /[\\/]$/.test(binPath) ? normalized + '/' : normalized
+}
