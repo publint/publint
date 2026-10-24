@@ -413,6 +413,10 @@ Internal tests or config files are published, which are usually not needed and u
 }
 ```
 
+Using `.npmignore` to exclude files is discouraged. It works as a denylist, so new files that aren't added to it, e.g. a new config or `.env` file, are published by default. If a `.npmignore` file exists, `.gitignore` is also not used, so files ignored by `.gitignore` will be published unless they're also listed in `.npmignore`. The `"files"` field works as an allowlist instead, so only the files you've listed are published.
+
+When `"files"` is set, the `.npmignore` and `.gitignore` files at the package root are not used, but the ones in subdirectories still apply to the files within them. Some files like `package.json`, `README`, and `LICENSE` are always published regardless of these settings. See [package.json#files](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files) for the full list of files that are always included or excluded.
+
 ### `USE_SIDE_EFFECTS` <RuleType type="suggestion" />
 
 For packages that are consumed by bundlers, the [`"sideEffects"`](https://webpack.js.org/guides/tree-shaking/) field is often used to hint whether the package or which parts of the package that have side effects. Side effects are defined as code that relies on being executed for its behavior, e.g. polyfills, global variable mutations, etc.
