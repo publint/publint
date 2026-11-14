@@ -62,6 +62,11 @@ export function formatMessage(m, pkg, opts = {}) {
         if (value === EMPTY_MSG && m.path[0] === 'main') {
           value += ' (implies index.js)'
         }
+        const resolvedFilePaths = m.args.resolvedFilePaths
+        if (resolvedFilePaths?.length) {
+          const resolvedStr = resolvedFilePaths.map((p) => h.bold(p)).join(', ')
+          return `${h.bold(fp(m.path))} is ${h.bold(value)} (resolved as ${resolvedStr} via ${h.bold('pkg.typesVersions')}) but the file does not exist.`
+        }
         return `${h.bold(fp(m.path))} is ${h.bold(value)} but the file does not exist.`
       }
     case 'FILE_NOT_PUBLISHED':

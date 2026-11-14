@@ -42,7 +42,7 @@ export type Message =
       }
     >
   | BaseMessage<'FILE_INVALID_JSX_EXTENSION', { actualExtension: string; globbedFilePath?: string }>
-  | BaseMessage<'FILE_DOES_NOT_EXIST'>
+  | BaseMessage<'FILE_DOES_NOT_EXIST', { resolvedFilePaths?: string[] }>
   | BaseMessage<'FILE_NOT_PUBLISHED'>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
