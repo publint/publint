@@ -35,6 +35,9 @@ import {
   hasEsModuleAndExportsDefault,
   hasCustomCondition,
   getConditionsFromCurrentPath,
+  normalizeTypesSubpath,
+  matchTypesVersionsPattern,
+  doesTypesVersionRangeMatchLatest,
 } from './utils.js'
 
 /**
@@ -384,14 +387,20 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     promiseQueue.push(() => checkRepositoryField(rootPkg.repository))
   }
 
-  // check file existence for other known package fields
-  const knownFields = ['types', 'typings', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
-  // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
-  // for now skip it, but further improvements are tracked at
-  // https://github.com/publint/publint/issues/42
-  if (getPublishedField(rootPkg, 'typesVersions')[0]) {
-    knownFields.splice(0, 2)
+  // check file existence for `typesVersions`, `types`, and `typings` fields
+  const [typesVersions, typesVersionsPkgPath] = getPublishedField(rootPkg, 'typesVersions')
+  if (typesVersions != null) {
+    crawlTypesVersions(typesVersions, typesVersionsPkgPath)
   }
+  for (const fieldName of ['types', 'typings']) {
+    const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, fieldName)
+    if (fieldValue != null && ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)) {
+      promiseQueue.push(() => checkTypesField(fieldValue, fieldPkgPath))
+    }
+  }
+
+  // check file existence for other known package fields
+  const knownFields = ['jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   for (const fieldName of knownFields) {
     const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, fieldName)
     if (fieldValue != null && ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)) {
@@ -1291,10 +1300,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     if (exportsKey == null || exportsKey === '.') {
       const [types] = getPublishedField(rootPkg, 'types')
       const [typings] = getPublishedField(rootPkg, 'typings')
-      if (types) {
-        typesFilePath = types
-      } else if (typings) {
-        typesFilePath = typings
+      if (typeof types === 'string' && types) {
+        typesFilePath = (await resolveTypesFilePathWithVersions(types)) ?? types
+      } else if (typeof typings === 'string' && typings) {
+        typesFilePath = (await resolveTypesFilePathWithVersions(typings)) ?? typings
       } else if (await readFile(vfs.pathJoin(pkgDir, './index.d.ts'))) {
         typesFilePath = './index.d.ts'
       }
@@ -1302,6 +1311,361 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // TODO: handle nested exports key
     }
     return typesFilePath
+  }
+
+  /**
+   * Extensions TypeScript attempts when resolving extensionless or directory paths
+   * from `types`, `typings`, and `typesVersions` substitutions.
+   */
+  function getDtsTryExtensions() {
+    return [
+      '.d.ts',
+      '.d.mts',
+      '.d.cts',
+      '.ts',
+      '.mts',
+      '.cts',
+      '.tsx',
+      '.js',
+      '/index.d.ts',
+      '/index.d.mts',
+      '/index.d.cts',
+      '/index.ts',
+      '/index.mts',
+      '/index.cts',
+      '/index.tsx',
+      '/index.js',
+    ]
+  }
+
+  /**
+   * Probe whether a relative `types`/`typings`/`typesVersions` target resolves to
+   * an existing (and published, if `_packedFiles` is set) file.
+   * @param {string} relPath
+   * @returns {Promise<
+   *   | { status: 'ok', resolvedRelPath: string }
+   *   | { status: 'not-published' | 'missing' }
+   * >}
+   */
+  async function probeDtsFile(relPath) {
+    /** @type {string[]} */
+    const relCandidates = []
+    const adjacent = getAdjacentDtsPath(relPath)
+    if (adjacent !== relPath) {
+      relCandidates.push(adjacent)
+    }
+    relCandidates.push(relPath)
+    for (let ext of getDtsTryExtensions()) {
+      if (ext[0] === '/' && relPath.endsWith('/')) {
+        ext = ext.slice(1)
+      }
+      relCandidates.push(relPath + ext)
+    }
+
+    let sawNotPublished = false
+    for (const candidateRel of relCandidates) {
+      const fullPath = vfs.pathJoin(pkgDir, candidateRel)
+      try {
+        await vfs.readFile(fullPath)
+        if (_packedFiles && !_packedFiles.includes(fullPath)) {
+          sawNotPublished = true
+          continue
+        }
+        return { status: 'ok', resolvedRelPath: candidateRel }
+      } catch {}
+    }
+
+    return { status: sawNotPublished ? 'not-published' : 'missing' }
+  }
+
+  /**
+   * Probe whether a `typesVersions` glob target (containing `*`) matches at least
+   * one existing (and published, if `_packedFiles` is set) file.
+   * @param {string} globRelPath
+   * @returns {Promise<'ok' | 'not-published' | 'missing'>}
+   */
+  async function probeTypesVersionsGlob(globRelPath) {
+    const baseGlob = vfs.pathJoin(pkgDir, globRelPath)
+    /** @type {string[]} */
+    const candidateGlobs = [baseGlob]
+    const afterStar = globRelPath.slice(globRelPath.lastIndexOf('*') + 1)
+    if (afterStar) {
+      const lastSeg = afterStar.split('/').pop() ?? ''
+      if (/\.[mc]?jsx?$/.test(lastSeg)) {
+        candidateGlobs.push(getAdjacentDtsPath(baseGlob))
+      } else if (!lastSeg.includes('.')) {
+        for (let ext of getDtsTryExtensions()) {
+          if (ext[0] === '/' && baseGlob.endsWith('/')) {
+            ext = ext.slice(1)
+          }
+          candidateGlobs.push(baseGlob + ext)
+        }
+      }
+    }
+
+    for (const g of candidateGlobs) {
+      const matched = (await exportsGlob(g, vfs, _packedFiles)).filter((f) => f !== rootPkgPath)
+      if (matched.length > 0) {
+        return 'ok'
+      }
+    }
+
+    if (_packedFiles) {
+      for (const g of candidateGlobs) {
+        const matchedAll = (await exportsGlob(g, vfs)).filter((f) => f !== rootPkgPath)
+        if (matchedAll.length > 0) {
+          return 'not-published'
+        }
+      }
+    }
+
+    return 'missing'
+  }
+
+  /**
+   * Validate structure and target file/glob existence of `pkg.typesVersions`.
+   * @param {any} typesVersionsValue
+   * @param {string[]} basePath
+   */
+  function crawlTypesVersions(typesVersionsValue, basePath) {
+    if (Array.isArray(typesVersionsValue)) {
+      messages.push({
+        code: 'FIELD_INVALID_VALUE_TYPE',
+        args: { actualType: 'array', expectTypes: ['object'] },
+        path: basePath,
+        type: 'error',
+      })
+      return
+    }
+    if (!ensureTypeOfField(typesVersionsValue, ['object'], basePath)) return
+
+    for (const versionRange of Object.keys(typesVersionsValue)) {
+      const versionPath = basePath.concat(versionRange)
+      const versionMap = typesVersionsValue[versionRange]
+      if (versionMap == null) {
+        ensureTypeOfField(versionMap, ['object'], versionPath)
+        continue
+      }
+      if (Array.isArray(versionMap)) {
+        messages.push({
+          code: 'FIELD_INVALID_VALUE_TYPE',
+          args: { actualType: 'array', expectTypes: ['object'] },
+          path: versionPath,
+          type: 'error',
+        })
+        continue
+      }
+      if (!ensureTypeOfField(versionMap, ['object'], versionPath)) continue
+
+      for (const pattern of Object.keys(versionMap)) {
+        const patternPath = versionPath.concat(pattern)
+        const targetPaths = versionMap[pattern]
+        if (!Array.isArray(targetPaths)) {
+          messages.push({
+            code: 'FIELD_INVALID_VALUE_TYPE',
+            args: { actualType: typeof targetPaths, expectTypes: ['array'] },
+            path: patternPath,
+            type: 'error',
+          })
+          continue
+        }
+
+        for (let i = 0; i < targetPaths.length; i++) {
+          const itemPath = patternPath.concat(String(i))
+          const subst = targetPaths[i]
+          if (!ensureTypeOfField(subst, ['string'], itemPath)) continue
+
+          promiseQueue.push(async () => {
+            const status = subst.includes('*')
+              ? await probeTypesVersionsGlob(subst)
+              : (await probeDtsFile(subst)).status
+            if (status === 'not-published') {
+              fileNotPublished(itemPath)
+            } else if (status === 'missing') {
+              messages.push({
+                code: 'FILE_DOES_NOT_EXIST',
+                args: {},
+                path: itemPath,
+                type: 'error',
+              })
+            }
+          })
+        }
+      }
+    }
+  }
+
+  /**
+   * Collect valid `[versionRange, versionMap]` entries from `pkg.typesVersions`.
+   * @returns {[string, Record<string, any>][]}
+   */
+  function getValidTypesVersionEntries() {
+    if (!typesVersions || typeof typesVersions !== 'object' || Array.isArray(typesVersions)) {
+      return []
+    }
+    /** @type {[string, Record<string, any>][]} */
+    const entries = []
+    for (const versionRange of Object.keys(typesVersions)) {
+      const versionMap = typesVersions[versionRange]
+      if (versionMap && typeof versionMap === 'object' && !Array.isArray(versionMap)) {
+        entries.push([versionRange, versionMap])
+      }
+    }
+    return entries
+  }
+
+  /**
+   * Check `pkg.types` or `pkg.typings`, applying `pkg.typesVersions` path remapping
+   * when configured (matching TypeScript's `loadNodeModuleFromDirectoryWorker`).
+   * @param {string} fieldValue
+   * @param {string[]} fieldPkgPath
+   */
+  async function checkTypesField(fieldValue, fieldPkgPath) {
+    const versionEntries = getValidTypesVersionEntries()
+    const subpath = normalizeTypesSubpath(fieldValue)
+
+    if (versionEntries.length === 0 || subpath === undefined) {
+      const res = await probeDtsFile(fieldValue)
+      if (res.status === 'not-published') {
+        fileNotPublished(fieldPkgPath)
+      } else if (res.status === 'missing') {
+        messages.push({
+          code: 'FILE_DOES_NOT_EXIST',
+          args: {},
+          path: fieldPkgPath,
+          type: 'error',
+        })
+      }
+      return
+    }
+
+    let hasMissing = false
+    let hasNotPublished = false
+    /** @type {Set<string>} */
+    const missingResolvedPaths = new Set()
+    let anyCoversLatest = false
+    /** @type {'ok' | 'not-published' | 'missing' | undefined} */
+    let unmappedStatus
+
+    const checkUnmapped = async () => {
+      if (unmappedStatus === undefined) {
+        unmappedStatus = (await probeDtsFile(fieldValue)).status
+      }
+      if (unmappedStatus === 'not-published') {
+        hasNotPublished = true
+      } else if (unmappedStatus === 'missing') {
+        hasMissing = true
+      }
+    }
+
+    for (const [versionRange, versionMap] of versionEntries) {
+      if (doesTypesVersionRangeMatchLatest(versionRange)) {
+        anyCoversLatest = true
+      }
+
+      const match = matchTypesVersionsPattern(versionMap, subpath)
+      if (!match) {
+        await checkUnmapped()
+        continue
+      }
+
+      if (!Array.isArray(match.targets)) continue
+      const stringTargets = /** @type {string[]} */ (
+        match.targets.filter((t) => typeof t === 'string')
+      )
+      if (stringTargets.length === 0) {
+        if (match.targets.length === 0) {
+          hasMissing = true
+        }
+        continue
+      }
+
+      let resolvedInVersion = false
+      let versionSawNotPublished = false
+      for (const subst of stringTargets) {
+        const mappedRelPath =
+          match.matchedStar !== undefined
+            ? subst.replace('*', () => /** @type {string} */ (match.matchedStar))
+            : subst
+        const res = await probeDtsFile(mappedRelPath)
+        if (res.status === 'ok') {
+          resolvedInVersion = true
+          break
+        }
+        if (res.status === 'not-published') {
+          versionSawNotPublished = true
+        }
+      }
+
+      if (!resolvedInVersion) {
+        if (versionSawNotPublished) {
+          hasNotPublished = true
+        } else {
+          hasMissing = true
+          for (const subst of stringTargets) {
+            const mappedRelPath =
+              match.matchedStar !== undefined
+                ? subst.replace('*', () => /** @type {string} */ (match.matchedStar))
+                : subst
+            if (mappedRelPath !== fieldValue) {
+              missingResolvedPaths.add(mappedRelPath)
+            }
+          }
+        }
+      }
+    }
+
+    if (!anyCoversLatest) {
+      await checkUnmapped()
+    }
+
+    if (hasNotPublished) {
+      fileNotPublished(fieldPkgPath)
+    }
+    if (hasMissing) {
+      messages.push({
+        code: 'FILE_DOES_NOT_EXIST',
+        args:
+          missingResolvedPaths.size > 0
+            ? { resolvedFilePaths: Array.from(missingResolvedPaths) }
+            : {},
+        path: fieldPkgPath,
+        type: 'error',
+      })
+    }
+  }
+
+  /**
+   * Resolve a `pkg.types` or `pkg.typings` path through `pkg.typesVersions` if applicable,
+   * returning the resolved relative file path when found.
+   * @param {string} rawFieldPath
+   * @returns {Promise<string | undefined>}
+   */
+  async function resolveTypesFilePathWithVersions(rawFieldPath) {
+    const versionEntries = getValidTypesVersionEntries()
+    const subpath = normalizeTypesSubpath(rawFieldPath)
+    if (versionEntries.length > 0 && subpath !== undefined) {
+      const preferredEntry =
+        versionEntries.find(([range]) => doesTypesVersionRangeMatchLatest(range)) ??
+        versionEntries[0]
+      const match = matchTypesVersionsPattern(preferredEntry[1], subpath)
+      if (match && Array.isArray(match.targets)) {
+        for (const subst of match.targets) {
+          if (typeof subst !== 'string') continue
+          const mappedRelPath =
+            match.matchedStar !== undefined
+              ? subst.replace('*', () => /** @type {string} */ (match.matchedStar))
+              : subst
+          const res = await probeDtsFile(mappedRelPath)
+          if (res.status === 'ok') {
+            return res.resolvedRelPath
+          }
+        }
+        return undefined
+      }
+    }
+    const res = await probeDtsFile(rawFieldPath)
+    return res.status === 'ok' ? res.resolvedRelPath : undefined
   }
 
   /**

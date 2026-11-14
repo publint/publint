@@ -580,3 +580,145 @@ export function replaceLast(str, search, replace) {
 export function startsWithShebang(code) {
   return /^#!\s*\/usr\/bin\/env/.test(code)
 }
+
+/**
+ * Normalize a `types` or `typings` path to a package-relative subpath for
+ * `typesVersions` pattern matching (matching TypeScript's `getRelativePathFromDirectory`).
+ * Returns `undefined` if the path escapes outside the package root (`..`).
+ * @param {string} filePath
+ * @returns {string | undefined}
+ */
+export function normalizeTypesSubpath(filePath) {
+  const segments = slash(filePath).split('/')
+  /** @type {string[]} */
+  const resolved = []
+  for (const seg of segments) {
+    if (!seg || seg === '.') continue
+    if (seg === '..') {
+      if (resolved.length === 0) return undefined
+      resolved.pop()
+    } else {
+      resolved.push(seg)
+    }
+  }
+  return resolved.length > 0 ? resolved.join('/') : 'index'
+}
+
+/**
+ * Match a normalized subpath against a single `typesVersions[version]` mapping object,
+ * following TypeScript's `matchPatternOrExact` precedence (exact match first, then
+ * single-`*` pattern with the longest prefix).
+ * @param {Record<string, any>} versionPaths
+ * @param {string} candidate
+ * @returns {{ pattern: string, matchedStar: string | undefined, targets: any } | undefined}
+ */
+export function matchTypesVersionsPattern(versionPaths, candidate) {
+  if (Object.prototype.hasOwnProperty.call(versionPaths, candidate)) {
+    return {
+      pattern: candidate,
+      matchedStar: undefined,
+      targets: versionPaths[candidate],
+    }
+  }
+
+  /** @type {string | undefined} */
+  let bestPattern
+  /** @type {string | undefined} */
+  let bestMatchedStar
+  let longestPrefixLength = -1
+
+  for (const key of Object.keys(versionPaths)) {
+    const starIndex = key.indexOf('*')
+    if (starIndex === -1) continue
+    // TypeScript ignores patterns with more than one `*`
+    if (key.indexOf('*', starIndex + 1) !== -1) continue
+
+    const prefix = key.slice(0, starIndex)
+    const suffix = key.slice(starIndex + 1)
+    if (
+      prefix.length > longestPrefixLength &&
+      candidate.length >= prefix.length + suffix.length &&
+      candidate.startsWith(prefix) &&
+      candidate.endsWith(suffix)
+    ) {
+      longestPrefixLength = prefix.length
+      bestPattern = key
+      bestMatchedStar = candidate.slice(prefix.length, candidate.length - suffix.length)
+    }
+  }
+
+  if (bestPattern !== undefined) {
+    return {
+      pattern: bestPattern,
+      matchedStar: bestMatchedStar,
+      targets: versionPaths[bestPattern],
+    }
+  }
+}
+
+const PARTIAL_VERSION_RE =
+  /^([x*0]|[1-9]\d*)(?:\.([x*0]|[1-9]\d*)(?:\.([x*0]|[1-9]\d*)(?:-[a-z0-9-.]+)?(?:\+[a-z0-9-.]+)?)?)?$/i
+const HYPHEN_RANGE_RE = /^\s*([a-z0-9-+.*]+)\s+-\s+([a-z0-9-+.*]+)\s*$/i
+const COMPARATOR_RE = /^(<=|>=|[~^<>=])?\s*([a-z0-9-+.*]+)$/i
+
+/**
+ * Whether a `typesVersions` semver range key matches modern/unbounded-above
+ * TypeScript versions (e.g. `*`, `>=4.0`, `>3.5`, `<3.8 || >=4.0`), as opposed
+ * to an upper-bounded legacy range (e.g. `<4.0`, `<=3.9`, `3.1 - 3.9`, `^3.8`).
+ * @param {string} rangeText
+ * @returns {boolean}
+ */
+export function doesTypesVersionRangeMatchLatest(rangeText) {
+  for (const rawAlt of rangeText.trim().split('||')) {
+    const alt = rawAlt.trim()
+    if (!alt) continue
+
+    const hyphenMatch = HYPHEN_RANGE_RE.exec(alt)
+    if (hyphenMatch) {
+      const left = PARTIAL_VERSION_RE.exec(hyphenMatch[1])
+      const right = PARTIAL_VERSION_RE.exec(hyphenMatch[2])
+      if (left && right && /^[x*]/i.test(right[1])) {
+        return true
+      }
+      continue
+    }
+
+    const tokens = alt.split(/\s+/)
+    /** @type {string[]} */
+    const comparators = []
+    for (let i = 0; i < tokens.length; i++) {
+      if (/^(?:<=|>=|[~^<>=])$/.test(tokens[i]) && i + 1 < tokens.length) {
+        comparators.push(tokens[i] + tokens[i + 1])
+        i++
+      } else {
+        comparators.push(tokens[i])
+      }
+    }
+
+    let allUnboundedAbove = comparators.length > 0
+    for (const comp of comparators) {
+      const m = COMPARATOR_RE.exec(comp)
+      if (!m) {
+        allUnboundedAbove = false
+        break
+      }
+      const op = m[1] ?? ''
+      const ver = PARTIAL_VERSION_RE.exec(m[2])
+      if (!ver) {
+        allUnboundedAbove = false
+        break
+      }
+      const isMajorWildcard = /^[x*]/i.test(ver[1])
+      if ((op === '' || op === '=') && isMajorWildcard) {
+        continue
+      }
+      if (op === '>' || op === '>=') {
+        continue
+      }
+      allUnboundedAbove = false
+      break
+    }
+    if (allUnboundedAbove) return true
+  }
+  return false
+}

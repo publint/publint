@@ -217,6 +217,11 @@ testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])
 
+testFixture('types-versions-missing', [
+  ...Array(4).fill('FILE_DOES_NOT_EXIST'),
+  'FILE_NOT_PUBLISHED',
+])
+
 testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT', 'USE_ENGINES_NODE'])
 
 testFixture('deprecated-fields', ['DEPRECATED_FIELD_JSNEXT', 'DEPRECATED_FIELD_JSNEXT', 'USE_TYPE'])
