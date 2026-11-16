@@ -37,6 +37,7 @@ const esmCode = [
   'export default "bla"',
   'export const foo = "bla"',
   'export function foo() { return "bla" }',
+  'export class Foo {}',
 ]
 
 const isoCode = [`console.log('hello')`, `document.title = 'bla`]
